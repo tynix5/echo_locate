@@ -1,0 +1,1 @@
+../Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_fir_decimate_fast_q15.c:61:24:arm_fir_decimate_fast_q15	216	static,ignoring_inline_asm
