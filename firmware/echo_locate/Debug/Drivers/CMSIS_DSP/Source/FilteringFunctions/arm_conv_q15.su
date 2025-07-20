@@ -1,0 +1,1 @@
+../Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_conv_q15.c:229:24:arm_conv_q15	1392	static,ignoring_inline_asm

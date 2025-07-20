@@ -1,0 +1,1 @@
+../Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_iir_lattice_q31.c:55:24:arm_iir_lattice_q31	328	static,ignoring_inline_asm
