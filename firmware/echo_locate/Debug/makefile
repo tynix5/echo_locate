@@ -62,7 +62,7 @@ main-build: echo_locate.elf secondary-outputs
 
 # Tool invocations
 echo_locate.elf echo_locate.map: $(OBJS) $(USER_OBJS) C:\Users\tynix\Development\stm32_workspace\echo_locate\firmware\echo_locate\STM32F401RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "echo_locate.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\tynix\Development\stm32_workspace\echo_locate\firmware\echo_locate\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="echo_locate.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "echo_locate.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\tynix\Development\stm32_workspace\echo_locate\firmware\echo_locate\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="echo_locate.map" -Wl,--gc-sections -static -L"C:\Users\tynix\Development\stm32_workspace\lib\uart2\Debug" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
