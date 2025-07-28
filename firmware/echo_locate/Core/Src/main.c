@@ -15,435 +15,246 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
+#include "uart2.h"
 #include "dsp/filtering_functions.h"
-/* USER CODE END Includes */
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
+#define NUM_FILTER_TAPS		59
+#define BLOCK_SIZE			32
 
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-#define FILTER_TAPS		59
-#define BLOCK_SIZE		32
-
-float32_t const filter_coeff[FILTER_TAPS] = {
-		 0.008853489517862969,
-		  0.012336117846197307,
-		  0.01919053080081171,
-		  0.02357529588293749,
-		  0.02103778430880732,
-		  0.009851119935668212,
-		  -0.006868821885649766,
-		  -0.022287674656347622,
-		  -0.029593270905834943,
-		  -0.025971486257862348,
-		  -0.014458722112174098,
-		  -0.002576204552428596,
-		  0.0015612559742238874,
-		  -0.006084381509796098,
-		  -0.02270617511778867,
-		  -0.03946159315255754,
-		  -0.046166772454251284,
-		  -0.03768506203086776,
-		  -0.018208106399573615,
-		  -0.00024668883022941945,
-		  0.0020573263647973195,
-		  -0.017953408395298347,
-		  -0.05326257976724875,
-		  -0.08428105251091034,
-		  -0.08766353278952717,
-		  -0.048803421864686024,
-		  0.028667251505804254,
-		  0.12188932879853132,
-		  0.1975603429597411,
-		  0.22660949366725555,
-		  0.1975603429597411,
-		  0.12188932879853132,
-		  0.028667251505804254,
-		  -0.048803421864686024,
-		  -0.08766353278952717,
-		  -0.08428105251091034,
-		  -0.05326257976724875,
-		  -0.017953408395298347,
-		  0.0020573263647973195,
-		  -0.00024668883022941945,
-		  -0.018208106399573615,
-		  -0.03768506203086776,
-		  -0.046166772454251284,
-		  -0.03946159315255754,
-		  -0.02270617511778867,
-		  -0.006084381509796098,
-		  0.0015612559742238874,
-		  -0.002576204552428596,
-		  -0.014458722112174098,
-		  -0.025971486257862348,
-		  -0.029593270905834943,
-		  -0.022287674656347622,
-		  -0.006868821885649766,
-		  0.009851119935668212,
-		  0.02103778430880732,
-		  0.02357529588293749,
-		  0.01919053080081171,
-		  0.012336117846197307,
-		  0.008853489517862969
-
+float32_t const ftaps[NUM_FILTER_TAPS] = {
+		 0.008853489517862969,	0.012336117846197307,	0.01919053080081171,	0.02357529588293749,	0.02103778430880732,
+		 0.009851119935668212,	-0.006868821885649766,	-0.022287674656347622, 	-0.029593270905834943,	-0.025971486257862348,
+		 -0.014458722112174098,	-0.002576204552428596,	0.0015612559742238874,	-0.006084381509796098,	-0.02270617511778867,
+		 -0.03946159315255754,	-0.046166772454251284,	-0.03768506203086776,	-0.018208106399573615,	-0.00024668883022941945,
+		 0.0020573263647973195,	-0.017953408395298347,	-0.05326257976724875,	-0.08428105251091034,	-0.08766353278952717,
+		 -0.048803421864686024,	0.028667251505804254,	0.12188932879853132,	0.1975603429597411,		0.22660949366725555,
+		 0.1975603429597411,	0.12188932879853132,	0.028667251505804254,	-0.048803421864686024,	-0.08766353278952717,
+		 -0.08428105251091034,	-0.05326257976724875,	-0.017953408395298347,	0.0020573263647973195,	-0.00024668883022941945,
+		 -0.018208106399573615,	-0.03768506203086776,	-0.046166772454251284,	-0.03946159315255754,	-0.02270617511778867,
+		 -0.006084381509796098,	0.0015612559742238874,	-0.002576204552428596,	-0.014458722112174098,	-0.025971486257862348,
+		 -0.029593270905834943,	-0.022287674656347622,	-0.006868821885649766,	0.009851119935668212,	0.02103778430880732,
+		 0.02357529588293749,	0.01919053080081171,	0.012336117846197307,	0.008853489517862969
 };
 
-/* USER CODE END PD */
+arm_fir_instance_f32 hfir;
 
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
+uint16_t stream[BLOCK_SIZE];
+float stream_f[BLOCK_SIZE];
 
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
-
-TIM_HandleTypeDef htim1;
-
-UART_HandleTypeDef huart2;
-
-/* USER CODE BEGIN PV */
-arm_fir_instance_f32 fir_handle;
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_ADC1_Init(void);
-static void MX_USART2_UART_Init(void);
-static void MX_TIM1_Init(void);
-/* USER CODE BEGIN PFP */
 
 void sysclock_config(void);
-void ADC_config(void);
-void UART_config();
-void TIM_config();
-
-volatile uint8_t sample_rdy = 0;
+void adc1_dma_config(void);
+void tim2_trig_config(void);
 
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim)
-{
-	if (htim->Instance == TIM1)
-	{
-		sample_rdy = 1;
-	}
-}
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
+	sysclock_config();
 
-  /* USER CODE END 1 */
+	float32_t state[NUM_FILTER_TAPS + BLOCK_SIZE - 1];
+	arm_fir_init_f32(&hfir, NUM_FILTER_TAPS, ftaps, state, BLOCK_SIZE);
 
-  /* MCU Configuration--------------------------------------------------------*/
+	float32_t out_buff[BLOCK_SIZE];
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	uart2_set_fcpu(84000000);
+	uart2_config(115200, USART_DATA_8, USART_STOP_1);
 
-  /* USER CODE BEGIN Init */
+	tim2_trig_config();
+	adc1_dma_config();
 
-  /* USER CODE END Init */
+	while (1)
+	{
 
-  /* Configure the system clock */
-  SystemClock_Config();
+		while (!((DMA2->LISR) & DMA_LISR_TCIF0));		// wait for stream to complete
+		ADC1->CR2 &= ~ADC_CR2_DMA;						// disable ADC DMA
+		DMA2->LIFCR |= DMA_LIFCR_CTCIF0 | DMA_LIFCR_CHTIF0;			// clear transfer complete and half complete flag
 
-  /* USER CODE BEGIN SysInit */
+		for (uint8_t i = 0; i < BLOCK_SIZE; i++)
+		{
+			stream_f[i] = (float) stream[i];
+		}
 
-  /* USER CODE END SysInit */
+		arm_fir_f32(&hfir, stream_f, out_buff, BLOCK_SIZE);
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_ADC1_Init();
-  MX_USART2_UART_Init();
-  MX_TIM1_Init();
-  /* USER CODE BEGIN 2 */
+		ADC1->CR2 |= ADC_CR2_DMA;
 
-  /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  float32_t state[FILTER_TAPS + BLOCK_SIZE - 1];
-  arm_fir_init_f32(&fir_handle, FILTER_TAPS, filter_coeff, state, BLOCK_SIZE);
+		uint8_t str[11];
 
-  float32_t adc_buff[BLOCK_SIZE];
-  float32_t out_buff[BLOCK_SIZE];
-
-  uint8_t test[4] = {'t', 'e', 's', 't'};
-  HAL_UART_Transmit(&huart2, test, 4, 200);
-
-  while (1)
-  {
-
-	  HAL_TIM_Base_Start_IT(&htim1);
-	  for (uint32_t i = 0; i < BLOCK_SIZE; i++)
-	  {
-		while (!sample_rdy);
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
-		HAL_ADC_Start(&hadc1);
-		HAL_ADC_PollForConversion(&hadc1, 50);
-		adc_buff[i] = (float) HAL_ADC_GetValue(&hadc1);
-		sample_rdy = 0;
-	  }
-
-	  HAL_TIM_Base_Stop_IT(&htim1);
-
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, 1);
-	  arm_fir_f32(&fir_handle, adc_buff, out_buff, BLOCK_SIZE);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, 0);
-
-  	  uint8_t str[11];
-
-  	  for (uint32_t i = 0; i < BLOCK_SIZE; i++)
-  	  {
-  		  str[0] = (uint16_t) adc_buff[i] / 1000 + '0';
-  		  str[1] = (uint16_t) adc_buff[i] / 100 % 10 + '0';
-  		  str[2] = (uint16_t) adc_buff[i] / 10 % 10 + '0';
-  		  str[3] = (uint16_t) adc_buff[i] % 10 + '0';
-  		  str[4] = ',';
-  		  str[5] = ' ';
-  		  str[6] = (uint16_t) out_buff[i] / 1000 + '0';
-  		  str[7] = (uint16_t) out_buff[i] / 100 % 10 + '0';
-  		  str[8] = (uint16_t) out_buff[i] / 10 % 10 + '0';
-  		  str[9] = (uint16_t) out_buff[i] % 10 + '0';
-  		  str[10] = '\r';
-  		  HAL_UART_Transmit(&huart2, str, 11, 200);
-  	  }
+		for (uint32_t i = 0; i < BLOCK_SIZE; i++)
+		{
+			str[0] = (uint16_t) stream[i] / 1000 + '0';
+			str[1] = (uint16_t) stream[i] / 100 % 10 + '0';
+			str[2] = (uint16_t) stream[i] / 10 % 10 + '0';
+			str[3] = (uint16_t) stream[i] % 10 + '0';
+			str[4] = ',';
+			str[5] = ' ';
+			str[6] = (uint16_t) out_buff[i] / 1000 + '0';
+			str[7] = (uint16_t) out_buff[i] / 100 % 10 + '0';
+			str[8] = (uint16_t) out_buff[i] / 10 % 10 + '0';
+			str[9] = (uint16_t) out_buff[i] % 10 + '0';
+			str[10] = '\r';
+			uart2_write(str, 11);
+		}
 	}
-  /* USER CODE END WHILE */
-  /* USER CODE END 3 */
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
+
+void sysclock_config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+	// 16 MHz HSI oscillator is default on reset, but select anyways
+	RCC->CR |= RCC_CR_HSION;
+	// wait for HSI to be ready
+	while (!((RCC->CR) & RCC_CR_HSIRDY));
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
+	// enable power interface clock for APB1
+	RCC->APB1ENR = RCC_APB1ENR_PWREN;
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 168;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	// configure VCO to scale 2 per CubeMX
+	PWR->CR |= PWR_CR_VOS_1;
+	PWR->CR &= ~PWR_CR_VOS_0;
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+	// configure FLASH
+	// instruction cache, prefetch enable, and data cache enabled
+	uint32_t flash;
+	flash = FLASH_ACR_DCEN | FLASH_ACR_ICEN | FLASH_ACR_PRFTEN;
+	flash |= 2;		// 2 wait states for flash
+	FLASH->ACR = flash;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	// configure bus prescalers
+	uint32_t cfgr = 0;
+	cfgr &= ~RCC_CFGR_PPRE2_2;		// APB2 prescaler of 1 (84MHz)
+	cfgr |= RCC_CFGR_PPRE1_2;		// APB1 prescaler of 2 (42MHZ)
+	cfgr &= ~RCC_CFGR_HPRE;			// AHB prescaler of 1 (84MHz)
+	RCC->CFGR = cfgr;
+
+	// configure main PLL
+	uint32_t pll_cfg = RCC->PLLCFGR;
+	pll_cfg &= ~RCC_PLLCFGR_PLLQ;
+	pll_cfg |= RCC_PLLCFGR_PLLQ_2; // configure Q prescaler for USB, SDIO, RNG clocks (/4)
+
+	pll_cfg &= ~RCC_PLLCFGR_PLLP;	// main PLL division factor of 2
+
+	pll_cfg &= ~RCC_PLLCFGR_PLLN;
+	pll_cfg |= 168UL << 6;	// pll multiplication factor for VCO (x168)
+
+	pll_cfg &= ~RCC_PLLCFGR_PLLM;
+	pll_cfg |= 16UL << 0;	// pll division factor for main PLL and audio PLL (/16)
+
+	RCC->PLLCFGR = pll_cfg;
+
+	// enable PLL and wait for ready
+	RCC->CR |= RCC_CR_PLLON;
+	while (!((RCC->CR) & RCC_CR_PLLRDY));
+
+	// select clock source
+	cfgr = RCC->CFGR;
+	cfgr |= RCC_CFGR_SW_1;		// select PLL as system clock
+	cfgr &= ~RCC_CFGR_SW_0;
+	RCC->CFGR = cfgr;
+
+	// wait for PLL clock source to become active
+	while (!((RCC->CFGR) & RCC_CFGR_SWS_1));
 }
 
-/**
-  * @brief ADC1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_ADC1_Init(void)
+
+void adc1_dma_config(void)
 {
+	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;				// enable ADC1 clock
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;			// enable GPIOA clock
 
-  /* USER CODE BEGIN ADC1_Init 0 */
+	// PA0 as analog input
+	GPIOA->MODER |= GPIO_MODER_MODER0_0 | GPIO_MODER_MODER0_1;
 
-  /* USER CODE END ADC1_Init 0 */
+	ADC1->CR2 &= ~ADC_CR2_ADON;						// turn off ADC to configure
 
-  ADC_ChannelConfTypeDef sConfig = {0};
+	// APB2 clock (84 MHz) / 4 = 21 MHz
+	// MAX ADC clock freq is 36 MHz (pg 106 datasheet)
+	ADC->CCR &= ~ADC_CCR_ADCPRE;
+	ADC->CCR |= ADC_CCR_ADCPRE_0;
 
-  /* USER CODE BEGIN ADC1_Init 1 */
 
-  /* USER CODE END ADC1_Init 1 */
+	// trigger detection on rising edge
+	ADC1->CR2 |= ADC_CR2_EXTEN_0;
+	ADC1->CR2 &= ~ADC_CR2_EXTEN_1;
 
-  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-  */
-  hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc1.Init.ScanConvMode = DISABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-  if (HAL_ADC_Init(&hadc1) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	// TIM2 TRGO event
+	ADC1->CR2 |= ADC_CR2_EXTSEL_1 | ADC_CR2_EXTSEL_2;
+	ADC1->CR2 &= ~(ADC_CR2_EXTSEL_0 | ADC_CR2_EXTSEL_3);
 
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-  */
-  sConfig.Channel = ADC_CHANNEL_0;
-  sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN ADC1_Init 2 */
+	ADC1->SQR1 &= ~ADC_SQR1_L;				// 1 conversion per sequence
+	ADC1->SQR3 &= ~ADC_SQR3_SQ1;			// channel 0 (PA0) is conversion channel
 
-  /* USER CODE END ADC1_Init 2 */
+	/* DMA2 Channel 0, Stream 0 --> ADC1 */
+	RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN;		// enable DMA2 clock
 
+	DMA2_Stream0->CR &= ~DMA_SxCR_EN;		// disable stream
+	while (DMA2_Stream0->CR & DMA_SxCR_EN);	// wait for stream to disable
+
+	DMA2_Stream0->PAR = (uint32_t)&(ADC1->DR);// peripheral address
+	DMA2_Stream0->M0AR = (uint32_t)stream;	// destination memory address
+	DMA2_Stream0->NDTR = BLOCK_SIZE;		// number of units to be transmitted
+
+	DMA2_Stream0->CR &= ~DMA_SxCR_CHSEL;	// channel 0 selected
+
+	DMA2_Stream0->CR &= ~DMA_SxCR_PFCTRL;	// DMA is the flow controller
+
+	// priority level: medium
+	DMA2_Stream0->CR |= DMA_SxCR_PL_0;
+	DMA2_Stream0->CR &= ~DMA_SxCR_PL_1;
+
+	// disable direct mode
+	// FIFO threshold of 1/2 before transfer
+	DMA2_Stream0->FCR |= DMA_SxFCR_DMDIS;
+	DMA2_Stream0->FCR |= DMA_SxFCR_FTH_0;
+	DMA2_Stream0->FCR &= ~DMA_SxFCR_FTH_1;
+
+	// memory data size: half word (16 bits)
+	DMA2_Stream0->CR |= DMA_SxCR_MSIZE_0;
+	DMA2_Stream0->CR &= ~DMA_SxCR_MSIZE_1;
+
+	// peripheral data size: half word (16 bits)
+	DMA2_Stream0->CR |= DMA_SxCR_PSIZE_0;
+	DMA2_Stream0->CR &= ~DMA_SxCR_PSIZE_1;
+
+	// increment memory address after every transfer
+	DMA2_Stream0->CR |= DMA_SxCR_MINC;
+
+	// disable peripheral address increment
+	DMA2_Stream0->CR &= ~DMA_SxCR_PINC;
+
+	// peripheral to memory data direction
+	DMA2_Stream0->CR &= ~DMA_SxCR_DIR;
+
+	// circular mode --> reload NDTR after every transfer complete
+	DMA2_Stream0->CR |= DMA_SxCR_CIRC;
+
+
+	DMA2_Stream0->CR |= DMA_SxCR_EN;		// enable DMA stream
+
+	ADC1->CR2 |= ADC_CR2_DMA;				// enable DMA
+	ADC1->CR2 &= ~ADC_CR2_DDS;				// no DMA requests after last transfer (BLOCK_SIZE transfers)
+	ADC1->CR2 |= ADC_CR2_ADON;				// turn on ADC
 }
 
-/**
-  * @brief TIM1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM1_Init(void)
+
+void tim2_trig_config(void)
 {
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;				// enable TIM2 clock
 
-  /* USER CODE BEGIN TIM1_Init 0 */
+	TIM2->CR1 &= ~TIM_CR1_DIR;			// upcounting
+	TIM2->PSC = 0;						// /1 prescaler
+	TIM2->ARR = 2100;					// 40kHz frequency
 
-  /* USER CODE END TIM1_Init 0 */
+	TIM2->CR2 |= TIM_CR2_MMS_1;
+	TIM2->CR2 &= ~(TIM_CR2_MMS_0 | TIM_CR2_MMS_2);		// update event as TRGO
 
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
+	TIM2->EGR |= TIM_EGR_UG;			// generate update event
 
-  /* USER CODE BEGIN TIM1_Init 1 */
-
-  /* USER CODE END TIM1_Init 1 */
-  htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 0;
-  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 2100;
-  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM1_Init 2 */
-
-  /* USER CODE END TIM1_Init 2 */
-
+	TIM2->CR1 |= TIM_CR1_CEN;			// enable counter
 }
-
-/**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART2_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART2_Init 0 */
-
-  /* USER CODE END USART2_Init 0 */
-
-  /* USER CODE BEGIN USART2_Init 1 */
-
-  /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART2_Init 2 */
-
-  /* USER CODE END USART2_Init 2 */
-
-}
-
-/**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_GPIO_Init(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  /* USER CODE BEGIN MX_GPIO_Init_1 */
-
-  /* USER CODE END MX_GPIO_Init_1 */
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : PA10 */
-  GPIO_InitStruct.Pin = GPIO_PIN_10;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PB3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
-
-  /* USER CODE END MX_GPIO_Init_2 */
-}
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
 
 /**
   * @brief  This function is executed in case of error occurrence.
