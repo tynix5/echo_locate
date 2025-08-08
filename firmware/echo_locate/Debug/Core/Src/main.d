@@ -24,7 +24,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- C:/Users/tynix/Development/stm32_workspace/lib/uart2/Inc/uart2.h \
+ C:/Users/tynix/Development/stm32/lib/uart2/Inc/uart2.h \
  ../Drivers/CMSIS_DSP/Include/dsp/filtering_functions.h \
  ../Drivers/CMSIS_DSP/Include/arm_math_types.h \
  ../Drivers/CMSIS/Include/cmsis_compiler.h \
@@ -61,7 +61,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
-C:/Users/tynix/Development/stm32_workspace/lib/uart2/Inc/uart2.h:
+C:/Users/tynix/Development/stm32/lib/uart2/Inc/uart2.h:
 ../Drivers/CMSIS_DSP/Include/dsp/filtering_functions.h:
 ../Drivers/CMSIS_DSP/Include/arm_math_types.h:
 ../Drivers/CMSIS/Include/cmsis_compiler.h:

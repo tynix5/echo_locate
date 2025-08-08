@@ -25,5 +25,6 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/CMSIS_DSP/Source/FilteringFunctions \
+Drivers/CMSIS_DSP/Source/SupportFunctions \
 Drivers/STM32F4xx_HAL_Driver/Src \
 
