@@ -26,7 +26,23 @@
 #define DECIMATION_SIZE		SAMPLE_SIZE / DECIMATION_M
 
 #define THRESH_EVENT		2000
-#define EVENT_DEBOUNCE_TIME	100
+#define EVENT_DB_TIME		0.1					// wait 100ms between updates
+
+#define SAMPLE_FREQ			40000
+#define SAMPLE_PERIOD		1.0 / SAMPLE_FREQ
+
+// account for temperature based changes later
+#define SPEED_OF_SOUND		343
+
+// distances in meters
+#define MIC0_XPOS			0
+#define MIC0_YPOS			0
+#define MIC1_XPOS			0
+#define MIC1_YPOS			1
+#define MIC2_XPOS			1
+#define MIC2_YPOS			1
+
+// mic0 is the reference mic
 
 
 /*
@@ -82,12 +98,12 @@ uint8_t mic_detected_event[3] = {0};
 void sysclock_config(void);
 void adc1_dma_config(void);
 void tim2_trig_config(void);
-void tim5_time_config(void);
 void stream_splice(void);
 void find_filter_peaks(q15_t * mic0_filtered, q15_t * mic1_filtered, q15_t * mic2_filtered,
 						uint16_t * mic0_ind, uint16_t * mic1_ind, uint16_t * mic2_ind);
-uint32_t tim5_get_time(void);
-
+void compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
+					   float mic1_x, float mic1_y, float mic2_x, float mic2_y,
+					   float mic1_delay, float mic2_delay);
 
 int main(void)
 {
@@ -107,9 +123,8 @@ int main(void)
 	q15_t mic2_filtered[DECIMATION_SIZE];
 
 	uart2_set_fcpu(84000000);
-	uart2_config(115200, USART_DATA_8, USART_STOP_1);
+	uart2_dma1_config(115200, USART_DATA_8, USART_STOP_1);
 
-	tim5_time_config();
 	tim2_trig_config();
 	adc1_dma_config();
 
@@ -119,12 +134,10 @@ int main(void)
 	GPIOA->MODER &= ~GPIO_MODER_MODER8;
 	GPIOA->MODER |= GPIO_MODER_MODER8_0;
 
-	uint32_t mic0_timestamp = 0, mic1_timestamp = 0, mic2_timestamp = 0;
+	float mic0_timestamp = 0, mic1_timestamp = 0, mic2_timestamp = 0;
 
-	uint32_t event_timestamp = 0;				// time stamp of first microphone event
-	uint8_t event_cnt = 0;						// number of microphones that have detected an event
-	uint8_t prev_event_cnt = 0;
-
+	uint8_t detection_cnt = 0;						// number of microphones that have detected an event
+	uint32_t sample_cnt = 0;						// # of samples collected
 
 	while (1)
 	{
@@ -138,6 +151,8 @@ int main(void)
 		stream_splice();
 
 		GPIOA->ODR |= GPIO_ODR_OD8;
+
+		// Cross correlation instead of filtering?
 		arm_fir_decimate_fast_q15(&hfir0, mic0_samp, mic0_filtered, SAMPLE_SIZE);
 		arm_fir_decimate_fast_q15(&hfir1, mic1_samp, mic1_filtered, SAMPLE_SIZE);
 		arm_fir_decimate_fast_q15(&hfir2, mic2_samp, mic2_filtered, SAMPLE_SIZE);
@@ -145,106 +160,69 @@ int main(void)
 		uint16_t mic0_max, mic1_max, mic2_max;			// hold indices of max values in filtered sample (0-DECIMATION_SIZE)
 		find_filter_peaks(mic0_filtered, mic1_filtered, mic2_filtered, &mic0_max, &mic1_max, &mic2_max);
 
+		float sample_based_time = sample_cnt * SAMPLE_PERIOD;
 		// if a new event has been detected, update time stamps and event count
-		if ((abs(mic0_filtered[mic0_max]) > THRESH_EVENT) && (tim5_get_time() - mic0_timestamp > EVENT_DEBOUNCE_TIME))
+		if ((abs(mic0_filtered[mic0_max]) > THRESH_EVENT) && (sample_based_time - mic0_timestamp > EVENT_DB_TIME))
 		{
-			mic0_timestamp = tim5_get_time();
+			mic0_timestamp = (sample_cnt + mic0_max) * SAMPLE_PERIOD;
 			mic_detected_event[0] = 1;
-			event_cnt++;
-
-			// if this is the first mic to detect the event, time stamp its start
-			if (event_cnt == 1)
-			{
-				event_timestamp = mic0_timestamp;
-			}
+			detection_cnt++;
 		}
 
-		if ((abs(mic1_filtered[mic1_max]) > THRESH_EVENT) && (tim5_get_time() - mic1_timestamp > EVENT_DEBOUNCE_TIME))
+		if ((abs(mic1_filtered[mic1_max]) > THRESH_EVENT) && (sample_based_time - mic1_timestamp > EVENT_DB_TIME))
 		{
-			mic1_timestamp = tim5_get_time();
+			// account for sample delay later
+			mic1_timestamp = (sample_cnt + mic1_max) * SAMPLE_PERIOD;
 			mic_detected_event[1] = 1;
-			event_cnt++;
-
-			// if this is the first mic to detect the event, time stamp its start
-			if (event_cnt == 1)
-			{
-				event_timestamp = mic1_timestamp;
-			}
+			detection_cnt++;
 		}
 
-		if ((abs(mic2_filtered[mic2_max]) > THRESH_EVENT) && (tim5_get_time() - mic2_timestamp > EVENT_DEBOUNCE_TIME))
+		if ((abs(mic2_filtered[mic2_max]) > THRESH_EVENT) && (sample_based_time - mic2_timestamp > EVENT_DB_TIME))
 		{
-			mic2_timestamp = tim5_get_time();
+			// account for sample delay later
+			mic2_timestamp = (sample_cnt + mic2_max) * SAMPLE_PERIOD;
 			mic_detected_event[2] = 1;
-			event_cnt++;
-
-			// if this is the first mic to detect the event, time stamp its start
-			if (event_cnt == 1)
-			{
-				event_timestamp = mic2_timestamp;
-			}
+			detection_cnt++;
 		}
 
 
-		if (event_cnt == 3)
+		if (detection_cnt >= 3)
 		{
-			if (mic_detected_event[0] && mic_detected_event[1] && mic_detected_event[2])
+			if (detection_cnt == 3 && mic_detected_event[0] && mic_detected_event[1] && mic_detected_event[2])
 			{
 				// GOOD state
+				// mic0 is the reference
+				float mic1_delay = mic1_timestamp - mic0_timestamp;
+				float mic2_delay = mic2_timestamp - mic0_timestamp;
+
+				// x, y coordinates of event
+				union {
+					float coords_f[2];			// (x, y)
+					uint8_t serial[8];
+				} coords;
+
+				// initial guess
+				coords.coords_f[0] = 0.3;
+				coords.coords_f[1] = 0.5;
+
+				compute_event_pos(&coords.coords_f[0], &coords.coords_f[1], MIC0_XPOS, MIC0_YPOS, MIC1_XPOS, MIC1_YPOS, MIC2_XPOS, MIC2_YPOS, mic1_delay, mic2_delay);
+				uart2_dma1_write(8, coords.serial);
 			}
 			else
 			{
 				// ERROR state
-				event_cnt = 0;
-				mic_detected_event[0] = 0;
-				mic_detected_event[1] = 0;
-				mic_detected_event[2] = 0;
 			}
+
+			// reset event detection
+			detection_cnt = 0;
+			mic_detected_event[0] = 0;
+			mic_detected_event[1] = 0;
+			mic_detected_event[2] = 0;
 		}
 
+		sample_cnt += SAMPLE_SIZE;
 
 		GPIOA->ODR &= ~GPIO_ODR_OD8;
-
-//		uint8_t str[7];
-//
-//		for (uint32_t i = 0; i < DECIMATION_SIZE; i++)
-//		{
-//			uint16_t temp = abs(mic0_filtered[i]);
-//			if (mic0_filtered[i] < 0)
-//			{
-//				str[0] = '-';
-//				str[1] = temp / 10000 + '0';
-//				str[2] = temp / 1000 % 10 + '0';
-//				str[3] = temp / 100 % 10 + '0';
-//				str[4] = temp / 10 % 10 + '0';
-//				str[5] = temp % 10 + '0';
-//				str[6] = '\r';
-//			}
-//			else
-//			{
-//				str[0] = ' ';
-//				str[1] = temp / 10000 + '0';
-//				str[2] = temp / 1000 % 10 + '0';
-//				str[3] = temp / 100 % 10 + '0';
-//				str[4] = temp / 10 % 10 + '0';
-//				str[5] = temp % 10 + '0';
-//				str[6] = '\r';
-//			}
-//
-//			str[4] = ',';
-//			str[5] = ' ';
-//			str[6] = (uint16_t) mic1_filtered[i] / 1000 + '0';
-//			str[7] = (uint16_t) mic1_filtered[i] / 100 % 10 + '0';
-//			str[8] = (uint16_t) mic1_filtered[i] / 10 % 10 + '0';
-//			str[9] = (uint16_t) mic1_filtered[i] % 10 + '0';
-//			str[10] = ',';
-//			str[11] = ' ';
-//			str[12] = (uint16_t) mic2_filtered[i] / 1000 + '0';
-//			str[13] = (uint16_t) mic2_filtered[i] / 100 % 10 + '0';
-//			str[14] = (uint16_t) mic2_filtered[i] / 10 % 10 + '0';
-//			str[15] = (uint16_t) mic2_filtered[i] % 10 + '0';
-//			str[16] = '\r';
-//		}
 	}
 }
 
@@ -338,9 +316,8 @@ void adc1_dma_config(void)
 	// EOC bit set at end of each sequence of regular conversions
 	ADC1->CR2 &= ~ADC_CR2_EOCS;
 
-	// 28 cycles before sample
+	// 3 cycles before sample
 	ADC1->SMPR2 &= ~(ADC_SMPR2_SMP0 | ADC_SMPR2_SMP1 | ADC_SMPR2_SMP2);
-//	ADC1->SMPR2 |= ADC_SMPR2_SMP0_1 | ADC_SMPR2_SMP1_1 | ADC_SMPR2_SMP2_1;
 
 	// 3 conversions per sequence
 	ADC1->SQR1 &= ~ADC_SQR1_L;
@@ -431,19 +408,6 @@ void tim2_trig_config(void)
 	TIM2->CR1 |= TIM_CR1_CEN;			// enable counter
 }
 
-void tim5_time_config(void)
-{
-	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;		// enable TIM5 clock
-
-	TIM5->CR1 &= ~(TIM_CR1_DIR | TIM_CR1_CEN);		// upcounter, disable counting
-	TIM5->PSC = 0;						// /1 prescaler
-	TIM5->ARR = 839;					// 100kHz frequency
-
-	TIM5->EGR |= TIM_EGR_UG;			// generate update event
-
-	TIM5->CR1 |= TIM_CR1_CEN;			// enable counter
-}
-
 void stream_splice(void)
 {
 	for (uint32_t i = 0; i < BLOCK_SIZE; i += 3)
@@ -490,9 +454,58 @@ void find_filter_peaks(q15_t * mic0_filtered, q15_t * mic1_filtered, q15_t * mic
 	}
 }
 
-uint32_t tim5_get_time(void)
+void compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
+					   float mic1_x, float mic1_y, float mic2_x, float mic2_y,
+					   float mic1_delay, float mic2_delay)
 {
-	return TIM5->CNT;
+
+	for (uint8_t i = 0; i < 5; i++)
+	{
+		// distances from mic1 and mic2 to mic0
+		float d10 = SPEED_OF_SOUND * mic1_delay;
+		float d20 = SPEED_OF_SOUND * mic2_delay;
+
+		// compute radii of guesses
+		float r0 = sqrtf(powf(*x - mic0_x, 2) + powf(*y - mic0_y, 2));
+		float r1 = sqrtf(powf(*x - mic1_x, 2) + powf(*y - mic1_y, 2));
+		float r2 = sqrtf(powf(*x - mic2_x, 2) + powf(*y - mic2_y, 2));
+
+		// compute residuals (error)
+		// [f]
+		float res1 = r1 - r0 - d10;
+		float res2 = r2 - r0 - d20;
+
+		// create Jacobian
+		float j11 = (*x - mic1_x) / r1 - (*x - mic0_x) / r0;
+		float j12 = (*y - mic1_y) / r1 - (*y - mic0_y) / r0;
+		float j21 = (*x - mic2_x) / r2 - (*x - mic0_x) / r0;
+		float j22 = (*y - mic2_y) / r2 - (*y - mic0_y) / r0;
+
+		// ([J]^T)[J]
+		float prod11 = j11 * j11 + j21 * j21;
+		float prod12 = j11 * j12 + j21 * j22;
+		float prod21 = j12 * j11 + j22 * j21;
+		float prod22 = j12 * j12 + j22 * j22;
+
+		// ([J]^T)[f]
+		float g1 = j11 * res1 + j21 * res2;
+		float g2 = j12 * res1 + j22 * res2;
+
+		// solve system
+		// ([J]^T)[J]delta = -([J]^T)[f]
+		// delta = inv(([J]^T)[J]) * (-([J]^T)[f])
+		float det = prod11 * prod22 - prod12 * prod21;
+		if (fabsf(det) < 1e-6) break;
+
+		float dx = (-prod22 * g1 + prod12 * g2) / det;
+		float dy = (prod21 * g1 - prod11 * g1) / det;
+
+		*x += dx;
+		*y += dy;
+
+		if (sqrtf(dx * dx + dy * dy) < 1e-5) break;
+	}
+
 }
 
 
