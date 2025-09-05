@@ -26,10 +26,13 @@
 #define DECIMATION_SIZE		SAMPLE_SIZE / DECIMATION_M
 
 #define THRESH_EVENT		2000
+#define TIMEOUT_S			1
 #define EVENT_DB_TIME		0.1					// wait 100ms between updates
 
 #define SAMPLE_FREQ			40000
 #define SAMPLE_PERIOD		1.0 / SAMPLE_FREQ
+#define TIME_FREQ			100000
+#define TIME_PERIOD			1.0 / TIME_FREQ
 
 // account for temperature based changes later
 #define SPEED_OF_SOUND		343
@@ -98,6 +101,7 @@ uint8_t mic_detected_event[3] = {0};
 void sysclock_config(void);
 void adc1_dma_config(void);
 void tim2_trig_config(void);
+void tim5_time_config(void);
 void stream_splice(void);
 void find_filter_peaks(q15_t * mic0_filtered, q15_t * mic1_filtered, q15_t * mic2_filtered,
 						uint16_t * mic0_ind, uint16_t * mic1_ind, uint16_t * mic2_ind);
@@ -125,32 +129,39 @@ int main(void)
 	uart2_set_fcpu(84000000);
 	uart2_dma1_config(115200, USART_DATA_8, USART_STOP_1);
 
+	tim5_time_config();
+
 	tim2_trig_config();
 	adc1_dma_config();
 
-	GPIOA->MODER &= ~GPIO_MODER_MODER10;
-	GPIOA->MODER |= GPIO_MODER_MODER10_0;
-
-	GPIOA->MODER &= ~GPIO_MODER_MODER8;
-	GPIOA->MODER |= GPIO_MODER_MODER8_0;
+//	GPIOA->MODER &= ~GPIO_MODER_MODER10;
+//	GPIOA->MODER |= GPIO_MODER_MODER10_0;
+//
+//	GPIOA->MODER &= ~GPIO_MODER_MODER8;
+//	GPIOA->MODER |= GPIO_MODER_MODER8_0;
 
 	float mic0_timestamp = 0, mic1_timestamp = 0, mic2_timestamp = 0;
+	float last_event_timestamp = 0;
 
 	uint8_t detection_cnt = 0;						// number of microphones that have detected an event
 	uint32_t sample_cnt = 0;						// # of samples collected
 
+	uint32_t prev_cnt = 0, this_cnt = 0;
+
 	while (1)
 	{
 
-		GPIOA->ODR |= GPIO_ODR_OD10;
+//		GPIOA->ODR |= GPIO_ODR_OD10;
 		while (!!(DMA2_Stream0->CR & DMA_SxCR_CT) == dma_tgt);		// wait for stream to complete
-		GPIOA->ODR &= ~GPIO_ODR_OD10;
+		prev_cnt = this_cnt;
+		this_cnt = TIM5->CNT;
+//		GPIOA->ODR &= ~GPIO_ODR_OD10;
 		dma_tgt = !dma_tgt;								// switch DMA targets
 		DMA2->LIFCR |= DMA_LIFCR_CTCIF0 | DMA_LIFCR_CHTIF0;			// clear transfer complete and half complete flag
 
 		stream_splice();
 
-		GPIOA->ODR |= GPIO_ODR_OD8;
+//		GPIOA->ODR |= GPIO_ODR_OD8;
 
 		// Cross correlation instead of filtering?
 		arm_fir_decimate_fast_q15(&hfir0, mic0_samp, mic0_filtered, SAMPLE_SIZE);
@@ -164,27 +175,39 @@ int main(void)
 		// if a new event has been detected, update time stamps and event count
 		if ((abs(mic0_filtered[mic0_max]) > THRESH_EVENT) && (sample_based_time - mic0_timestamp > EVENT_DB_TIME))
 		{
-			mic0_timestamp = (sample_cnt + mic0_max) * SAMPLE_PERIOD;
+			mic0_timestamp = prev_cnt * TIME_PERIOD + mic0_max * SAMPLE_PERIOD * DECIMATION_M;
 			mic_detected_event[0] = 1;
 			detection_cnt++;
+			last_event_timestamp = mic0_timestamp;
 		}
 
 		if ((abs(mic1_filtered[mic1_max]) > THRESH_EVENT) && (sample_based_time - mic1_timestamp > EVENT_DB_TIME))
 		{
 			// account for sample delay later
-			mic1_timestamp = (sample_cnt + mic1_max) * SAMPLE_PERIOD;
+			mic1_timestamp = prev_cnt * TIME_PERIOD + mic1_max * SAMPLE_PERIOD * DECIMATION_M;
 			mic_detected_event[1] = 1;
 			detection_cnt++;
+			last_event_timestamp = mic1_timestamp;
 		}
 
 		if ((abs(mic2_filtered[mic2_max]) > THRESH_EVENT) && (sample_based_time - mic2_timestamp > EVENT_DB_TIME))
 		{
 			// account for sample delay later
-			mic2_timestamp = (sample_cnt + mic2_max) * SAMPLE_PERIOD;
+			mic2_timestamp = prev_cnt * TIME_PERIOD + mic2_max * SAMPLE_PERIOD * DECIMATION_M;
 			mic_detected_event[2] = 1;
 			detection_cnt++;
+			last_event_timestamp = mic2_timestamp;
 		}
 
+		/* Testing
+		detection_cnt = 3;
+		mic0_timestamp = sqrt(2) / SPEED_OF_SOUND;
+		mic1_timestamp = 1.0 / SPEED_OF_SOUND;
+		mic2_timestamp = 0;
+		mic_detected_event[0] = 1;
+		mic_detected_event[1] = 1;
+		mic_detected_event[2] = 1;
+		*/
 
 		if (detection_cnt >= 3)
 		{
@@ -202,8 +225,8 @@ int main(void)
 				} coords;
 
 				// initial guess
-				coords.coords_f[0] = 0.3;
-				coords.coords_f[1] = 0.5;
+				coords.coords_f[0] = 0.23;
+				coords.coords_f[1] = 0.38;
 
 				compute_event_pos(&coords.coords_f[0], &coords.coords_f[1], MIC0_XPOS, MIC0_YPOS, MIC1_XPOS, MIC1_YPOS, MIC2_XPOS, MIC2_YPOS, mic1_delay, mic2_delay);
 				uart2_dma1_write(8, coords.serial);
@@ -219,10 +242,18 @@ int main(void)
 			mic_detected_event[1] = 0;
 			mic_detected_event[2] = 0;
 		}
+		else if (detection_cnt != 0 && sample_based_time - last_event_timestamp > TIMEOUT_S)
+		{
+			detection_cnt = 0;
+			mic_detected_event[0] = 0;
+			mic_detected_event[1] = 0;
+			mic_detected_event[2] = 0;
+		}
+
 
 		sample_cnt += SAMPLE_SIZE;
 
-		GPIOA->ODR &= ~GPIO_ODR_OD8;
+//		GPIOA->ODR &= ~GPIO_ODR_OD8;
 	}
 }
 
@@ -408,6 +439,19 @@ void tim2_trig_config(void)
 	TIM2->CR1 |= TIM_CR1_CEN;			// enable counter
 }
 
+void tim5_time_config(void)
+{
+	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;				// enable TIM2 clock
+
+	TIM5->CR1 &= ~TIM_CR1_DIR;			// upcounting
+	TIM5->PSC = 839;					// 100kHz frequency
+	TIM5->ARR = 0xffffffff;
+
+	TIM5->EGR |= TIM_EGR_UG;			// generate update event
+
+	TIM5->CR1 |= TIM_CR1_CEN;			// enable counter
+}
+
 void stream_splice(void)
 {
 	for (uint32_t i = 0; i < BLOCK_SIZE; i += 3)
@@ -459,7 +503,7 @@ void compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 					   float mic1_delay, float mic2_delay)
 {
 
-	for (uint8_t i = 0; i < 5; i++)
+	for (uint8_t i = 0; i < 10; i++)
 	{
 		// distances from mic1 and mic2 to mic0
 		float d10 = SPEED_OF_SOUND * mic1_delay;
@@ -469,6 +513,8 @@ void compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 		float r0 = sqrtf(powf(*x - mic0_x, 2) + powf(*y - mic0_y, 2));
 		float r1 = sqrtf(powf(*x - mic1_x, 2) + powf(*y - mic1_y, 2));
 		float r2 = sqrtf(powf(*x - mic2_x, 2) + powf(*y - mic2_y, 2));
+
+		if (r0 == 0 || r1 == 0 || r2 == 0) break;
 
 		// compute residuals (error)
 		// [f]
@@ -498,7 +544,7 @@ void compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 		if (fabsf(det) < 1e-6) break;
 
 		float dx = (-prod22 * g1 + prod12 * g2) / det;
-		float dy = (prod21 * g1 - prod11 * g1) / det;
+		float dy = (prod21 * g1 - prod11 * g2) / det;
 
 		*x += dx;
 		*y += dy;
