@@ -624,36 +624,6 @@ Discarded input sections
  .text          0x00000000       0x14 ./Core/Startup/startup_stm32f401retx.o
  .data          0x00000000        0x0 ./Core/Startup/startup_stm32f401retx.o
  .bss           0x00000000        0x0 ./Core/Startup/startup_stm32f401retx.o
- .group         0x00000000        0xc ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .text          0x00000000        0x0 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .data          0x00000000        0x0 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .bss           0x00000000        0x0 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .debug_info    0x00000000       0x22 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .debug_abbrev  0x00000000       0x12 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .debug_aranges
-                0x00000000       0x18 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .debug_macro   0x00000000       0x11 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .debug_macro   0x00000000      0xad8 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .debug_line    0x00000000       0x64 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .debug_str     0x00000000     0x2eb2 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .comment       0x00000000       0x44 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .ARM.attributes
-                0x00000000       0x34 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
- .group         0x00000000        0xc ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .text          0x00000000        0x0 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .data          0x00000000        0x0 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .bss           0x00000000        0x0 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_info    0x00000000       0x22 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_abbrev  0x00000000       0x12 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_aranges
-                0x00000000       0x18 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_macro   0x00000000       0x11 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_macro   0x00000000      0xad8 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_line    0x00000000       0x67 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_str     0x00000000     0x2eb5 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .comment       0x00000000       0x44 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
- .ARM.attributes
-                0x00000000       0x34 ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
  .group         0x00000000        0xc ./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_32x64_init_q31.o
  .group         0x00000000        0xc ./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_32x64_init_q31.o
  .group         0x00000000        0xc ./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_32x64_init_q31.o
@@ -16396,7 +16366,7 @@ Discarded input sections
  .text          0x00000000        0x0 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o
  .data          0x00000000        0x0 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o
  .bss           0x00000000        0x0 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o
- .bss.pFlash    0x00000000       0x20 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o
+ .data.pFlash   0x00000000       0x20 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o
  .text.HAL_FLASH_Program
                 0x00000000       0xa4 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o
  .text.HAL_FLASH_Program_IT
@@ -17657,8 +17627,6 @@ LOAD ./Core/Src/syscalls.o
 LOAD ./Core/Src/sysmem.o
 LOAD ./Core/Src/system_stm32f4xx.o
 LOAD ./Core/Startup/startup_stm32f401retx.o
-LOAD ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o
-LOAD ./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o
 LOAD ./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_32x64_init_q31.o
 LOAD ./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_32x64_q31.o
 LOAD ./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_f16.o

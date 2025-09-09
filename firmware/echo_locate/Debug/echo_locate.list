@@ -890,7 +890,7 @@ int main(void)
 	q15_t mic1_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
 	q15_t mic2_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
 
-	arm_fir_decimate_init_q15(&hfir0, NUM_FILTER_TAPS, 4, ftaps_q15, mic0_state, SAMPLE_SIZE);
+	arm_fir_decimate_init_q15(&hfir0, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic0_state, SAMPLE_SIZE);
  8000b34:	2330      	movs	r3, #48	@ 0x30
  8000b36:	9301      	str	r3, [sp, #4]
  8000b38:	f507 73e8 	add.w	r3, r7, #464	@ 0x1d0
@@ -900,7 +900,7 @@ int main(void)
  8000b42:	212e      	movs	r1, #46	@ 0x2e
  8000b44:	48cf      	ldr	r0, [pc, #828]	@ (8000e84 <main+0x35c>)
  8000b46:	f001 f9f6 	bl	8001f36 <arm_fir_decimate_init_q15>
-	arm_fir_decimate_init_q15(&hfir1, NUM_FILTER_TAPS, 4, ftaps_q15, mic1_state, SAMPLE_SIZE);
+	arm_fir_decimate_init_q15(&hfir1, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic1_state, SAMPLE_SIZE);
  8000b4a:	2330      	movs	r3, #48	@ 0x30
  8000b4c:	9301      	str	r3, [sp, #4]
  8000b4e:	f507 738a 	add.w	r3, r7, #276	@ 0x114
@@ -910,7 +910,7 @@ int main(void)
  8000b58:	212e      	movs	r1, #46	@ 0x2e
  8000b5a:	48cb      	ldr	r0, [pc, #812]	@ (8000e88 <main+0x360>)
  8000b5c:	f001 f9eb 	bl	8001f36 <arm_fir_decimate_init_q15>
-	arm_fir_decimate_init_q15(&hfir2, NUM_FILTER_TAPS, 4, ftaps_q15, mic2_state, SAMPLE_SIZE);
+	arm_fir_decimate_init_q15(&hfir2, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic2_state, SAMPLE_SIZE);
  8000b60:	2330      	movs	r3, #48	@ 0x30
  8000b62:	9301      	str	r3, [sp, #4]
  8000b64:	f107 0358 	add.w	r3, r7, #88	@ 0x58

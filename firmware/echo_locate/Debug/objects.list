@@ -5,8 +5,6 @@
 "./Core/Src/sysmem.o"
 "./Core/Src/system_stm32f4xx.o"
 "./Core/Startup/startup_stm32f401retx.o"
-"./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctions.o"
-"./Drivers/CMSIS_DSP/Source/FilteringFunctions/FilteringFunctionsF16.o"
 "./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_32x64_init_q31.o"
 "./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_32x64_q31.o"
 "./Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_biquad_cascade_df1_f16.o"
