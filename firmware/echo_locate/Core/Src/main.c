@@ -45,8 +45,6 @@
 #define MIC2_XPOS			1
 #define MIC2_YPOS			1
 
-// mic0 is the reference mic
-
 
 /*
 
@@ -84,27 +82,29 @@ q15_t const ftaps_q15[NUM_FILTER_TAPS] = {
 		  -1129, 1091, 514, 1444, -1481, 426, 958, -1182, 0
 };
 
-arm_fir_decimate_instance_q15 hfir0;
-arm_fir_decimate_instance_q15 hfir1;
-arm_fir_decimate_instance_q15 hfir2;
+arm_fir_decimate_instance_q15 hfir0, hfir1, hfir2;
 
-uint16_t stream0[BLOCK_SIZE];
-uint16_t stream1[BLOCK_SIZE];
-q15_t mic0_samp[SAMPLE_SIZE];
-q15_t mic1_samp[SAMPLE_SIZE];
-q15_t mic2_samp[SAMPLE_SIZE];
+uint16_t stream0[BLOCK_SIZE], stream1[BLOCK_SIZE];
+q15_t mic0_samp[SAMPLE_SIZE], mic1_samp[SAMPLE_SIZE], mic2_samp[SAMPLE_SIZE];
 
 uint8_t dma_tgt = 0;				// M0AR written to first
 
 uint8_t mic_detected_event[3] = {0};
 
+/* Configure clock for 84 MHz */
 void sysclock_config(void);
+/* Configure ADC1 for channel group ADC0, ADC1, ADC2 streamed to DMA2 */
 void adc1_dma_config(void);
+/* 40 kHz timer configure for ADC1 */
 void tim2_trig_config(void);
+/* 100 kHz global timer */
 void tim5_time_config(void);
+/* Split DMA stream into separate mic streams */
 void stream_splice(void);
+/* Find index of maximum filter peaks for each channel */
 void find_filter_peaks(q15_t * mic0_filtered, q15_t * mic1_filtered, q15_t * mic2_filtered,
 						uint16_t * mic0_ind, uint16_t * mic1_ind, uint16_t * mic2_ind);
+/* Compute x and y coordinates of event using trilateration */
 void compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 					   float mic1_x, float mic1_y, float mic2_x, float mic2_y,
 					   float mic1_delay, float mic2_delay);
@@ -118,9 +118,9 @@ int main(void)
 	q15_t mic1_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
 	q15_t mic2_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
 
-	arm_fir_decimate_init_q15(&hfir0, NUM_FILTER_TAPS, 4, ftaps_q15, mic0_state, SAMPLE_SIZE);
-	arm_fir_decimate_init_q15(&hfir1, NUM_FILTER_TAPS, 4, ftaps_q15, mic1_state, SAMPLE_SIZE);
-	arm_fir_decimate_init_q15(&hfir2, NUM_FILTER_TAPS, 4, ftaps_q15, mic2_state, SAMPLE_SIZE);
+	arm_fir_decimate_init_q15(&hfir0, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic0_state, SAMPLE_SIZE);
+	arm_fir_decimate_init_q15(&hfir1, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic1_state, SAMPLE_SIZE);
+	arm_fir_decimate_init_q15(&hfir2, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic2_state, SAMPLE_SIZE);
 
 	q15_t mic0_filtered[DECIMATION_SIZE];
 	q15_t mic1_filtered[DECIMATION_SIZE];

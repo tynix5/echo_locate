@@ -1,0 +1,7 @@
+.settings
+.cproject
+.mxproject
+.project
+*.ld
+*.ioc
+*.launch
