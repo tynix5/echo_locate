@@ -20,22 +20,21 @@
 #include <stdlib.h>
 
 #define NUM_FILTER_TAPS		46
-#define BLOCK_SIZE			144
-#define SAMPLE_SIZE			BLOCK_SIZE / 3
-#define DECIMATION_M		4
+#define BLOCK_SIZE			144								// Total samples from ADC before switching DMA targets
+#define SAMPLE_SIZE			BLOCK_SIZE / 3					// Samples per microphone before switching DMA targets
+#define DECIMATION_M		4								// Take every 4th sample
 #define DECIMATION_SIZE		SAMPLE_SIZE / DECIMATION_M
 
-#define THRESH_EVENT		2000
-#define TIMEOUT_S			1
-#define EVENT_DB_TIME		0.1					// wait 100ms between updates
+#define ENERGY_THRESH		2000							// Detected event energy threshold
+#define TIMEOUT_S			1								// Timeout before resetting microphone detections
+#define EVENT_DB_TIME		0.1								// wait 100ms between position updates
 
-#define SAMPLE_FREQ			40000
+#define SAMPLE_FREQ			40000							// ADC group sample rate
 #define SAMPLE_PERIOD		1.0 / SAMPLE_FREQ
-#define TIME_FREQ			100000
+#define TIME_FREQ			100000							// Global timer frequency
 #define TIME_PERIOD			1.0 / TIME_FREQ
 
-// account for temperature based changes later
-#define SPEED_OF_SOUND		343
+#define SPEED_OF_SOUND		343								// speed is in meters/second
 
 // distances in meters
 #define MIC0_XPOS			0
@@ -84,22 +83,22 @@ q15_t const ftaps_q15[NUM_FILTER_TAPS] = {
 
 arm_fir_decimate_instance_q15 hfir0, hfir1, hfir2;
 
-uint16_t stream0[BLOCK_SIZE], stream1[BLOCK_SIZE];
-q15_t mic0_samp[SAMPLE_SIZE], mic1_samp[SAMPLE_SIZE], mic2_samp[SAMPLE_SIZE];
+uint16_t stream0[BLOCK_SIZE], stream1[BLOCK_SIZE];									// raw data streams from DMA buffers
+q15_t mic0_samp[SAMPLE_SIZE], mic1_samp[SAMPLE_SIZE], mic2_samp[SAMPLE_SIZE];		// spliced microphone sample streams
 
 uint8_t dma_tgt = 0;				// M0AR written to first
 
 uint8_t mic_detected_event[3] = {0};
 
-/* Configure clock for 84 MHz */
+/* Configure system clock for 84 MHz */
 void sysclock_config(void);
-/* Configure ADC1 for channel group ADC0, ADC1, ADC2 streamed to DMA2 */
+/* Configure ADC1 to trigger via TIM2, and sample normal group ADC0, ADC1, and ADC2, streaming to DMA2 in double-buffer mode */
 void adc1_dma_config(void);
-/* 40 kHz timer configure for ADC1 */
+/* 40 kHz trigger timer for ADC1 */
 void tim2_trig_config(void);
 /* 100 kHz global timer */
 void tim5_time_config(void);
-/* Split DMA stream into separate mic streams */
+/* Split DMA stream into separate microphone streams */
 void stream_splice(void);
 /* Find index of maximum filter peaks for each channel */
 void find_filter_peaks(q15_t * mic0_filtered, q15_t * mic1_filtered, q15_t * mic2_filtered,
@@ -122,6 +121,7 @@ int main(void)
 	arm_fir_decimate_init_q15(&hfir1, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic1_state, SAMPLE_SIZE);
 	arm_fir_decimate_init_q15(&hfir2, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic2_state, SAMPLE_SIZE);
 
+	// sampled, filtered, and decimated microphone streams
 	q15_t mic0_filtered[DECIMATION_SIZE];
 	q15_t mic1_filtered[DECIMATION_SIZE];
 	q15_t mic2_filtered[DECIMATION_SIZE];
@@ -141,22 +141,21 @@ int main(void)
 //	GPIOA->MODER |= GPIO_MODER_MODER8_0;
 
 	float mic0_timestamp = 0, mic1_timestamp = 0, mic2_timestamp = 0;
-	float last_event_timestamp = 0;
+	float prev_timestamp = 0;
 
-	uint8_t detection_cnt = 0;						// number of microphones that have detected an event
-	uint32_t sample_cnt = 0;						// # of samples collected
+	uint8_t detection_cnt = 0;						// # of microphones that have detected an event
 
-	uint32_t prev_cnt = 0, this_cnt = 0;
+	uint32_t prev_ticks = 0, ticks = 0;
 
 	while (1)
 	{
 
 //		GPIOA->ODR |= GPIO_ODR_OD10;
 		while (!!(DMA2_Stream0->CR & DMA_SxCR_CT) == dma_tgt);		// wait for stream to complete
-		prev_cnt = this_cnt;
-		this_cnt = TIM5->CNT;
+		prev_ticks = ticks;
+		ticks = TIM5->CNT;
 //		GPIOA->ODR &= ~GPIO_ODR_OD10;
-		dma_tgt = !dma_tgt;								// switch DMA targets
+		dma_tgt = !dma_tgt;											// switch DMA targets
 		DMA2->LIFCR |= DMA_LIFCR_CTCIF0 | DMA_LIFCR_CHTIF0;			// clear transfer complete and half complete flag
 
 		stream_splice();
@@ -168,35 +167,37 @@ int main(void)
 		arm_fir_decimate_fast_q15(&hfir1, mic1_samp, mic1_filtered, SAMPLE_SIZE);
 		arm_fir_decimate_fast_q15(&hfir2, mic2_samp, mic2_filtered, SAMPLE_SIZE);
 
-		uint16_t mic0_max, mic1_max, mic2_max;			// hold indices of max values in filtered sample (0-DECIMATION_SIZE)
-		find_filter_peaks(mic0_filtered, mic1_filtered, mic2_filtered, &mic0_max, &mic1_max, &mic2_max);
+		uint16_t mic0_max_ind, mic1_max_ind, mic2_max_ind;			// hold indices of max values in filtered sample (0-DECIMATION_SIZE)
+		find_filter_peaks(mic0_filtered, mic1_filtered, mic2_filtered, &mic0_max_ind, &mic1_max_ind, &mic2_max_ind);
 
-		float sample_based_time = sample_cnt * SAMPLE_PERIOD;
+		// reference time is based on # of samples
+		float ref_time = prev_ticks * TIME_PERIOD;
+
 		// if a new event has been detected, update time stamps and event count
-		if ((abs(mic0_filtered[mic0_max]) > THRESH_EVENT) && (sample_based_time - mic0_timestamp > EVENT_DB_TIME))
+		if ((abs(mic0_filtered[mic0_max_ind]) > ENERGY_THRESH) && (ref_time - mic0_timestamp > EVENT_DB_TIME))
 		{
-			mic0_timestamp = prev_cnt * TIME_PERIOD + mic0_max * SAMPLE_PERIOD * DECIMATION_M;
+			mic0_timestamp = prev_ticks * TIME_PERIOD + mic0_max_ind * SAMPLE_PERIOD * DECIMATION_M;
 			mic_detected_event[0] = 1;
 			detection_cnt++;
-			last_event_timestamp = mic0_timestamp;
+			prev_timestamp = mic0_timestamp;
 		}
 
-		if ((abs(mic1_filtered[mic1_max]) > THRESH_EVENT) && (sample_based_time - mic1_timestamp > EVENT_DB_TIME))
+		if ((abs(mic1_filtered[mic1_max_ind]) > ENERGY_THRESH) && (ref_time - mic1_timestamp > EVENT_DB_TIME))
 		{
 			// account for sample delay later
-			mic1_timestamp = prev_cnt * TIME_PERIOD + mic1_max * SAMPLE_PERIOD * DECIMATION_M;
+			mic1_timestamp = prev_ticks * TIME_PERIOD + mic1_max_ind * SAMPLE_PERIOD * DECIMATION_M;
 			mic_detected_event[1] = 1;
 			detection_cnt++;
-			last_event_timestamp = mic1_timestamp;
+			prev_timestamp = mic1_timestamp;
 		}
 
-		if ((abs(mic2_filtered[mic2_max]) > THRESH_EVENT) && (sample_based_time - mic2_timestamp > EVENT_DB_TIME))
+		if ((abs(mic2_filtered[mic2_max_ind]) > ENERGY_THRESH) && (ref_time - mic2_timestamp > EVENT_DB_TIME))
 		{
 			// account for sample delay later
-			mic2_timestamp = prev_cnt * TIME_PERIOD + mic2_max * SAMPLE_PERIOD * DECIMATION_M;
+			mic2_timestamp = prev_ticks * TIME_PERIOD + mic2_max_ind * SAMPLE_PERIOD * DECIMATION_M;
 			mic_detected_event[2] = 1;
 			detection_cnt++;
-			last_event_timestamp = mic2_timestamp;
+			prev_timestamp = mic2_timestamp;
 		}
 
 		/* Testing
@@ -242,17 +243,13 @@ int main(void)
 			mic_detected_event[1] = 0;
 			mic_detected_event[2] = 0;
 		}
-		else if (detection_cnt != 0 && sample_based_time - last_event_timestamp > TIMEOUT_S)
+		else if (detection_cnt != 0 && ref_time - prev_timestamp > TIMEOUT_S)
 		{
 			detection_cnt = 0;
 			mic_detected_event[0] = 0;
 			mic_detected_event[1] = 0;
 			mic_detected_event[2] = 0;
 		}
-
-
-		sample_cnt += SAMPLE_SIZE;
-
 //		GPIOA->ODR &= ~GPIO_ODR_OD8;
 	}
 }
