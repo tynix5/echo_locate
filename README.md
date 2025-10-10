@@ -4,17 +4,17 @@ A sound-based trilateratation system using a distributed array of microphones. T
 ## /firmware
 
 ### firmware/echo_locate
-    #### Core
-        - Contains the source (*Core/Src/main.c*) and include folders/files
-    #### Debug
-        - Contains binaries and linker files
-    #### Drivers
-        - Contains relevant CMSIS_DSP signal processing libraries
+#### Core
+    Contains the source (*Core/Src/main.c*) and include folders/files
+#### Debug
+    Contains binaries and linker files
+#### Drivers
+    Contains relevant CMSIS_DSP signal processing libraries
 
 ### firmware/scripts
-    - Python scripts for printing and graphing received event locations. Run using command *python plotter.py*
+    Python scripts for printing and graphing received event locations. Run using command *python plotter.py*
 ## /hardware
-    - Contains active bandpass-filter schematics and (future) PCB designs
+    Contains active bandpass-filter schematics and (future) PCB designs
 ## /misc
-    - Contains block diagram of core signal processing algorithm
+    Contains block diagram of core signal processing algorithm
 
