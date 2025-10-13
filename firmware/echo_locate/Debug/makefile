@@ -11,6 +11,7 @@ RM := rm -rf
 -include sources.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Drivers/CMSIS_DSP/Source/SupportFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/StatisticsFunctions/subdir.mk
 -include Drivers/CMSIS_DSP/Source/FilteringFunctions/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk

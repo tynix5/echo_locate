@@ -34,7 +34,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/CMSIS_DSP/Include/dsp/utils.h \
  ../Drivers/CMSIS_DSP/Include/dsp/support_functions.h \
  ../Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h \
- ../Drivers/CMSIS_DSP/Include/dsp/basic_math_functions.h
+ ../Drivers/CMSIS_DSP/Include/dsp/basic_math_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/statistics_functions.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -72,3 +73,4 @@ C:/Users/tynix/Development/stm32/lib/uart2/Inc/uart2.h:
 ../Drivers/CMSIS_DSP/Include/dsp/support_functions.h:
 ../Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h:
 ../Drivers/CMSIS_DSP/Include/dsp/basic_math_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/statistics_functions.h:
