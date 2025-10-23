@@ -21,26 +21,26 @@
 #include <stdlib.h>
 
 #define NUM_FILTER_TAPS		48
-#define BLOCK_SIZE			144								// Total samples from ADC before switching DMA targets
-#define SAMPLE_SIZE			BLOCK_SIZE / 3					// Samples per microphone before switching DMA targets
-#define DECIMATION_M		4								// Take every 4th sample
-#define DECIMATION_SIZE		SAMPLE_SIZE / DECIMATION_M
+#define BLOCK_SIZE			1440							// total samples from ADC before switching DMA targets
+#define SAMPLE_SIZE			(BLOCK_SIZE / 3)				// samples per microphone before switching DMA targets
 
-#define WINDOW_SIZE			7
-#define BUFFER_SIZE			SAMPLE_SIZE * WINDOW_SIZE
+#define SAMPLES_BEFORE_DET	10								// # of samples used before peak detection in cross correlation
+#define SAMPLES_AFTER_DET	189								// # of samples needed after first peak detection to compute cross correlation
+#define CORR_SIZE			(SAMPLES_BEFORE_DET + SAMPLES_AFTER_DET + 1)		// size of input window for correlation
+#define WINDOW_SIZE			2
+#define BUFFER_SIZE			WINDOW_SIZE * SAMPLE_SIZE
+#define CORR_LEN			2 * CORR_SIZE - 1				// correlation sequence length
 
-#define CORRELATION_SIZE	SAMPLE_SIZE * 4 - 1				// length of correlation sequence
+#define ENERGY_THRESH		2000							// detected event energy threshold
+#define TIMEOUT_S			0.05							// timeout before resetting microphone detections
+#define UPDATE_PERIOD		0.025							// delay between position updates
 
-#define ENERGY_THRESH		2000							// Detected event energy threshold
-#define TIMEOUT_S			0.05							// Timeout before resetting microphone detections
-#define EVENT_DB_TIME		0.05							// wait 50ms between position updates
+#define SAMPLE_FREQ			40000.0f						// ADC group sample rate
+#define SAMPLE_PERIOD		(1.0f / SAMPLE_FREQ)
+#define TIME_FREQ			100000.0f						// global timer frequency
+#define TIME_PERIOD			(1.0f / TIME_FREQ)
 
-#define SAMPLE_FREQ			40000							// ADC group sample rate
-#define SAMPLE_PERIOD		1.0 / SAMPLE_FREQ
-#define TIME_FREQ			100000							// Global timer frequency
-#define TIME_PERIOD			1.0 / TIME_FREQ
-
-#define SPEED_OF_SOUND		343								// speed is in meters/second
+#define SPEED_OF_SOUND		343								// m/s
 
 // distances in meters
 #define MIC0_XPOS			0
@@ -50,7 +50,7 @@
 #define MIC2_XPOS			1
 #define MIC2_YPOS			1
 
-#define MAX_TDOA			0.005							// maximum time difference (5 ms)
+#define MAX_TDOA			0.005f							// maximum time difference (5 ms)
 															// 0.005s * 343 m/s > sqrt(2) meters
 
 
@@ -100,7 +100,6 @@ q15_t mic0_samp[SAMPLE_SIZE], mic1_samp[SAMPLE_SIZE], mic2_samp[SAMPLE_SIZE];		/
 
 uint8_t dma_tgt = 0;				// M0AR written to first
 
-uint8_t mic_detected_event[3] = {0};
 
 /* Configure system clock for 84 MHz */
 void sysclock_config(void);
@@ -122,27 +121,18 @@ int main(void)
 
 	sysclock_config();
 
-	q15_t mic0_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
-	q15_t mic1_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
-	q15_t mic2_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
+	static q15_t mic0_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
+	static q15_t mic1_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
+	static q15_t mic2_state[NUM_FILTER_TAPS + SAMPLE_SIZE - 1];
 
-	/*
-	arm_fir_decimate_init_q15(&hfir0, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic0_state, SAMPLE_SIZE);
-	arm_fir_decimate_init_q15(&hfir1, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic1_state, SAMPLE_SIZE);
-	arm_fir_decimate_init_q15(&hfir2, NUM_FILTER_TAPS, DECIMATION_M, ftaps_q15, mic2_state, SAMPLE_SIZE);
-	*/
 	arm_fir_init_q15(&hfir0, NUM_FILTER_TAPS, ftaps_q15, mic0_state, SAMPLE_SIZE);
 	arm_fir_init_q15(&hfir1, NUM_FILTER_TAPS, ftaps_q15, mic1_state, SAMPLE_SIZE);
 	arm_fir_init_q15(&hfir2, NUM_FILTER_TAPS, ftaps_q15, mic2_state, SAMPLE_SIZE);
 
+	static q15_t mic0_buff[BUFFER_SIZE], mic1_buff[BUFFER_SIZE], mic2_buff[BUFFER_SIZE];
 
-	// sampled, decimated, and filtered microphone streams
-//	q15_t mic0_filt[DECIMATION_SIZE];
-//	q15_t mic1_filt[DECIMATION_SIZE];
-//	q15_t mic2_filt[DECIMATION_SIZE];
-	q15_t mic0_filt[SAMPLE_SIZE];
-	q15_t mic1_filt[SAMPLE_SIZE];
-	q15_t mic2_filt[SAMPLE_SIZE];
+	// sampled and filtered microphone streams
+	static q15_t mic0_filt[SAMPLE_SIZE], mic1_filt[SAMPLE_SIZE], mic2_filt[SAMPLE_SIZE];
 
 	uart2_set_fcpu(84000000);
 	uart2_dma1_config(115200, USART_DATA_8, USART_STOP_1);
@@ -158,191 +148,181 @@ int main(void)
 	GPIOA->MODER &= ~GPIO_MODER_MODER8;
 	GPIOA->MODER |= GPIO_MODER_MODER8_0;
 
-	float mic0_timestamp = 0, mic1_timestamp = 0, mic2_timestamp = 0;
-	float prev_timestamp = 0;
-
-	uint8_t detection_cnt = 0;						// # of microphones that have detected an event
-
 	uint32_t prev_ticks = 0, ticks = 0;
 
-	q15_t mic0_filt_max, mic1_filt_max, mic2_filt_max;		// holds max value in filtered samples
-	uint32_t mic0_max_ind, mic1_max_ind, mic2_max_ind;		// holds indices of max values in filtered samples (0-DECIMATION_SIZE)
+	uint8_t window_ind = 0;
 
-	q15_t mic0_buff[BUFFER_SIZE], mic1_buff[BUFFER_SIZE], mic2_buff[BUFFER_SIZE];
-
-	uint8_t ind = 0;
-	uint32_t mic0_event_ind, mic1_event_ind, mic2_event_ind;
+	float last_update = 0;
+	uint8_t detected_event = 0;								// has reference microphone detected an event?
+	uint32_t ref_sample = 0;
+	uint32_t samples = 0;
 
 	while (1)
 	{
-
 		GPIOA->ODR |= GPIO_ODR_OD10;
 		while (!!(DMA2_Stream0->CR & DMA_SxCR_CT) == dma_tgt);		// wait for stream to complete
 		prev_ticks = ticks;
 		ticks = TIM5->CNT;
+		samples += SAMPLE_SIZE;
 		GPIOA->ODR &= ~GPIO_ODR_OD10;
 		dma_tgt = !dma_tgt;											// switch DMA targets
 		DMA2->LIFCR |= DMA_LIFCR_CTCIF0 | DMA_LIFCR_CHTIF0;			// clear transfer complete and half complete flag
 
+		GPIOA->ODR |= GPIO_ODR_OD8;
 		stream_splice();
 
-		GPIOA->ODR |= GPIO_ODR_OD8;
-
-		// Cross correlation instead of filtering?
-		/*
-		arm_fir_decimate_fast_q15(&hfir0, mic0_samp, mic0_filt, SAMPLE_SIZE);
-		arm_fir_decimate_fast_q15(&hfir1, mic1_samp, mic1_filt, SAMPLE_SIZE);
-		arm_fir_decimate_fast_q15(&hfir2, mic2_samp, mic2_filt, SAMPLE_SIZE);
-		*/
-
+		// sanitize microphone streams with bandpass filter
 		arm_fir_fast_q15(&hfir0, mic0_samp, mic0_filt, SAMPLE_SIZE);
 		arm_fir_fast_q15(&hfir1, mic1_samp, mic1_filt, SAMPLE_SIZE);
 		arm_fir_fast_q15(&hfir2, mic2_samp, mic2_filt, SAMPLE_SIZE);
 
-		arm_copy_q15(mic0_samp, mic0_filt + ind * SAMPLE_SIZE, SAMPLE_SIZE);
-		arm_copy_q15(mic1_samp, mic1_filt + ind * SAMPLE_SIZE, SAMPLE_SIZE);
-		arm_copy_q15(mic2_samp, mic2_filt + ind * SAMPLE_SIZE, SAMPLE_SIZE);
+		// copy data to window buffers for cross correlation
+		arm_copy_q15(mic0_filt, mic0_buff + window_ind * SAMPLE_SIZE, SAMPLE_SIZE);
+		arm_copy_q15(mic1_filt, mic1_buff + window_ind * SAMPLE_SIZE, SAMPLE_SIZE);
+		arm_copy_q15(mic2_filt, mic2_buff + window_ind * SAMPLE_SIZE, SAMPLE_SIZE);
 
-
-
-		// find filter peaks and their indices
-		/*
-		arm_absmax_q15(mic0_filt, DECIMATION_SIZE, &mic0_filt_max, &mic0_max_ind);
-		arm_absmax_q15(mic1_filt, DECIMATION_SIZE, &mic1_filt_max, &mic1_max_ind);
-		arm_absmax_q15(mic2_filt, DECIMATION_SIZE, &mic2_filt_max, &mic2_max_ind);
-		*/
-		arm_absmax_q15(mic0_filt, SAMPLE_SIZE, &mic0_filt_max, &mic0_max_ind);
-		arm_absmax_q15(mic1_filt, SAMPLE_SIZE, &mic1_filt_max, &mic1_max_ind);
-		arm_absmax_q15(mic2_filt, SAMPLE_SIZE, &mic2_filt_max, &mic2_max_ind);
-
-
-		// reference time is based on # of samples
+		// reference time is based on # ticks since last DMA buffer started
 		float ref_time = prev_ticks * TIME_PERIOD;
 
-		// if a new event has been detected, update time stamps and event count
-		if ((abs(mic0_filt_max) > ENERGY_THRESH) && (ref_time - mic0_timestamp > EVENT_DB_TIME))
+		if (!detected_event && ref_time - last_update > UPDATE_PERIOD)
 		{
-//			mic0_timestamp = ref_time + mic0_max_ind * SAMPLE_PERIOD * DECIMATION_M;
-			mic0_timestamp = ref_time + mic0_max_ind * SAMPLE_PERIOD;
-			mic0_event_ind = mic0_max_ind + ind * SAMPLE_SIZE;
-			mic_detected_event[0] = 1;
-			detection_cnt++;
-			prev_timestamp = mic0_timestamp;
-		}
+			q15_t mic0_filt_peak, mic1_filt_peak, mic2_filt_peak;
+			uint32_t mic0_filt_peak_ind, mic1_filt_peak_ind, mic2_filt_peak_ind;
 
-		if ((abs(mic1_filt_max) > ENERGY_THRESH) && (ref_time - mic1_timestamp > EVENT_DB_TIME))
-		{
-			// account for sample delay later
-//			mic1_timestamp = ref_time + mic1_max_ind * SAMPLE_PERIOD * DECIMATION_M;
-			mic1_timestamp = ref_time + mic1_max_ind * SAMPLE_PERIOD;
-			mic1_event_ind = mic1_max_ind + ind * SAMPLE_SIZE;
-			mic_detected_event[1] = 1;
-			detection_cnt++;
-			prev_timestamp = mic1_timestamp;
-		}
+			// find peaks on microphone
+			arm_absmax_q15(mic0_filt, SAMPLE_SIZE, &mic0_filt_peak, &mic0_filt_peak_ind);
+			arm_absmax_q15(mic1_filt, SAMPLE_SIZE, &mic1_filt_peak, &mic1_filt_peak_ind);
+			arm_absmax_q15(mic2_filt, SAMPLE_SIZE, &mic2_filt_peak, &mic2_filt_peak_ind);
 
-		if ((abs(mic2_filt_max) > ENERGY_THRESH) && (ref_time - mic2_timestamp > EVENT_DB_TIME))
-		{
-			// account for sample delay later
-//			mic2_timestamp = ref_time + mic2_max_ind * SAMPLE_PERIOD * DECIMATION_M;
-			mic2_timestamp = ref_time + mic2_max_ind * SAMPLE_PERIOD;
-			mic2_event_ind = mic2_max_ind + ind * SAMPLE_SIZE;
-			mic_detected_event[2] = 1;
-			detection_cnt++;
-			prev_timestamp = mic2_timestamp;
-		}
-
-		/* Testing
-		detection_cnt = 3;
-		mic0_timestamp = sqrt(2) / SPEED_OF_SOUND;
-		mic1_timestamp = 1.0 / SPEED_OF_SOUND;
-		mic2_timestamp = 0;
-		mic_detected_event[0] = 1;
-		mic_detected_event[1] = 1;
-		mic_detected_event[2] = 1;
-		*/
-
-		if (detection_cnt >= 3)
-		{
-			if (detection_cnt == 3 && mic_detected_event[0] && mic_detected_event[1] && mic_detected_event[2])
+			// find first peak above threshold --> this index is the start of the cross correlation
+			if (mic0_filt_peak_ind < mic1_filt_peak_ind && mic0_filt_peak_ind < mic2_filt_peak_ind && abs(mic0_filt_peak) > ENERGY_THRESH)
 			{
-				// GOOD state
+				ref_sample = mic0_filt_peak_ind + window_ind * SAMPLE_SIZE;	// get global sample # for reference in buffer
+				last_update = ref_time + mic0_filt_peak_ind * SAMPLE_PERIOD;	// update last time peak was detected
+				detected_event = 1;
+			}
+			else if (mic1_filt_peak_ind < mic0_filt_peak_ind && mic1_filt_peak_ind < mic2_filt_peak_ind && abs(mic1_filt_peak) > ENERGY_THRESH)
+			{
+				ref_sample = mic1_filt_peak_ind + window_ind * SAMPLE_SIZE;
+				last_update = ref_time + mic1_filt_peak_ind * SAMPLE_PERIOD;
+				detected_event = 1;
+			}
+			else if (mic2_filt_peak_ind < mic0_filt_peak_ind && mic2_filt_peak_ind < mic1_filt_peak_ind && abs(mic2_filt_peak) > ENERGY_THRESH)
+			{
+				ref_sample = mic2_filt_peak_ind + window_ind * SAMPLE_SIZE;
+				last_update = ref_time + mic2_filt_peak_ind * SAMPLE_PERIOD;
+				detected_event = 1;
+			}
 
-				// take 48 samples centered around each event index
-				q15_t mic0_corr_buff[SAMPLE_SIZE], mic1_corr_buff[SAMPLE_SIZE], mic2_corr_buff[SAMPLE_SIZE];
-				// output cross correlation sequences
-				q15_t corr_mic01[CORRELATION_SIZE], corr_mic02[CORRELATION_SIZE];
+		}
+		else if (detected_event && ref_sample + SAMPLES_AFTER_DET < samples) 				// make sure enough samples have been taken after peak detected
+		{
+			// take 10 samples starting from before first peak, then 189 after first peak
+			static q15_t mic0_corr_buff[CORR_SIZE], mic1_corr_buff[CORR_SIZE], mic2_corr_buff[CORR_SIZE];
+			// output cross correlation sequences
+			static q15_t corr_mic01[CORR_LEN], corr_mic02[CORR_LEN];
 
-				uint32_t corr_peak_ind_01, corr_peak_ind_02;
-				q15_t corr_peak_01, corr_peak_02;
-				arm_correlate_fast_q15(mic0_corr_buff, SAMPLE_SIZE, mic1_corr_buff, SAMPLE_SIZE, corr_mic01);
-				arm_correlate_fast_q15(mic0_corr_buff, SAMPLE_SIZE, mic2_corr_buff, SAMPLE_SIZE, corr_mic02);
-				arm_absmax_q15(corr_mic01, CORRELATION_SIZE, &corr_peak_01, &corr_peak_ind_01);
-				arm_absmax_q15(corr_mic02, CORRELATION_SIZE, &corr_peak_02, &corr_peak_ind_02);
+			int32_t start_sample = ref_sample - SAMPLES_BEFORE_DET;
+			int32_t stop_sample = ref_sample + SAMPLES_AFTER_DET;
 
-				float mic1_delay = (corr_peak_ind_01 - (SAMPLE_SIZE - 1)) * SAMPLE_PERIOD;
-				float mic2_delay = (corr_peak_ind_02 - (SAMPLE_SIZE - 1)) * SAMPLE_PERIOD;
+			if (start_sample > -1 && stop_sample < BUFFER_SIZE)			// full length of correlation input is contiguous
+			{
+				arm_copy_q15(mic0_buff + start_sample, mic0_corr_buff, CORR_SIZE);
+				arm_copy_q15(mic1_buff + start_sample, mic1_corr_buff, CORR_SIZE);
+				arm_copy_q15(mic2_buff + start_sample, mic2_corr_buff, CORR_SIZE);
+			}
+			else 														// if correlation length wraps, copy separately
+			{
 
-				// mic0 is the reference
-//				float mic1_delay = mic1_timestamp - mic0_timestamp;
-//				float mic2_delay = mic2_timestamp - mic0_timestamp;
+				uint32_t curr_sample;
 
-				if (abs(mic1_delay) < MAX_TDOA && abs(mic2_delay) < MAX_TDOA)
+				if (start_sample < 0)
+					curr_sample = BUFFER_SIZE + start_sample;			// if start is on other end of buffer, move pointer back
+				else
+					curr_sample = start_sample;
+
+
+				for (uint32_t i = 0; i < CORR_SIZE; i++)
 				{
-					// x, y coordinates of event
-					union {
-						float coords_f[2];			// (x, y)
-						uint8_t serial[8];
-					} coords;
+					mic0_corr_buff[i] = mic0_buff[curr_sample];
+					mic1_corr_buff[i] = mic1_buff[curr_sample];
+					mic2_corr_buff[i] = mic2_buff[curr_sample];
 
-					// initial guess
-					if (mic1_delay > 0 && mic2_delay > 0)
-					{
-						coords.coords_f[0] = 0.1;
-						coords.coords_f[1] = 0.1;
-					}
-					else if (mic1_delay < 0 && mic2_delay > 0)
-					{
-						coords.coords_f[0] = 0.9;
-						coords.coords_f[1] = 0.1;
-					}
-					else if (mic1_delay > 0 && mic2_delay < 0)
-					{
-						coords.coords_f[0] = 0.7;
-						coords.coords_f[1] = 0.7;
-					}
-					else
-					{
-						coords.coords_f[0] = 0.8;
-						coords.coords_f[1] = 0.8;
-					}
-
-					compute_event_pos(&coords.coords_f[0], &coords.coords_f[1], MIC0_XPOS,
-							MIC0_YPOS, MIC1_XPOS, MIC1_YPOS, MIC2_XPOS, MIC2_YPOS, mic1_delay, mic2_delay);
-					uart2_dma1_write(8, coords.serial);
+					if (++curr_sample == BUFFER_SIZE)					// wrap pointer back to front on overflow
+						curr_sample = 0;
 				}
 			}
-			else
+
+			// Run cross correlation between mic 0 and mic 1 then mic 0 and mic 2
+			uint32_t corr_peak_01_ind, corr_peak_02_ind;
+			q15_t corr_peak_01, corr_peak_02;
+
+			arm_fill_q15(0, corr_mic01, CORR_LEN);
+			arm_fill_q15(0, corr_mic02, CORR_LEN);
+			arm_correlate_fast_q15(mic0_corr_buff, CORR_SIZE, mic1_corr_buff, CORR_SIZE, corr_mic01);
+			arm_correlate_fast_q15(mic0_corr_buff, CORR_SIZE, mic2_corr_buff, CORR_SIZE, corr_mic02);
+
+			// find peaks in cross correlation output to determine mic delay
+			arm_absmax_q15(corr_mic01, CORR_LEN, &corr_peak_01, &corr_peak_01_ind);
+			arm_absmax_q15(corr_mic02, CORR_LEN, &corr_peak_02, &corr_peak_02_ind);
+
+			// calculate time delay based on sample difference --> 0 sample delay rests at middle of cross correlation sequence SAMPLE_SIZE - 1
+			float mic1_delay = (corr_peak_01_ind - (CORR_SIZE - 1)) * SAMPLE_PERIOD;
+			float mic2_delay = (corr_peak_02_ind - (CORR_SIZE - 1)) * SAMPLE_PERIOD;
+
+			/*
+			union {
+				float fdel[2];			// (x, y)
+				uint8_t serial[8];
+			} delay;
+
+			delay.fdel[0] = mic1_delay;
+			delay.fdel[1] = mic2_delay;
+			uart2_dma1_write(8, delay.serial);
+			*/
+
+			if (fabs(mic1_delay) < MAX_TDOA && fabs(mic2_delay) < MAX_TDOA)
 			{
-				// ERROR state
+				// x, y coordinates of event
+				union {
+					float coords_f[2];			// (x, y)
+					uint8_t serial[8];
+				} coords;
+
+				// initial guess
+				if (mic1_delay > 0 && mic2_delay > 0)
+				{
+					coords.coords_f[0] = 0.1;
+					coords.coords_f[1] = 0.1;
+				}
+				else if (mic1_delay < 0 && mic2_delay > 0)
+				{
+					coords.coords_f[0] = 0.9;
+					coords.coords_f[1] = 0.1;
+				}
+				else if (mic1_delay > 0 && mic2_delay < 0)
+				{
+					coords.coords_f[0] = 0.7;
+					coords.coords_f[1] = 0.7;
+				}
+				else
+				{
+					coords.coords_f[0] = 0.8;
+					coords.coords_f[1] = 0.8;
+				}
+
+				compute_event_pos(&coords.coords_f[0], &coords.coords_f[1], MIC0_XPOS,
+						MIC0_YPOS, MIC1_XPOS, MIC1_YPOS, MIC2_XPOS, MIC2_YPOS, mic1_delay, mic2_delay);
+				uart2_dma1_write(8, coords.serial);
 			}
 
 			// reset event detection
-			detection_cnt = 0;
-			mic_detected_event[0] = 0;
-			mic_detected_event[1] = 0;
-			mic_detected_event[2] = 0;
+			detected_event = 0;
 		}
-		else if (detection_cnt != 0 && ref_time - prev_timestamp > TIMEOUT_S)
-		{
-			detection_cnt = 0;
-			mic_detected_event[0] = 0;
-			mic_detected_event[1] = 0;
-			mic_detected_event[2] = 0;
-		}
-//		GPIOA->ODR &= ~GPIO_ODR_OD8;
-		if (++ind == WINDOW_SIZE)
-			ind = 0;
+
+		if (++window_ind == WINDOW_SIZE)
+			window_ind = 0;
+
 		GPIOA->ODR &= ~GPIO_ODR_OD8;
 
 	}

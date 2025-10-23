@@ -1,1 +1,1 @@
-../Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_lms_init_q15.c:61:24:arm_lms_init_q15	16	static
+../Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_lms_init_q15.c:61:24:arm_lms_init_q15	24	static
