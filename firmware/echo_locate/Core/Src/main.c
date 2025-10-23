@@ -26,10 +26,10 @@
 
 #define SAMPLES_BEFORE_DET	10								// # of samples used before peak detection in cross correlation
 #define SAMPLES_AFTER_DET	189								// # of samples needed after first peak detection to compute cross correlation
-#define CORR_IN_SIZE			(SAMPLES_BEFORE_DET + SAMPLES_AFTER_DET + 1)		// size of input window for correlation
+#define CORR_IN_SIZE		(SAMPLES_BEFORE_DET + SAMPLES_AFTER_DET + 1)		// size of input window for correlation
 #define WINDOW_SIZE			2
-#define BUFFER_SIZE			WINDOW_SIZE * SAMPLE_SIZE
-#define CORR_OUT_SIZE			2 * CORR_IN_SIZE - 1				// correlation sequence length
+#define BUFFER_SIZE			WINDOW_SIZE * SAMPLE_SIZE		// buffer for previous microphone samples
+#define CORR_OUT_SIZE		2 * CORR_IN_SIZE - 1			// correlation sequence length
 
 #define ENERGY_THRESH		2000							// detected event energy threshold
 #define TIMEOUT_S			0.05							// timeout before resetting microphone detections
@@ -193,7 +193,7 @@ int main(void)
 			q15_t mic0_filt_peak, mic1_filt_peak, mic2_filt_peak;
 			uint32_t mic0_filt_peak_ind, mic1_filt_peak_ind, mic2_filt_peak_ind;
 
-			// find peaks on microphone
+			// find peaks in filtered streams
 			arm_absmax_q15(mic0_filt, SAMPLE_SIZE, &mic0_filt_peak, &mic0_filt_peak_ind);
 			arm_absmax_q15(mic1_filt, SAMPLE_SIZE, &mic1_filt_peak, &mic1_filt_peak_ind);
 			arm_absmax_q15(mic2_filt, SAMPLE_SIZE, &mic2_filt_peak, &mic2_filt_peak_ind);
@@ -201,7 +201,7 @@ int main(void)
 			// find first peak above threshold --> this index is the start of the cross correlation
 			if (mic0_filt_peak_ind < mic1_filt_peak_ind && mic0_filt_peak_ind < mic2_filt_peak_ind && abs(mic0_filt_peak) > ENERGY_THRESH)
 			{
-				ref_sample = mic0_filt_peak_ind + window_ind * SAMPLE_SIZE;	// get global sample # for reference in buffer
+				ref_sample = mic0_filt_peak_ind + window_ind * SAMPLE_SIZE;		// get global sample # for reference in buffer
 				last_update = ref_time + mic0_filt_peak_ind * SAMPLE_PERIOD;	// update last time peak was detected
 				detected_event = 1;
 			}
@@ -237,14 +237,12 @@ int main(void)
 			}
 			else 														// if correlation length wraps, copy separately
 			{
-
 				uint32_t curr_sample;
 
 				if (start_sample < 0)
 					curr_sample = BUFFER_SIZE + start_sample;			// if start is on other end of buffer, move pointer back
 				else
 					curr_sample = start_sample;
-
 
 				for (uint32_t i = 0; i < CORR_IN_SIZE; i++)
 				{
@@ -263,16 +261,16 @@ int main(void)
 
 			arm_fill_q15(0, corr_mic01, CORR_OUT_SIZE);
 			arm_fill_q15(0, corr_mic02, CORR_OUT_SIZE);
-			arm_correlate_fast_q15(mic0_corr_buff, CORR_IN_SIZE, mic1_corr_buff, CORR_IN_SIZE, corr_mic01);
-			arm_correlate_fast_q15(mic0_corr_buff, CORR_IN_SIZE, mic2_corr_buff, CORR_IN_SIZE, corr_mic02);
+			arm_correlate_q15(mic0_corr_buff, CORR_IN_SIZE, mic1_corr_buff, CORR_IN_SIZE, corr_mic01);
+			arm_correlate_q15(mic0_corr_buff, CORR_IN_SIZE, mic2_corr_buff, CORR_IN_SIZE, corr_mic02);
 
-			// find peaks in cross correlation output to determine mic delay
+			// find peaks in cross correlation output to determine sample delay
 			arm_absmax_q15(corr_mic01, CORR_OUT_SIZE, &corr_peak_01, &corr_peak_01_ind);
 			arm_absmax_q15(corr_mic02, CORR_OUT_SIZE, &corr_peak_02, &corr_peak_02_ind);
 
 			// calculate time delay based on sample difference --> 0 sample delay rests at middle of cross correlation sequence SAMPLE_SIZE - 1
-			float mic1_delay = ((int32_t) corr_peak_01_ind - (CORR_IN_SIZE - 1)) * SAMPLE_PERIOD;
-			float mic2_delay = ((int32_t) corr_peak_02_ind - (CORR_IN_SIZE - 1)) * SAMPLE_PERIOD;
+			float mic1_delay = -((int32_t) corr_peak_01_ind - (CORR_IN_SIZE - 1)) * SAMPLE_PERIOD;
+			float mic2_delay = -((int32_t) corr_peak_02_ind - (CORR_IN_SIZE - 1)) * SAMPLE_PERIOD;
 
 			if (fabs(mic1_delay) < MAX_TDOA && fabs(mic2_delay) < MAX_TDOA)
 			{
