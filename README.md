@@ -5,7 +5,7 @@ This version using 3 distributed microphones at the points (0, 0), (1, 0), and (
 ## /firmware
 
 ### firmware/echo_locate
-Contains the STM32CubeIDE project source code and included libraries
+- Contains the STM32CubeIDE project source code and included libraries
 ### firmware/scripts
 - Python scripts for printing and graphing received event locations. Run using command *python plotter.py*
 
