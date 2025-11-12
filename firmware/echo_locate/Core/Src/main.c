@@ -416,14 +416,14 @@ void adc1_dma_config(void)
 	ADC1->SQR1 &= ~ADC_SQR1_L;
 	ADC1->SQR1 |= ADC_SQR1_L_1;
 
-	// channel 0 (PA0 --> ADC1_IN0) is first conversion
+	// channel 0 (PA0 --> ADC1_IN0) is first conversion (microphone 0)
 	ADC1->SQR3 &= ~ADC_SQR3_SQ1;
 
-	// channel 1 (PA1 --> ADC1_IN1) is second conversion
+	// channel 1 (PA1 --> ADC1_IN1) is second conversion (microphone 1)
 	ADC1->SQR3 &= ~ADC_SQR3_SQ2;
 	ADC1->SQR3 |= ADC_SQR3_SQ2_0;
 
-	// channel 4 (PA4 --> ADC1_IN4) is third conversion
+	// channel 4 (PA4 --> ADC1_IN4) is third conversion (microphone 2)
 	ADC1->SQR3 &= ~ADC_SQR3_SQ3;
 	ADC1->SQR3 |= ADC_SQR3_SQ3_2;
 

@@ -1,13 +1,13 @@
 LTspice 24.1.6 for Windows
 Circuit: C:\Users\tynix\Development\stm32\echo_locate\hardware\bandpass.net
-Start Time: Fri Oct 10 02:43:13 2025
+Start Time: Mon Nov  3 00:24:10 2025
 solver = Normal
 Maximum thread count: 20
 tnom = 27
 temp = 27
 method = trap
 Direct Newton iteration for .op point succeeded.
-Total elapsed time: 0.031 seconds.
+Total elapsed time: 0.048 seconds.
 
 Files loaded:
 C:\Users\tynix\Development\stm32\echo_locate\hardware\bandpass.net
