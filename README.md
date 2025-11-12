@@ -1,6 +1,6 @@
 # echo_locate
 A sound-based trilateratation system using a distributed array of microphones. The trilateration method used is Time Difference of Arrival (TDoA), measuring the delays between identical peaks in microphone samples, then calculating position using nonlinear least squares.
-This version using 3 distributed microphones at the points (0, 0), (1, 0), and (1, 1) in the cartesian plane.
+This version using 3 distributed microphones at the points (0, 0), (0, 1), and (1, 1) in the cartesian plane.
 
 ## /firmware
 
