@@ -51,6 +51,10 @@ try:
             event_coords[0] = struct.unpack('f', event_x)[0]
             event_coords[1] = struct.unpack('f', event_y)[0]
 
+            if event_coords[0] == -1.0:
+                print("Invalid data\n")
+                continue
+
             print(f"x: {event_coords[0]}\t\ty: {event_coords[1]}")
 
             # graph new point

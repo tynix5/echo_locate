@@ -34,7 +34,7 @@
 #define BUFFER_SIZE			WINDOW_SIZE * SAMPLE_SIZE		// buffer for previous microphone samples
 #define CORR_OUT_SIZE		2 * CORR_IN_SIZE - 1			// correlated sequence length (convolution)
 
-#define ENERGY_THRESH		9000							// detected event energy threshold
+#define ENERGY_THRESH		8000							// detected event energy threshold
 #define UPDATE_PERIOD		0.025							// delay between position updates
 #define DETECTION_TIMEOUT	CORR_IN_SIZE * SAMPLE_PERIOD	// maximum allowable delay between consecutive peak detections before timeout
 #define MAX_TDOA			DETECTION_TIMEOUT
@@ -122,6 +122,8 @@ void stream_splice(void);
 uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 					   float mic1_x, float mic1_y, float mic2_x, float mic2_y,
 					   float mic1_delay, float mic2_delay);
+/* compute_event_pos helper function */
+float clamp(float in, float abs_max);
 
 int main(void)
 {
@@ -171,8 +173,6 @@ int main(void)
 	uint32_t ref_sample = 0;
 	uint32_t samples = 0;
 
-	int counter1 = 0, counter2 = 0;
-
 	while (1)
 	{
 		// echo_locate
@@ -210,30 +210,14 @@ int main(void)
 		arm_copy_q15(mic1_filt, mic1_buff + window_ind * SAMPLE_SIZE, SAMPLE_SIZE);
 		arm_copy_q15(mic2_filt, mic2_buff + window_ind * SAMPLE_SIZE, SAMPLE_SIZE);
 
-		if (counter1++ == 50)
-		{
-			char here = '.';
-			uart2_dma1_write(1, &here);
-			counter1 = 0;
-		}
-
 		// reference time is based on # ticks since last DMA buffer started
 		float ref_time = prev_ticks * TIME_PERIOD;
 
 		// wait for a while to update sound position (for constant noise)
 		if (!detected_event && ref_time - last_pos_update > UPDATE_PERIOD)
 		{
-			if (counter2++ == 50)
-			{
-				char there = '+';
-				uart2_dma1_write(1, &there);
-				counter2 = 0;
-			}
-//			q15_t mic0_filt_peak, mic1_filt_peak, mic2_filt_peak;
-//			uint32_t mic0_filt_peak_ind, mic1_filt_peak_ind, mic2_filt_peak_ind;
-
-			q15_t mic_filt_peak[3];
-			uint32_t mic_filt_peak_ind[3];
+			q15_t mic_filt_peak[NUM_MICS];
+			uint32_t mic_filt_peak_ind[NUM_MICS];
 
 			// find peaks in filtered streams
 			arm_absmax_q15(mic0_filt, SAMPLE_SIZE, &mic_filt_peak[0], &mic_filt_peak_ind[0]);
@@ -262,8 +246,6 @@ int main(void)
 							ref_sample = mic_first_peak[2];
 
 						detected_event = 1;
-						char str[3] = {'d', 'e', 't'};
-						uart2_dma1_write(3, str);
 					}
 				}
 				// if this microphone has already detected a peak, and last time microphone peak was detected is not possible (past max distance)...
@@ -275,33 +257,8 @@ int main(void)
 					mic_detected_event[0] = 0;
 					mic_detected_event[1] = 0;
 					mic_detected_event[2] = 0;
-					char str[3] = {'r', 's', 't'};
-					uart2_dma1_write(3, str);
 				}
 			}
-
-
-			/*
-			// find first peak above threshold --> this index is the start of the cross correlation
-			if (mic0_filt_peak_ind < mic1_filt_peak_ind && mic0_filt_peak_ind < mic2_filt_peak_ind && abs(mic0_filt_peak) > ENERGY_THRESH)
-			{
-				ref_sample = mic0_filt_peak_ind + window_ind * SAMPLE_SIZE;		// get global sample # for reference in buffer
-				last_update = ref_time + mic0_filt_peak_ind * SAMPLE_PERIOD;	// update last time peak was detected
-				detected_event = 1;
-			}
-			else if (mic1_filt_peak_ind < mic0_filt_peak_ind && mic1_filt_peak_ind < mic2_filt_peak_ind && abs(mic1_filt_peak) > ENERGY_THRESH)
-			{
-				ref_sample = mic1_filt_peak_ind + window_ind * SAMPLE_SIZE;
-				last_update = ref_time + mic1_filt_peak_ind * SAMPLE_PERIOD;
-				detected_event = 1;
-			}
-			else if (mic2_filt_peak_ind < mic0_filt_peak_ind && mic2_filt_peak_ind < mic1_filt_peak_ind && abs(mic2_filt_peak) > ENERGY_THRESH)
-			{
-				ref_sample = mic2_filt_peak_ind + window_ind * SAMPLE_SIZE;
-				last_update = ref_time + mic2_filt_peak_ind * SAMPLE_PERIOD;
-				detected_event = 1;
-			}
-			*/
 		}
 		else if (detected_event && ref_sample + SAMPLES_AFTER_DET < samples) 				// make sure enough samples have been taken after peak detected
 		{
@@ -368,20 +325,18 @@ int main(void)
 				coords.coords_f[0] = (MIC0_XPOS + MIC1_XPOS + MIC2_XPOS) / 3.0f;
 				coords.coords_f[1] = (MIC0_YPOS + MIC1_YPOS + MIC2_YPOS) / 3.0f;
 
-				// testing
-				mic1_delay = 0.00249999;
-				mic2_delay = 0.00422;
+				uint8_t valid = compute_event_pos(&coords.coords_f[0], &coords.coords_f[1], MIC0_XPOS,
+						MIC0_YPOS, MIC1_XPOS, MIC1_YPOS, MIC2_XPOS, MIC2_YPOS, mic1_delay, mic2_delay);
 
-				if (compute_event_pos(&coords.coords_f[0], &coords.coords_f[1], MIC0_XPOS,
-						MIC0_YPOS, MIC1_XPOS, MIC1_YPOS, MIC2_XPOS, MIC2_YPOS, mic1_delay, mic2_delay))
+				if (!valid || coords.coords_f[0] > 1.2f || coords.coords_f[0] < -0.2f || coords.coords_f[1] > 1.2f || coords.coords_f[1] < -0.2f)
 				{
+					// if NLLS doesn't converge or values are garbage, error, but indicate sound detected
+					coords.coords_f[0] = -1.0f;
+					coords.coords_f[1] = -1.0f;
 					uart2_dma1_write(8, coords.serial);
 				}
 				else
 				{
-					// if NLLS doesn't converge, error
-					coords.coords_f[0] = -1.0f;
-					coords.coords_f[1] = -1.0f;
 					uart2_dma1_write(8, coords.serial);
 				}
 
@@ -628,7 +583,7 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 					   float mic1_delay, float mic2_delay)
 {
 
-	const float max_step = 0.05;			// maximum dx/dy change per iteration in meters
+	const float max_step = 0.2f;			// maximum dx/dy change per iteration in meters
 
 	// distances from mic1 and mic2 to mic0
 	const float d10 = SPEED_OF_SOUND * mic1_delay;
@@ -636,7 +591,7 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 
 	float lambda = 1e-3f;
 
-	float old_res1, old_res2;
+	float old_res1 = 0, old_res2 = 0;
 
 	for (uint8_t i = 0; i < 50; i++)
 	{
@@ -653,11 +608,14 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 		float res1 = r1 - r0 - d10;
 		float res2 = r2 - r0 - d20;
 
-		if (i != 0)
-		{
-			if (res1 > old_res1 || res2 > old_res2)		lambda *= 10.0f;
-			else										lambda *= 0.1f;
-		}
+		// compute cost, exit if small
+		float cost = res1 * res1 + res2 * res2;
+		float old_cost = old_res1 * old_res1 + old_res2 * old_res2;
+		if (cost < 1e-8f)	return 1;
+
+		// else, compare new residuals to ones calculated previous iteration
+		if (cost < old_cost)		lambda *= 0.3f;			// reward improvement
+		else						lambda *= 5.0f;			// punish bad step
 
 		// create Jacobian
 		float j11 = (*x - mic1_x) / r1 - (*x - mic0_x) / r0;
@@ -665,10 +623,10 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 		float j21 = (*x - mic2_x) / r2 - (*x - mic0_x) / r0;
 		float j22 = (*y - mic2_y) / r2 - (*y - mic0_y) / r0;
 
-		// ([J]^T)[J]
+		// ([J]^T)[J] with damping on diagonal
 		float prod11 = j11 * j11 + j21 * j21 + lambda;
 		float prod12 = j11 * j12 + j21 * j22;
-		float prod21 = j12 * j11 + j22 * j21;
+		float prod21 = prod12;
 		float prod22 = j12 * j12 + j22 * j22 + lambda;
 
 		// ([J]^T)[f]
@@ -679,15 +637,19 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 		// ([J]^T)[J]delta = -([J]^T)[f]
 		// delta = inv(([J]^T)[J]) * (-([J]^T)[f])
 		float det = prod11 * prod22 - prod12 * prod21;
-		if (fabsf(det) < 1e-6) return 1;
+
+		// ill-conditioned, increase lambda and try again
+		if (fabsf(det) < 1e-12f)
+		{
+			lambda *= 10.0f;
+			continue;
+		}
 
 		float dx = (-prod22 * g1 + prod12 * g2) / det;
 		float dy = (prod21 * g1 - prod11 * g2) / det;
 
-		if (dx > max_step)			dx = max_step;
-		else if (dx < -max_step)	dx = -max_step;
-		if (dy > max_step)			dy = max_step;
-		else if (dy < -max_step)	dy = -max_step;
+		dx = clamp(dx, max_step);
+		dy = clamp(dy, max_step);
 
 		*x += dx;
 		*y += dy;
@@ -698,7 +660,18 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 		if (sqrtf(dx * dx + dy * dy) < 1e-5) return 1;
 	}
 
-	return 0;
+	return 0;			// error if didn't converge
+}
+
+float clamp(float in, float abs_max)
+{
+	// clamp in between [-abs_max, abs_max]
+	if (in > abs_max)
+		return abs_max;
+	else if (in < -abs_max)
+		return -abs_max;
+	else
+		return in;
 }
 
 

@@ -1,5 +1,5 @@
 # echo_locate
-A sound-based trilateratation system using a distributed array of microphones. The trilateration method used is Time Difference of Arrival (TDoA), measuring the delays between identical peaks in microphone samples, then calculating position using nonlinear least squares.
+A sound-based trilateratation system using a distributed array of microphones. The trilateration method used is Time Difference of Arrival (TDoA), measuring the delays between identical peaks in microphone samples using cross-correlation, then calculating position using nonlinear least squares (NLLS).
 This version using 3 distributed microphones at the points (0, 0), (0, 1), and (1, 1) in the cartesian plane.
 
 ## /firmware
@@ -7,10 +7,11 @@ This version using 3 distributed microphones at the points (0, 0), (0, 1), and (
 ### firmware/echo_locate
 - Contains the STM32CubeIDE project source code and included libraries
 ### firmware/scripts
-- Python scripts for printing and graphing received event locations. Run using command *python plotter.py*
+- Python scripts for printing and graphing received event locations
+- MATLAB function to compute NLLS to verify embedded algorithm
 
 ## /hardware
-- Contains active bandpass-filter schematics and (future) PCB designs
+- Contains active bandpass-filter schematics and notes on hardware selection
 ## /misc
-- Contains block diagram of core signal processing algorithm
+- Contains block diagram of core signal processing algorithm (draw.io)
 
