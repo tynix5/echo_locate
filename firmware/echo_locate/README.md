@@ -1,6 +1,6 @@
 # Firmware
 
-## Overview
+## Overview (initial + Revision 1.1)
 The general process for computing the origin of a sound event is as follows... (updated)
 1. Wait for DMA interrupt indicating stream complete
 2. Splice DMA stream into three separate microphone streams
@@ -17,7 +17,7 @@ The general process for computing the origin of a sound event is as follows... (
 ## Initial Design
 The original process before using the embedded FPU involved finding the highest peak in all three microphone stream samples within a timeout window, then computing microphone delays manually. This process was incredibly rudimentary but was intended to get a functional model. After discovering the CMSIS DSP library, changes were made.
 
-## Revision
+## Revision 1.1
 The second version involved using the embedded FPU to again find the highest peaks within a certain window, but also disregarding consecutive peaks on one microphone stream while waiting for other peaks in different microphone streams. After all three microphone peaks have been detected within a valid window, a correlation buffer is filled using a couple samples before the first detected peak, then several hundred samples after to ensure the longest valid distance can be detected. Cross correlation is run, and microphone delays 2 and 3 are computed, then fed into the NLLS algorithm. 
 
 ![alt text](echo_locate_block-1.png)
