@@ -21,3 +21,16 @@ The original process before using the embedded FPU involved finding the highest 
 The second version involved using the embedded FPU to again find the highest peaks within a certain window, but also disregarding consecutive peaks on one microphone stream while waiting for other peaks in different microphone streams. After all three microphone peaks have been detected within a valid window, a correlation buffer is filled using a couple samples before the first detected peak, then several hundred samples after to ensure the longest valid distance can be detected. Cross correlation is run, and microphone delays 2 and 3 are computed, then fed into the NLLS algorithm. 
 
 ![alt text](echo_locate_block-1.png)
+
+## Revision 2.0
+The triangulator works ok with some events, but is unreliable and gives wrong estimates. In the previous two revisions, a simultaneous ADC was not available, so each consecutive sample was taken a couple microseconds. This small skew leads to huge angular errors impacting cross correlation and TDoA. To prevent this, an FPGA with three digital ADC chips (MCP3002) will be used to simultaneously sample the ADCs, transmitting the buffers over SPI to the STM32F401RE. There were a couple of options including buying an STM32 with 3 different ADC units and triggering all using the same timer or buying a dedicated simultaneous sampling ADC (expensive), but I went with this because I have these parts on hand and its good exercise.
+
+### Overview
+1. Simultaneously sample N samples using iCE40HX8K FPGA
+2. Bandpass FIR stream per microphone (FPGA)
+3. Send stream over SPI to STM32F401RE
+4. Wait for DMA buffer to fill
+5. Envelope + Lowpass on STM32
+6. Detect peaks and extract sample windows
+7. GCC-PHAT
+8. Solve using NLLS/linear variant to estimate sound origin

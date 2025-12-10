@@ -105,6 +105,10 @@ arm_fir_instance_q15 hfir0, hfir1, hfir2;
 uint16_t stream0[BLOCK_SIZE], stream1[BLOCK_SIZE];									// raw data streams from DMA buffers
 q15_t mic0_samp[SAMPLE_SIZE], mic1_samp[SAMPLE_SIZE], mic2_samp[SAMPLE_SIZE];		// spliced microphone sample streams
 
+struct MicStruct {
+
+};
+
 uint8_t dma_tgt = 0;				// M0AR written to first
 
 
