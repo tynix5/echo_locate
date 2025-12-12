@@ -13,11 +13,11 @@ GCC-PHAT was selected instead of cross-correlation for its robustness and increa
 ### Overview
 FPGA
 1. Simultaneously sample N samples using iCE40HX8K FPGA at fs=40kHz
-2. Bandpass filter [1kHz, 5kHz] microphone streams (FPGA)
-3. Transfer filtered streams to STM32F401RE over SPI
+2. Transfer filtered streams to STM32F401RE over SPI
 STM32
 1. Wait for DMA buffer to fill
-2. Envelope detection
-3. Detect peaks and extract sample windows
-4. GCC-PHAT
-5. Solve using NLLS/linear variant to estimate sound origin
+2. Bandpass filter [1kHz, 5kHz] microphone stream(FPGA)
+3. Envelope detection
+4. Detect peaks and extract sample windows
+5. GCC-PHAT
+6. Solve using NLLS/linear variant to estimate sound origin

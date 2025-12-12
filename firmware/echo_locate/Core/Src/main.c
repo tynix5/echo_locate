@@ -18,34 +18,35 @@
 #include "uart2.h"
 #include "dsp/filtering_functions.h"
 #include "dsp/statistics_functions.h"
+#include "dsp/fast_math_functions.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-#define N_TAPS				48
+#define N_BP_TAPS			48
+#define N_LP_TAPS			1
+
 #define N_BLOCK				1440							// total samples from ADC before switching DMA targets
-#define N_SAMPLE			(BLOCK_SIZE / 3)				// samples per microphone before switching DMA targets
+#define N_SAMPLE			(N_BLOCK / 3)					// samples per microphone before switching DMA targets
 
-#define SAMPLES_BEFORE_DET	10								// # of samples used before peak detection in cross correlation
-#define SAMPLES_AFTER_DET	189								// # of samples needed after first peak detection to compute cross correlation
+#define N_WINDOW			2
+#define N_BUFFER			N_WINDOW * N_SAMPLE				// buffer for previous microphone samples
 
-#define WINDOW_SIZE			2
-#define N_BUFFER			WINDOW_SIZE * SAMPLE_SIZE		// buffer for previous microphone samples
+#define N_FFT				256								// length of FFT for GCC-PHAT
+#define N_SAMPLES_BEFORE	26								// gather samples before maximum peak to get full shape
+#define N_SAMPLES_AFTER		229								// N > MAX_DIST / (SAMPLE_PERIOD * SPEED_OF_SOUND) = 165
 
-#define ENERGY_THRESH		8000							// detected event energy threshold
-#define UPDATE_PERIOD		0.025							// delay between position updates
-#define DETECTION_TIMEOUT	CORR_IN_SIZE * SAMPLE_PERIOD	// maximum allowable delay between consecutive peak detections before timeout
-#define MAX_TDOA			DETECTION_TIMEOUT
+#define ENERGY_THRESH		8000.0f							// detected event energy threshold
+
+#define N_UPDATE_DELAY		500								// about 12.5ms between updates
 
 #define SAMPLE_FREQ			40000.0f						// ADC group sample rate
 #define SAMPLE_PERIOD		(1.0f / SAMPLE_FREQ)
-#define TIME_FREQ			100000.0f						// global timer frequency
-#define TIME_PERIOD			(1.0f / TIME_FREQ)
 
 #define SPEED_OF_SOUND		343.0f							// m/s
 
-#define PROC_TIME			SAMPLE_SIZE * SAMPLE_PERIOD
-
 #define N_MICS				3
+
+#define MAX_DIST			1.414							// sqrt(2) --> distance from mic0 to mic2
 
 // distances in meters
 #define MIC0_XPOS			0
@@ -55,8 +56,8 @@
 #define MIC2_XPOS			1
 #define MIC2_YPOS			1
 
-#if CORR_IN_SIZE > N_BUFFER
-#error	"Correlation input length cannot exceed buffer size"
+#if N_FFT > N_BUFFER / 2
+#error	"FFT input length cannot exceed half of buffer length"
 #endif
 
 
@@ -83,8 +84,9 @@ fixed point precision: 16 bits
   gain = 0
   desired attenuation = -40 dB
   actual attenuation = n/a
+*/
 
-q15_t const ftaps_q15[N_TAPS] = {
+float32_t const bandpass_taps[N_BP_TAPS] = {
 		427, 682, 874, 755, 246, -527,
 		-1261, -1613, -1405, -775, -149, -25,
 		-669, -1885, -3025, -3280, -2107, 416,
@@ -93,9 +95,9 @@ q15_t const ftaps_q15[N_TAPS] = {
 		-149, -775, -1405, -1613, -1261, -527,
 		246, 755, 874, 682, 427, 0
 };
-*/
 
-q15_t const lowpass_taps[N_TAPS] = {
+
+float32_t const lowpass_taps[N_LP_TAPS] = {
 		0
 };
 
@@ -103,14 +105,20 @@ uint16_t stream0[N_BLOCK], stream1[N_BLOCK];										// raw data streams from D
 
 struct MicStruct {
 
-	arm_fir_instance_q15 hfir;								// FIR handle
-	q15_t state[N_TAPS + N_SAMPLE - 1];						// lowpass FIR filter state
-	q15_t samples[N_SAMPLE];								// bandpassed samples received from FPGA
-	q15_t envelope[N_SAMPLE];								// scaled, lowpassed, and square rooted samples
-	q15_t buffer[N_BUFFER];									// running window
+	arm_rfft_fast_instance_f32 hfft;					// real FFT handle
+	arm_fir_instance_f32 bp_hfir;						// bandpass FIR handle
+	arm_fir_instance_f32 lp_hfir;						// lowpass FIR handle
+	float32_t bp_state[N_BP_TAPS + N_SAMPLE - 1];		// bandpass FIR filter state
+	float32_t lp_state[N_LP_TAPS + N_SAMPLE - 1];		// lowpass FIR filter state
 
-	q15_t env_peak;						// envelope peak
-	uint32_t env_peak_ind;				// envelope peak index
+	float32_t raw[N_SAMPLE];							// raw samples coming from ADCs
+	float32_t samples[N_SAMPLE];						// bandpassed samples received from FPGA
+	float32_t envelope[N_SAMPLE];						// scaled, lowpassed, and square rooted samples
+	float32_t buffer[N_BUFFER];							// running window
+
+	float32_t fft_window[N_FFT];						// samples taken from buffer (after envelope)
+	float32_t fft[N_FFT];								// FFT of fft_window
+	// add variables for noise mean?
 };
 
 uint8_t dma_tgt = 0;				// M0AR written to first
@@ -118,10 +126,8 @@ uint8_t dma_tgt = 0;				// M0AR written to first
 
 /* Configure system clock for 84 MHz */
 void sysclock_init(void);
-/* Configure ADC1 to trigger via TIM2, and sample normal group ADC0, ADC1, and ADC2, streaming to DMA2 in double-buffer mode */
-void adc1_dma_init(void);
-/* 100 kHz global timer */
-void tim5_time_init(void);
+/* Configure SPI1 to receive ADC stream from FPGA using DMA2 in double-buffer mode */
+void spi1_dma_init(void);
 /* Split DMA stream into separate microphone streams, converting from biased uint16_t to q15_t */
 void stream_splice(struct MicStruct * mics);
 /* Compute x and y coordinates of event using trilateration */
@@ -132,8 +138,8 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 float clamp(float in, float abs_max);
 /* Envelope detector function */
 void compute_envelope(struct MicStruct * mics);
-/* Threshold-search function, returns index of first value in Src > thresh */
-int32_t thresh_search(q15_t * src, uint32_t len, q15_t thresh);
+/* Threshold-search function, returns index of first value where src > thresh */
+int32_t thresh_search(float32_t * src, uint32_t len, float32_t thresh);
 /* simple sorting function */
 void simple_sort3(int32_t * src, int32_t * dst);
 
@@ -144,14 +150,16 @@ int main(void)
 
 	struct MicStruct mics[N_MICS];
 
-	// initiate lowpass FIRs
+	// initiate FIRs
 	for (uint32_t i = 0; i < N_MICS; i++)
-		arm_fir_init_q15(&mics[i].hfir, N_TAPS, lowpass_taps, &mics[i].state, N_SAMPLE);
+	{
+		arm_rfft_init_256_f32(&mics[i].hfft);
+		arm_fir_init_f32(&mics[i].bp_hfir, N_BP_TAPS, bandpass_taps, mics[i].bp_state, N_SAMPLE);
+		arm_fir_init_f32(&mics[i].lp_hfir, N_LP_TAPS, lowpass_taps, mics[i].lp_state, N_SAMPLE);
+	}
 
 	uart2_set_fcpu(84000000);
-	uart2_dma1_init(115200, USART_DATA_8, USART_STOP_1);
-
-	tim5_time_init();
+	uart2_dma1_config(115200, USART_DATA_8, USART_STOP_1);
 
 //	adc1_dma_init();
 
@@ -163,14 +171,13 @@ int main(void)
 	GPIOA->MODER |= GPIO_MODER_MODER8_0;
 	*/
 
-	uint32_t prev_ticks = 0, ticks = 0;
 
 	uint8_t window_ind = 0;
 
-	float last_pos_update = 0;								// last time position was updated
 	uint8_t triggered = 0;									// has a microphone detected an event?
 	uint32_t ref_sample = 0;
 	uint32_t samples = 0;
+	uint32_t last_trigger_sample = 0;
 
 	while (1)
 	{
@@ -178,60 +185,109 @@ int main(void)
 //		GPIOA->ODR |= GPIO_ODR_OD10;
 
 		while (!!(DMA2_Stream0->CR & DMA_SxCR_CT) == dma_tgt);		// wait for stream to complete
-		prev_ticks = ticks;
-		ticks = TIM5->CNT;
 		samples += N_SAMPLE;
 //		GPIOA->ODR &= ~GPIO_ODR_OD10;
 		dma_tgt = !dma_tgt;											// switch DMA targets
 		DMA2->LIFCR |= DMA_LIFCR_CTCIF0 | DMA_LIFCR_CHTIF0;			// clear transfer complete and half complete flag
 
-		stream_splice(&mics);
-
 //		GPIOA->ODR |= GPIO_ODR_OD8;
 
+		stream_splice(mics);
+
+		// bandpass filter raw samples
+		for (uint32_t i = 0; i < N_MICS; i++)
+			arm_fir_f32(&mics[i].bp_hfir, mics[i].raw, mics[i].samples, N_SAMPLE);
+
 		// square, lowpass, sqrt
-		compute_envelope(&mics);
+		compute_envelope(mics);
 
-		// reference time is based on # ticks since last DMA buffer started
-		float ref_time = prev_ticks * TIME_PERIOD;
+		for (uint32_t i = 0; i < N_MICS; i++)
+			arm_copy_f32(mics[i].envelope, mics[i].buffer + window_ind * N_SAMPLE, N_SAMPLE); 		// copy envelope to buffer for processing later
 
-		if (!triggered && ref_time - last_pos_update > UPDATE_PERIOD)			// wait for event detection and UPDATE_PERIOD time between updates
+
+		if (!triggered && samples - last_trigger_sample > N_UPDATE_DELAY)			// wait for event detection after N_UPDATE_DELAY samples since last event
 		{
-
-			// select a reference sample by finding the first peak above a threshold
+			// select a reference sample by finding the first peak (from all mics) above energy threshold
 
 			// find first peak above ENERGY_THRESH in envelope for each microphone
 			// if no such peak exists, place -1 at that index
-			int32_t thresh_ind[N_MICS];
-			for (uint32_t i = 0; i < N_MICS; i++)
-				thresh_ind[i] = thresh_search(&mics[i].envelope, N_SAMPLE, ENERGY_THRESH);
+			int32_t thresh_ind[N_MICS], thresh_ind_sorted[N_MICS];
 
-			int32_t thresh_ind_sorted[N_MICS];
+			for (uint32_t i = 0; i < N_MICS; i++)
+				thresh_ind[i] = thresh_search(mics[i].envelope, N_SAMPLE, ENERGY_THRESH);
+
 			simple_sort3(thresh_ind, thresh_ind_sorted);		// sort the indices of the first peaks
 
 			// find first non -1 index, that index becomes reference sample
 			for (uint32_t i = 0; i < N_MICS; i++)
 			{
+
 				if (thresh_ind_sorted[i] != -1)
 				{
-					ref_sample = thresh_ind_sorted[i];			// may need to adjust this for window size
+					ref_sample = thresh_ind_sorted[i] + window_ind * N_SAMPLE;				// calculate reference sample location in buffer
+					last_trigger_sample = samples - (N_SAMPLE - thresh_ind_sorted[i]);		// compute global sample value
 					triggered = 1;
 					break;
 				}
 			}
 		}
-		// sample > ref_sample + SAMPLES_AFTER_DET is wrong
-		else if (triggered && samples > ref_sample + SAMPLES_AFTER_DET)		// wait until enough samples have been taken after peak is detected
+
+		if (triggered && samples > last_trigger_sample + N_SAMPLES_AFTER)		// wait until enough samples have been taken after peak is detected
 		{
+			// extract windows
+			int32_t start_sample = ref_sample - N_SAMPLES_BEFORE;
+			int32_t stop_sample = ref_sample + N_SAMPLES_AFTER;
+
+			if (start_sample > 0 && stop_sample < N_BUFFER)					// if N_FFT is not wrapped in buffer...
+			{
+				// direct copy entire block from buffer to FFT window
+				for (uint32_t i = 0; i < N_MICS; i++)
+					arm_copy_f32(mics[i].buffer + start_sample, mics[i].fft_window, N_FFT);
+			}
+			else
+			{
+				int32_t curr_sample;										// should always be +
+
+				if (start_sample < 0)
+					curr_sample = (int32_t)N_BUFFER + start_sample;			// if start is on other end of buffer, move pointer back
+				else
+					curr_sample = start_sample;
+
+				for (uint32_t i = 0; i < N_FFT; i++)
+				{
+					for (uint32_t j = 0; j < N_MICS; j++)
+						mics[j].fft_window[i] = mics[j].buffer[curr_sample];	// copy buffer sample to FFT window
+
+					if (++curr_sample == N_BUFFER)								// wrap pointer back to front on overflow
+						curr_sample = 0;
+				}
+			}
+
 			// compute GCC-PHAT
+
+			// compute FFTs for each window
+			for (uint32_t i = 0; i < N_MICS; i++)
+				arm_rfft_fast_f32(&mics[i].hfft, mics[i].fft_window, mics[i].fft, 0);
+
+			// Use mic 0 as reference
+			// no need to compute conjugates for mic 1 and mic 2 FFTs because both are real-valued
+			// compute cross correlation between mic 0 - mic 1 and mic 0 - mic 2 (in frequency domain)
+			float32_t xcorr_01[N_FFT], xcorr_02[N_FFT];
+
+			for (uint32_t i = 0; i < N_FFT; i++)
+			{
+				xcorr_01[i] = mics[0].fft[i] * mics[1].fft[i];
+				xcorr_02[i] = mics[0].fft[i] * mics[2].fft[i];
+			}
+
+
 			// estimate location
 
 			// reset event detection
 			triggered = 0;
-			last_pos_update = TIM5->CNT * TIME_PERIOD;
 		}
 
-		if (++window_ind == WINDOW_SIZE)
+		if (++window_ind == N_WINDOW)
 			window_ind = 0;
 
 //		GPIOA->ODR &= ~GPIO_ODR_OD8;
@@ -296,7 +352,7 @@ void sysclock_init(void)
 	while (!((RCC->CFGR) & RCC_CFGR_SWS_1));
 }
 
-void adc1_dma_init(void)
+void spi1_dma_init(void)
 {
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;				// enable ADC1 clock
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;			// enable GPIOA clock
@@ -405,47 +461,29 @@ void adc1_dma_init(void)
 	ADC1->CR2 |= ADC_CR2_ADON;				// turn on ADC
 }
 
-void tim5_time_init(void)
-{
-	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;				// enable TIM2 clock
-
-	TIM5->CR1 &= ~TIM_CR1_DIR;			// upcounting
-	TIM5->PSC = 839;					// 100kHz frequency
-	TIM5->ARR = 0xffffffff;
-
-	TIM5->EGR |= TIM_EGR_UG;			// generate update event
-
-	TIM5->CR1 |= TIM_CR1_CEN;			// enable counter
-}
-
 void stream_splice(struct MicStruct * mics)
 {
-	for (uint32_t i = 0; i < BLOCK_SIZE; i += 3)
+	for (uint32_t i = 0; i < N_BLOCK; i += 3)
 	{
 		uint32_t ind = i / 3;
 
 		// input stream looks like this
-		// [][[]
-
+		// [CH0_S0, CH1_S0, CH2_S0, CH0_S1, CH1_S1, CH2_S1, ...]
+		// it needs to be spliced like this
+		// mic0 = [CH0_S0, CH0_S1, CH0_S2, ...]
+		// mic1 = [CH1_S0, CH1_S1, CH1_S2, ...]
+		// mic2 = [CH2_S0, CH2_S1, CH2_S2, ...]
 
 		// DMA is targeting M1AR ---> read from M0AR memory
-		// TO DO: check ranges of mic0
 		if (dma_tgt)
 		{
-			// convert from uint16_t in range [0, 4095] from ADC to q15_t range [-1, 1]
-			/*
-			mic0_samp[ind] = ((int16_t)stream0[i] - 2048) << 4;
-			mic1_samp[ind] = ((int16_t)stream0[i+1] - 2048) << 4;
-			mic2_samp[ind] = ((int16_t)stream0[i+2] - 2048) << 4;
-			*/
 			for (uint32_t j = 0; j < N_MICS; j++)
-				mics[j]->samples[ind] = stream0[i + j];
-
+				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
 		}
 		else
 		{
 			for (uint32_t j = 0; j < N_MICS; j++)
-				mics[j]->samples[ind] = stream1[i + j];
+				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
 		}
 	}
 }
@@ -551,19 +589,19 @@ void compute_envelope(struct MicStruct * mics)
 	// square signals and multiply with gain of 2
 	for (uint32_t i = 0; i < N_MICS; i++)
 		for (uint32_t j = 0; j < N_SAMPLE; j++)
-			mics[i]->envelope[j] = mics[i]->samples[j] * mics[i]->samples[j] * 2;
+			mics[i].envelope[j] = mics[i].samples[j] * mics[i].samples[j] * 2;
 
 	// Lowpass filter to remove high frequencies accumulated during scaling
 	for (uint32_t i = 0; i < N_MICS; i++)
-		arm_fir_fast_q15(mics[i].hfir, mics[i].envelope, mics[i].envelope, N_SAMPLE);
+		arm_fir_f32(&mics[i].lp_hfir, mics[i].envelope, mics[i].envelope, N_SAMPLE);
 
 	// square root output
 	for (uint32_t i = 0; i < N_MICS; i++)
 		for (uint32_t j = 0; j < N_SAMPLE; j++)
-			arm_sqrt_q15(mics[i].envelope[j], &mics[i].envelope[j]);
+			arm_sqrt_f32(mics[i].envelope[j], &mics[i].envelope[j]);
 }
 
-int32_t thresh_search(q15_t * src, uint32_t len, q15_t thresh)
+int32_t thresh_search(float32_t * src, uint32_t len, float32_t thresh)
 {
 	for (uint32_t i = 0; i < len; i++)
 	{
