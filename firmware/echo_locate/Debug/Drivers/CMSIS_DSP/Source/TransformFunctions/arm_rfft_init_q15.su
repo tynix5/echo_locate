@@ -1,0 +1,10 @@
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:154:1:arm_rfft_init_8192_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:178:1:arm_rfft_init_4096_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:202:1:arm_rfft_init_2048_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:226:1:arm_rfft_init_1024_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:250:1:arm_rfft_init_512_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:274:1:arm_rfft_init_256_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:298:1:arm_rfft_init_128_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:322:1:arm_rfft_init_64_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:346:1:arm_rfft_init_32_q15	8	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_init_q15.c:432:30:arm_rfft_init_q15	8	static

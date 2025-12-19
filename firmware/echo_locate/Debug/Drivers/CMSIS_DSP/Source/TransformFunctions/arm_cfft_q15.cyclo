@@ -1,0 +1,3 @@
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_cfft_q15.c:732:24:arm_cfft_radix4by2_q15	4
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_cfft_q15.c:831:24:arm_cfft_radix4by2_inverse_q15	4
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_cfft_q15.c:671:24:arm_cfft_q15	27

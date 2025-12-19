@@ -1,0 +1,9 @@
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:50:30:arm_rfft_fast_init_32_f64	2
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:77:30:arm_rfft_fast_init_64_f64	2
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:104:30:arm_rfft_fast_init_128_f64	2
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:131:30:arm_rfft_fast_init_256_f64	2
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:158:30:arm_rfft_fast_init_512_f64	2
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:184:30:arm_rfft_fast_init_1024_f64	2
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:209:30:arm_rfft_fast_init_2048_f64	2
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:235:30:arm_rfft_fast_init_4096_f64	2
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_rfft_fast_init_f64.c:281:30:arm_rfft_fast_init_f64	19

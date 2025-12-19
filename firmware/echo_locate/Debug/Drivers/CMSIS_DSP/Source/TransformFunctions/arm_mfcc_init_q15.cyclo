@@ -1,0 +1,9 @@
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:103:30:arm_mfcc_init_q15	1
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:220:1:arm_mfcc_init_32_q15	1
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:249:1:arm_mfcc_init_64_q15	1
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:278:1:arm_mfcc_init_128_q15	1
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:307:1:arm_mfcc_init_256_q15	1
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:336:1:arm_mfcc_init_512_q15	1
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:365:1:arm_mfcc_init_1024_q15	1
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:394:1:arm_mfcc_init_2048_q15	1
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_mfcc_init_q15.c:423:1:arm_mfcc_init_4096_q15	1

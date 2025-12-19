@@ -16,9 +16,7 @@
   */
 #include "main.h"
 #include "uart2.h"
-#include "dsp/filtering_functions.h"
-#include "dsp/statistics_functions.h"
-#include "dsp/fast_math_functions.h"
+#include "arm_math.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -103,7 +101,7 @@ float32_t const lowpass_taps[N_LP_TAPS] = {
 
 uint16_t stream0[N_BLOCK], stream1[N_BLOCK];										// raw data streams from DMA buffers
 
-struct MicStruct {
+struct MicProc {
 
 	arm_rfft_fast_instance_f32 hfft;					// real FFT handle
 	arm_fir_instance_f32 bp_hfir;						// bandpass FIR handle
@@ -121,6 +119,13 @@ struct MicStruct {
 	// add variables for noise mean?
 };
 
+struct MicCoord {
+
+	float x;
+	float y;
+};
+
+
 uint8_t dma_tgt = 0;				// M0AR written to first
 
 
@@ -129,15 +134,13 @@ void sysclock_init(void);
 /* Configure SPI1 to receive ADC stream from FPGA using DMA2 in double-buffer mode */
 void spi1_dma_init(void);
 /* Split DMA stream into separate microphone streams, converting from biased uint16_t to q15_t */
-void stream_splice(struct MicStruct * mics);
+void stream_splice(struct MicProc * mics);
 /* Compute x and y coordinates of event using trilateration */
-uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
-					   float mic1_x, float mic1_y, float mic2_x, float mic2_y,
-					   float mic1_delay, float mic2_delay);
+uint8_t compute_event_pos(float * x, float * y, struct MicCoord * mics_xy, float mic1_delay, float mic2_delay);
 /* compute_event_pos helper function */
 float clamp(float in, float abs_max);
 /* Envelope detector function */
-void compute_envelope(struct MicStruct * mics);
+void compute_envelope(struct MicProc * mics);
 /* Threshold-search function, returns index of first value where src > thresh */
 int32_t thresh_search(float32_t * src, uint32_t len, float32_t thresh);
 /* simple sorting function */
@@ -148,12 +151,13 @@ int main(void)
 
 	sysclock_init();
 
-	struct MicStruct mics[N_MICS];
+	struct MicProc mics[N_MICS];
+	struct MicCoord mics_xy[N_MICS] = {{.x = MIC0_XPOS, .y = MIC0_YPOS}, {.x = MIC1_XPOS, .y = MIC1_YPOS}, {.x = MIC2_XPOS, .y = MIC2_YPOS}};
 
 	// initiate FIRs
 	for (uint32_t i = 0; i < N_MICS; i++)
 	{
-		arm_rfft_init_256_f32(&mics[i].hfft);
+		arm_rfft_fast_init_256_f32(&mics[i].hfft);
 		arm_fir_init_f32(&mics[i].bp_hfir, N_BP_TAPS, bandpass_taps, mics[i].bp_state, N_SAMPLE);
 		arm_fir_init_f32(&mics[i].lp_hfir, N_LP_TAPS, lowpass_taps, mics[i].lp_state, N_SAMPLE);
 	}
@@ -461,7 +465,7 @@ void spi1_dma_init(void)
 	ADC1->CR2 |= ADC_CR2_ADON;				// turn on ADC
 }
 
-void stream_splice(struct MicStruct * mics)
+void stream_splice(struct MicProc * mics)
 {
 	for (uint32_t i = 0; i < N_BLOCK; i += 3)
 	{
@@ -488,9 +492,7 @@ void stream_splice(struct MicStruct * mics)
 	}
 }
 
-uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
-					   float mic1_x, float mic1_y, float mic2_x, float mic2_y,
-					   float mic1_delay, float mic2_delay)
+uint8_t compute_event_pos(float * x, float * y, struct MicCoord * mics_xy, float mic1_delay, float mic2_delay)
 {
 
 	const float max_step = 0.2f;			// maximum dx/dy change per iteration in meters
@@ -507,9 +509,12 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 	{
 
 		// compute radii of guesses
-		float r0 = sqrtf(powf(*x - mic0_x, 2) + powf(*y - mic0_y, 2));
-		float r1 = sqrtf(powf(*x - mic1_x, 2) + powf(*y - mic1_y, 2));
-		float r2 = sqrtf(powf(*x - mic2_x, 2) + powf(*y - mic2_y, 2));
+		float r0 = sqrtf(powf(*x - mics_xy[0].x, 2) + powf(*y - mics_xy[0].y, 2));
+		float r1 = sqrtf(powf(*x - mics_xy[1].x, 2) + powf(*y - mics_xy[1].y, 2));
+		float r2 = sqrtf(powf(*x - mics_xy[2].x, 2) + powf(*y - mics_xy[2].y, 2));
+//		float r0 = sqrtf(powf(*x - mic0_x, 2) + powf(*y - mic0_y, 2));
+//		float r1 = sqrtf(powf(*x - mic1_x, 2) + powf(*y - mic1_y, 2));
+//		float r2 = sqrtf(powf(*x - mic2_x, 2) + powf(*y - mic2_y, 2));
 
 		if (r0 == 0 || r1 == 0 || r2 == 0) return 1;
 
@@ -528,10 +533,14 @@ uint8_t compute_event_pos(float * x, float * y, float mic0_x, float mic0_y,
 		else						lambda *= 5.0f;			// punish bad step
 
 		// create Jacobian
-		float j11 = (*x - mic1_x) / r1 - (*x - mic0_x) / r0;
-		float j12 = (*y - mic1_y) / r1 - (*y - mic0_y) / r0;
-		float j21 = (*x - mic2_x) / r2 - (*x - mic0_x) / r0;
-		float j22 = (*y - mic2_y) / r2 - (*y - mic0_y) / r0;
+		float j11 = (*x - mics_xy[1].x) / r1 - (*x - mics_xy[0].x) / r0;
+		float j12 = (*y - mics_xy[1].y) / r1 - (*y - mics_xy[0].y) / r0;
+		float j21 = (*x - mics_xy[2].x) / r2 - (*x - mics_xy[0].x) / r0;
+		float j22 = (*y - mics_xy[2].y) / r2 - (*y - mics_xy[0].y) / r0;
+//		float j11 = (*x - mic1_x) / r1 - (*x - mic0_x) / r0;
+//		float j12 = (*y - mic1_y) / r1 - (*y - mic0_y) / r0;
+//		float j21 = (*x - mic2_x) / r2 - (*x - mic0_x) / r0;
+//		float j22 = (*y - mic2_y) / r2 - (*y - mic0_y) / r0;
 
 		// ([J]^T)[J] with damping on diagonal
 		float prod11 = j11 * j11 + j21 * j21 + lambda;
@@ -584,7 +593,7 @@ float clamp(float in, float abs_max)
 		return in;
 }
 
-void compute_envelope(struct MicStruct * mics)
+void compute_envelope(struct MicProc * mics)
 {
 	// square signals and multiply with gain of 2
 	for (uint32_t i = 0; i < N_MICS; i++)

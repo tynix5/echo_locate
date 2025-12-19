@@ -5,49 +5,49 @@ Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
   0 .isr_vector   00000194  08000000  08000000  00001000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  1 .text         000010c0  08000194  08000194  00001194  2**2
+  1 .text         0000209c  08000194  08000194  00001194  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       000000c0  08001254  08001254  00002254  2**2
+  2 .rodata       00000a74  08002230  08002230  00003230  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08001314  08001314  00003004  2**0
+  3 .ARM.extab    00000000  08002ca4  08002ca4  00004004  2**0
                   CONTENTS, READONLY
-  4 .ARM          00000000  08001314  08001314  00003004  2**0
+  4 .ARM          00000000  08002ca4  08002ca4  00004004  2**0
                   CONTENTS, READONLY
-  5 .preinit_array 00000000  08001314  08001314  00003004  2**0
+  5 .preinit_array 00000000  08002ca4  08002ca4  00004004  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08001314  08001314  00002314  2**2
+  6 .init_array   00000004  08002ca4  08002ca4  00003ca4  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  7 .fini_array   00000004  08001318  08001318  00002318  2**2
+  7 .fini_array   00000004  08002ca8  08002ca8  00003ca8  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  8 .data         00000004  20000000  0800131c  00003000  2**0
+  8 .data         00000004  20000000  08002cac  00004000  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          000016a8  20000004  08001320  00003004  2**2
+  9 .bss          000016a8  20000004  08002cb0  00004004  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  200016ac  08001320  000036ac  2**0
+ 10 ._user_heap_stack 00000604  200016ac  08002cb0  000046ac  2**0
                   ALLOC
- 11 .ARM.attributes 00000030  00000000  00000000  00003004  2**0
+ 11 .ARM.attributes 00000030  00000000  00000000  00004004  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000305b  00000000  00000000  00003034  2**0
+ 12 .debug_info   00007ad6  00000000  00000000  00004034  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00000e45  00000000  00000000  0000608f  2**0
+ 13 .debug_abbrev 000018d4  00000000  00000000  0000bb0a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_loclists 00000eb5  00000000  00000000  00006ed4  2**0
+ 14 .debug_loclists 000030cf  00000000  00000000  0000d3de  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 000002b8  00000000  00000000  00007d90  2**3
+ 15 .debug_aranges 00000438  00000000  00000000  000104b0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 0000042e  00000000  00000000  00008048  2**0
+ 16 .debug_rnglists 00000556  00000000  00000000  000108e8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  0002511e  00000000  00000000  00008476  2**0
+ 17 .debug_macro  000263bf  00000000  00000000  00010e3e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00005343  00000000  00000000  0002d594  2**0
+ 18 .debug_line   0000a636  00000000  00000000  000371fd  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    00084130  00000000  00000000  000328d7  2**0
+ 19 .debug_str    00085fe7  00000000  00000000  00041833  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000b6a07  2**0
+ 20 .comment      00000043  00000000  00000000  000c781a  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  0000077c  00000000  00000000  000b6a4c  2**2
+ 21 .debug_frame  00000b04  00000000  00000000  000c7860  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 00000070  00000000  00000000  000b71c8  2**0
+ 22 .debug_line_str 00000070  00000000  00000000  000c8364  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -66,7 +66,7 @@ Disassembly of section .text:
  80001aa:	bd10      	pop	{r4, pc}
  80001ac:	20000004 	.word	0x20000004
  80001b0:	00000000 	.word	0x00000000
- 80001b4:	0800123c 	.word	0x0800123c
+ 80001b4:	08002218 	.word	0x08002218
 
 080001b8 <frame_dummy>:
  80001b8:	b508      	push	{r3, lr}
@@ -78,7 +78,7 @@ Disassembly of section .text:
  80001c6:	bd08      	pop	{r3, pc}
  80001c8:	00000000 	.word	0x00000000
  80001cc:	20000008 	.word	0x20000008
- 80001d0:	0800123c 	.word	0x0800123c
+ 80001d0:	08002218 	.word	0x08002218
 
 080001d4 <__aeabi_drsub>:
  80001d4:	f081 4100 	eor.w	r1, r1, #2147483648	@ 0x80000000
@@ -879,17 +879,17 @@ void sysclock_init(void)
 		return in;
 }
 
-void compute_envelope(struct MicStruct * mics)
+void compute_envelope(struct MicProc * mics)
 {
  8000a94:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
- 8000a98:	f500 51fc 	add.w	r1, r0, #8064	@ 0x1f80
+ 8000a98:	f500 51f7 	add.w	r1, r0, #7904	@ 0x1ee0
  8000a9c:	4605      	mov	r5, r0
- 8000a9e:	f500 4041 	add.w	r0, r0, #49408	@ 0xc100
- 8000aa2:	3110      	adds	r1, #16
- 8000aa4:	30d8      	adds	r0, #216	@ 0xd8
+ 8000a9e:	f500 4057 	add.w	r0, r0, #55040	@ 0xd700
+ 8000aa2:	310c      	adds	r1, #12
+ 8000aa4:	3030      	adds	r0, #48	@ 0x30
 	// square signals and multiply with gain of 2
 	for (uint32_t i = 0; i < N_MICS; i++)
- 8000aa6:	f243 6418 	movw	r4, #13848	@ 0x3618
+ 8000aa6:	f643 546c 	movw	r4, #15724	@ 0x3d6c
 		for (uint32_t j = 0; j < N_SAMPLE; j++)
  8000aaa:	f5a1 63f0 	sub.w	r3, r1, #1920	@ 0x780
 {
@@ -908,16 +908,16 @@ void compute_envelope(struct MicStruct * mics)
  8000ac4:	1919      	adds	r1, r3, r4
  8000ac6:	4281      	cmp	r1, r0
  8000ac8:	d1ef      	bne.n	8000aaa <compute_envelope+0x16>
- 8000aca:	f505 4622 	add.w	r6, r5, #41472	@ 0xa200
- 8000ace:	f105 040c 	add.w	r4, r5, #12
- 8000ad2:	3654      	adds	r6, #84	@ 0x54
+ 8000aca:	f505 4638 	add.w	r6, r5, #47104	@ 0xb800
+ 8000ace:	f105 0424 	add.w	r4, r5, #36	@ 0x24
+ 8000ad2:	3668      	adds	r6, #104	@ 0x68
 
 	// Lowpass filter to remove high frequencies accumulated during scaling
 	for (uint32_t i = 0; i < N_MICS; i++)
 		arm_fir_f32(&mics[i].lp_hfir, mics[i].envelope, mics[i].envelope, N_SAMPLE);
- 8000ad4:	f641 7884 	movw	r8, #8068	@ 0x1f84
+ 8000ad4:	f641 68c8 	movw	r8, #7880	@ 0x1ec8
 	for (uint32_t i = 0; i < N_MICS; i++)
- 8000ad8:	f243 6718 	movw	r7, #13848	@ 0x3618
+ 8000ad8:	f643 576c 	movw	r7, #15724	@ 0x3d6c
 		arm_fir_f32(&mics[i].lp_hfir, mics[i].envelope, mics[i].envelope, N_SAMPLE);
  8000adc:	eb04 0208 	add.w	r2, r4, r8
  8000ae0:	4620      	mov	r0, r4
@@ -926,12 +926,12 @@ void compute_envelope(struct MicStruct * mics)
 	for (uint32_t i = 0; i < N_MICS; i++)
  8000ae8:	443c      	add	r4, r7
 		arm_fir_f32(&mics[i].lp_hfir, mics[i].envelope, mics[i].envelope, N_SAMPLE);
- 8000aea:	f000 f9eb 	bl	8000ec4 <arm_fir_f32>
+ 8000aea:	f000 fa97 	bl	800101c <arm_fir_f32>
 	for (uint32_t i = 0; i < N_MICS; i++)
  8000aee:	42b4      	cmp	r4, r6
  8000af0:	d1f4      	bne.n	8000adc <compute_envelope+0x48>
- 8000af2:	f505 511c 	add.w	r1, r5, #9984	@ 0x2700
- 8000af6:	f505 4549 	add.w	r5, r5, #51456	@ 0xc900
+ 8000af2:	f505 5119 	add.w	r1, r5, #9792	@ 0x2640
+ 8000af6:	f505 455e 	add.w	r5, r5, #56832	@ 0xde00
  */
 __STATIC_FORCEINLINE arm_status arm_sqrt_f32(
   const float32_t in,
@@ -939,12 +939,12 @@ __STATIC_FORCEINLINE arm_status arm_sqrt_f32(
   {
     if (in >= 0.0f)
  8000afa:	2000      	movs	r0, #0
- 8000afc:	3110      	adds	r1, #16
- 8000afe:	3558      	adds	r5, #88	@ 0x58
+ 8000afc:	312c      	adds	r1, #44	@ 0x2c
+ 8000afe:	35b0      	adds	r5, #176	@ 0xb0
 
 	// square root output
 	for (uint32_t i = 0; i < N_MICS; i++)
- 8000b00:	f243 6418 	movw	r4, #13848	@ 0x3618
+ 8000b00:	f643 546c 	movw	r4, #15724	@ 0x3d6c
 		for (uint32_t j = 0; j < N_SAMPLE; j++)
  8000b04:	f5a1 63f0 	sub.w	r3, r1, #1920	@ 0x780
  8000b08:	e005      	b.n	8000b16 <compute_envelope+0x82>
@@ -986,1210 +986,3272 @@ __STATIC_FORCEINLINE arm_status arm_sqrt_f32(
 {
  8000b38:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
  8000b3c:	ed2d 8b02 	vpush	{d8}
- 8000b40:	f5ad 4d22 	sub.w	sp, sp, #41472	@ 0xa200
- 8000b44:	b0a3      	sub	sp, #140	@ 0x8c
+ 8000b40:	f5ad 4d38 	sub.w	sp, sp, #47104	@ 0xb800
+ 8000b44:	b0a1      	sub	sp, #132	@ 0x84
 	sysclock_init();
  8000b46:	f7ff ff63 	bl	8000a10 <sysclock_init>
-	for (uint32_t i = 0; i < N_MICS; i++)
- 8000b4a:	f50d 4722 	add.w	r7, sp, #41472	@ 0xa200
-		arm_fir_init_f32(&mics[i].bp_fir, N_TAPS, lowpass_taps, mics[i].bp_state, N_SAMPLE);
- 8000b4e:	4db0      	ldr	r5, [pc, #704]	@ (8000e10 <main+0x2d8>)
- 8000b50:	f44f 76f0 	mov.w	r6, #480	@ 0x1e0
- 8000b54:	3788      	adds	r7, #136	@ 0x88
+		arm_fir_init_f32(&mics[i].bp_hfir, N_BP_TAPS, bandpass_taps, mics[i].bp_state, N_SAMPLE);
+ 8000b4a:	4fc0      	ldr	r7, [pc, #768]	@ (8000e4c <main+0x314>)
+		arm_fir_init_f32(&mics[i].lp_hfir, N_LP_TAPS, lowpass_taps, mics[i].lp_state, N_SAMPLE);
+ 8000b4c:	4ec0      	ldr	r6, [pc, #768]	@ (8000e50 <main+0x318>)
+		arm_fir_init_f32(&mics[i].bp_hfir, N_BP_TAPS, bandpass_taps, mics[i].bp_state, N_SAMPLE);
+ 8000b4e:	f44f 75f0 	mov.w	r5, #480	@ 0x1e0
 	sysclock_init();
- 8000b56:	ac10      	add	r4, sp, #64	@ 0x40
-		arm_fir_init_f32(&mics[i].bp_fir, N_TAPS, lowpass_taps, mics[i].bp_state, N_SAMPLE);
- 8000b58:	f104 0318 	add.w	r3, r4, #24
- 8000b5c:	4620      	mov	r0, r4
- 8000b5e:	462a      	mov	r2, r5
- 8000b60:	2130      	movs	r1, #48	@ 0x30
- 8000b62:	9600      	str	r6, [sp, #0]
- 8000b64:	f000 f9e8 	bl	8000f38 <arm_fir_init_f32>
-		arm_fir_init_f32(&mics[i].lp_hfir, N_TAPS, lowpass_taps, mics[i].lp_state, N_SAMPLE);
- 8000b68:	f604 0354 	addw	r3, r4, #2132	@ 0x854
- 8000b6c:	f104 000c 	add.w	r0, r4, #12
+ 8000b52:	ac0f      	add	r4, sp, #60	@ 0x3c
+		arm_rfft_fast_init_256_f32(&mics[i].hfft);
+ 8000b54:	4620      	mov	r0, r4
+ 8000b56:	f001 f9e3 	bl	8001f20 <arm_rfft_fast_init_256_f32>
+		arm_fir_init_f32(&mics[i].bp_hfir, N_BP_TAPS, bandpass_taps, mics[i].bp_state, N_SAMPLE);
+ 8000b5a:	f104 0330 	add.w	r3, r4, #48	@ 0x30
+ 8000b5e:	f104 0018 	add.w	r0, r4, #24
+ 8000b62:	463a      	mov	r2, r7
+ 8000b64:	2130      	movs	r1, #48	@ 0x30
+ 8000b66:	9500      	str	r5, [sp, #0]
+ 8000b68:	f000 fa92 	bl	8001090 <arm_fir_init_f32>
+		arm_fir_init_f32(&mics[i].lp_hfir, N_LP_TAPS, lowpass_taps, mics[i].lp_state, N_SAMPLE);
+ 8000b6c:	f604 036c 	addw	r3, r4, #2156	@ 0x86c
+ 8000b70:	f104 0024 	add.w	r0, r4, #36	@ 0x24
+ 8000b74:	9500      	str	r5, [sp, #0]
+ 8000b76:	4632      	mov	r2, r6
+ 8000b78:	2101      	movs	r1, #1
+ 8000b7a:	f000 fa89 	bl	8001090 <arm_fir_init_f32>
 	for (uint32_t i = 0; i < N_MICS; i++)
- 8000b70:	f504 5458 	add.w	r4, r4, #13824	@ 0x3600
-		arm_fir_init_f32(&mics[i].lp_hfir, N_TAPS, lowpass_taps, mics[i].lp_state, N_SAMPLE);
- 8000b74:	2130      	movs	r1, #48	@ 0x30
- 8000b76:	9600      	str	r6, [sp, #0]
- 8000b78:	462a      	mov	r2, r5
-	for (uint32_t i = 0; i < N_MICS; i++)
- 8000b7a:	3418      	adds	r4, #24
-		arm_fir_init_f32(&mics[i].lp_hfir, N_TAPS, lowpass_taps, mics[i].lp_state, N_SAMPLE);
- 8000b7c:	f000 f9dc 	bl	8000f38 <arm_fir_init_f32>
-	for (uint32_t i = 0; i < N_MICS; i++)
- 8000b80:	42a7      	cmp	r7, r4
- 8000b82:	d1e9      	bne.n	8000b58 <main+0x20>
+ 8000b7e:	f504 5475 	add.w	r4, r4, #15680	@ 0x3d40
+ 8000b82:	f50d 4338 	add.w	r3, sp, #47104	@ 0xb800
+ 8000b86:	342c      	adds	r4, #44	@ 0x2c
+ 8000b88:	3380      	adds	r3, #128	@ 0x80
+ 8000b8a:	42a3      	cmp	r3, r4
+ 8000b8c:	d1e2      	bne.n	8000b54 <main+0x1c>
 	uart2_set_fcpu(84000000);
- 8000b84:	48a3      	ldr	r0, [pc, #652]	@ (8000e14 <main+0x2dc>)
- 8000b86:	4ea4      	ldr	r6, [pc, #656]	@ (8000e18 <main+0x2e0>)
- 8000b88:	4da4      	ldr	r5, [pc, #656]	@ (8000e1c <main+0x2e4>)
+ 8000b8e:	48b1      	ldr	r0, [pc, #708]	@ (8000e54 <main+0x31c>)
+ 8000b90:	4db1      	ldr	r5, [pc, #708]	@ (8000e58 <main+0x320>)
+ 8000b92:	4cb2      	ldr	r4, [pc, #712]	@ (8000e5c <main+0x324>)
 
 int32_t thresh_search(float32_t * src, uint32_t len, float32_t thresh)
 {
 	for (uint32_t i = 0; i < len; i++)
 	{
 		if (src[i] > thresh)
- 8000b8a:	ed9f 8aa5 	vldr	s16, [pc, #660]	@ 8000e20 <main+0x2e8>
+ 8000b94:	ed9f 8ab2 	vldr	s16, [pc, #712]	@ 8000e60 <main+0x328>
 		while (!!(DMA2_Stream0->CR & DMA_SxCR_CT) == dma_tgt);		// wait for stream to complete
- 8000b8e:	f8df a2a0 	ldr.w	sl, [pc, #672]	@ 8000e30 <main+0x2f8>
+ 8000b98:	f8df b2cc 	ldr.w	fp, [pc, #716]	@ 8000e68 <main+0x330>
 	uart2_set_fcpu(84000000);
- 8000b92:	f000 f9f5 	bl	8000f80 <uart2_set_fcpu>
+ 8000b9c:	f001 f9de 	bl	8001f5c <uart2_set_fcpu>
 	uart2_dma1_config(115200, USART_DATA_8, USART_STOP_1);
- 8000b96:	2200      	movs	r2, #0
- 8000b98:	4611      	mov	r1, r2
- 8000b9a:	f44f 30e1 	mov.w	r0, #115200	@ 0x1c200
- 8000b9e:	f000 f9ff 	bl	8000fa0 <uart2_dma1_config>
-	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;				// enable TIM2 clock
- 8000ba2:	4aa0      	ldr	r2, [pc, #640]	@ (8000e24 <main+0x2ec>)
-	TIM5->CR1 &= ~TIM_CR1_DIR;			// upcounting
- 8000ba4:	49a0      	ldr	r1, [pc, #640]	@ (8000e28 <main+0x2f0>)
-	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;				// enable TIM2 clock
- 8000ba6:	6c13      	ldr	r3, [r2, #64]	@ 0x40
- 8000ba8:	f043 0308 	orr.w	r3, r3, #8
- 8000bac:	6413      	str	r3, [r2, #64]	@ 0x40
-	TIM5->CR1 &= ~TIM_CR1_DIR;			// upcounting
- 8000bae:	680b      	ldr	r3, [r1, #0]
- 8000bb0:	f023 0310 	bic.w	r3, r3, #16
- 8000bb4:	600b      	str	r3, [r1, #0]
-	TIM5->PSC = 839;					// 100kHz frequency
- 8000bb6:	f240 3247 	movw	r2, #839	@ 0x347
-	TIM5->ARR = 0xffffffff;
- 8000bba:	f04f 33ff 	mov.w	r3, #4294967295
-	TIM5->PSC = 839;					// 100kHz frequency
- 8000bbe:	628a      	str	r2, [r1, #40]	@ 0x28
-	TIM5->ARR = 0xffffffff;
- 8000bc0:	62cb      	str	r3, [r1, #44]	@ 0x2c
-	TIM5->EGR |= TIM_EGR_UG;			// generate update event
- 8000bc2:	694b      	ldr	r3, [r1, #20]
- 8000bc4:	460a      	mov	r2, r1
- 8000bc6:	f043 0301 	orr.w	r3, r3, #1
-	uint8_t triggered = 0;									// has a microphone detected an event?
- 8000bca:	2100      	movs	r1, #0
- 8000bcc:	9104      	str	r1, [sp, #16]
-	TIM5->EGR |= TIM_EGR_UG;			// generate update event
- 8000bce:	6153      	str	r3, [r2, #20]
-	TIM5->CR1 |= TIM_CR1_CEN;			// enable counter
- 8000bd0:	6813      	ldr	r3, [r2, #0]
- 8000bd2:	f043 0301 	orr.w	r3, r3, #1
- 8000bd6:	6013      	str	r3, [r2, #0]
+ 8000ba0:	2200      	movs	r2, #0
+ 8000ba2:	4611      	mov	r1, r2
+ 8000ba4:	f44f 30e1 	mov.w	r0, #115200	@ 0x1c200
+ 8000ba8:	f001 f9e8 	bl	8001f7c <uart2_dma1_config>
+	uint32_t last_trigger_sample = 0;
+ 8000bac:	aa0f      	add	r2, sp, #60	@ 0x3c
+ 8000bae:	f502 5265 	add.w	r2, r2, #14656	@ 0x3940
+ 8000bb2:	2300      	movs	r3, #0
+ 8000bb4:	322c      	adds	r2, #44	@ 0x2c
+ 8000bb6:	9309      	str	r3, [sp, #36]	@ 0x24
 	uint32_t samples = 0;
- 8000bd8:	ab10      	add	r3, sp, #64	@ 0x40
- 8000bda:	f503 4341 	add.w	r3, r3, #49408	@ 0xc100
- 8000bde:	33d8      	adds	r3, #216	@ 0xd8
- 8000be0:	9307      	str	r3, [sp, #28]
-				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000be2:	aba2      	add	r3, sp, #648	@ 0x288
- 8000be4:	f503 524f 	add.w	r2, r3, #13248	@ 0x33c0
- 8000be8:	f5a3 7412 	sub.w	r4, r3, #584	@ 0x248
+ 8000bb8:	9306      	str	r3, [sp, #24]
+ 8000bba:	9203      	str	r2, [sp, #12]
+	uint32_t ref_sample = 0;
+ 8000bbc:	930b      	str	r3, [sp, #44]	@ 0x2c
+	uint8_t triggered = 0;									// has a microphone detected an event?
+ 8000bbe:	9307      	str	r3, [sp, #28]
 	uint8_t window_ind = 0;
- 8000bec:	9103      	str	r1, [sp, #12]
-				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000bee:	3210      	adds	r2, #16
- 8000bf0:	f106 0902 	add.w	r9, r6, #2
- 8000bf4:	f106 0804 	add.w	r8, r6, #4
- 8000bf8:	1caf      	adds	r7, r5, #2
- 8000bfa:	f105 0b04 	add.w	fp, r5, #4
- 8000bfe:	4621      	mov	r1, r4
+ 8000bc0:	9304      	str	r3, [sp, #16]
+ 8000bc2:	f105 0802 	add.w	r8, r5, #2
+ 8000bc6:	1d2f      	adds	r7, r5, #4
+ 8000bc8:	1ca6      	adds	r6, r4, #2
+ 8000bca:	f104 0904 	add.w	r9, r4, #4
 		while (!!(DMA2_Stream0->CR & DMA_SxCR_CT) == dma_tgt);		// wait for stream to complete
- 8000c00:	4b8a      	ldr	r3, [pc, #552]	@ (8000e2c <main+0x2f4>)
- 8000c02:	7818      	ldrb	r0, [r3, #0]
- 8000c04:	f8da 3010 	ldr.w	r3, [sl, #16]
- 8000c08:	f3c3 43c0 	ubfx	r3, r3, #19, #1
- 8000c0c:	4283      	cmp	r3, r0
- 8000c0e:	d0f9      	beq.n	8000c04 <main+0xcc>
-		ticks = TIM5->CNT;
- 8000c10:	4b85      	ldr	r3, [pc, #532]	@ (8000e28 <main+0x2f0>)
+ 8000bce:	4ba5      	ldr	r3, [pc, #660]	@ (8000e64 <main+0x32c>)
+ 8000bd0:	781a      	ldrb	r2, [r3, #0]
+ 8000bd2:	f8db 3010 	ldr.w	r3, [fp, #16]
+ 8000bd6:	f3c3 43c0 	ubfx	r3, r3, #19, #1
+ 8000bda:	4293      	cmp	r3, r2
+ 8000bdc:	d0f9      	beq.n	8000bd2 <main+0x9a>
 		dma_tgt = !dma_tgt;											// switch DMA targets
- 8000c12:	4c86      	ldr	r4, [pc, #536]	@ (8000e2c <main+0x2f4>)
-		ticks = TIM5->CNT;
- 8000c14:	6a5b      	ldr	r3, [r3, #36]	@ 0x24
+ 8000bde:	49a1      	ldr	r1, [pc, #644]	@ (8000e64 <main+0x32c>)
 		uint32_t ind = i / 3;
- 8000c16:	f8df c21c 	ldr.w	ip, [pc, #540]	@ 8000e34 <main+0x2fc>
+ 8000be0:	f8df e288 	ldr.w	lr, [pc, #648]	@ 8000e6c <main+0x334>
 		dma_tgt = !dma_tgt;											// switch DMA targets
- 8000c1a:	2800      	cmp	r0, #0
- 8000c1c:	bf0c      	ite	eq
- 8000c1e:	2301      	moveq	r3, #1
- 8000c20:	2300      	movne	r3, #0
- 8000c22:	7023      	strb	r3, [r4, #0]
+ 8000be4:	2a00      	cmp	r2, #0
+ 8000be6:	bf0c      	ite	eq
+ 8000be8:	2301      	moveq	r3, #1
+ 8000bea:	2300      	movne	r3, #0
+ 8000bec:	700b      	strb	r3, [r1, #0]
 		DMA2->LIFCR |= DMA_LIFCR_CTCIF0 | DMA_LIFCR_CHTIF0;			// clear transfer complete and half complete flag
- 8000c24:	f8da 3008 	ldr.w	r3, [sl, #8]
-				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000c28:	f501 44d8 	add.w	r4, r1, #27648	@ 0x6c00
-		DMA2->LIFCR |= DMA_LIFCR_CTCIF0 | DMA_LIFCR_CHTIF0;			// clear transfer complete and half complete flag
- 8000c2c:	f043 0330 	orr.w	r3, r3, #48	@ 0x30
+ 8000bee:	f8db 3008 	ldr.w	r3, [fp, #8]
+ 8000bf2:	f043 0330 	orr.w	r3, r3, #48	@ 0x30
+ 8000bf6:	f8cb 3008 	str.w	r3, [fp, #8]
+		samples += N_SAMPLE;
+ 8000bfa:	9b06      	ldr	r3, [sp, #24]
+ 8000bfc:	f503 73f0 	add.w	r3, r3, #480	@ 0x1e0
+ 8000c00:	9305      	str	r3, [sp, #20]
 				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
- 8000c30:	eeb7 6a00 	vmov.f32	s12, #112	@ 0x3f800000  1.0
-		DMA2->LIFCR |= DMA_LIFCR_CTCIF0 | DMA_LIFCR_CHTIF0;			// clear transfer complete and half complete flag
- 8000c34:	f8ca 3008 	str.w	r3, [sl, #8]
+ 8000c02:	f50d 6308 	add.w	r3, sp, #2176	@ 0x880
+ 8000c06:	f50d 5076 	add.w	r0, sp, #15744	@ 0x3d80
 				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000c38:	f104 0430 	add.w	r4, r4, #48	@ 0x30
- 8000c3c:	d045      	beq.n	8000cca <main+0x192>
+ 8000c0a:	f503 41e5 	add.w	r1, r3, #29312	@ 0x7280
+				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
+ 8000c0e:	eeb7 6a00 	vmov.f32	s12, #112	@ 0x3f800000  1.0
+ 8000c12:	f100 002c 	add.w	r0, r0, #44	@ 0x2c
+				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
+ 8000c16:	f101 0118 	add.w	r1, r1, #24
+ 8000c1a:	f000 80ad 	beq.w	8000d78 <main+0x240>
 	for (uint32_t i = 0; i < N_BLOCK; i += 3)
- 8000c3e:	2000      	movs	r0, #0
+ 8000c1e:	2200      	movs	r2, #0
 				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
- 8000c40:	f836 3010 	ldrh.w	r3, [r6, r0, lsl #1]
- 8000c44:	ee06 3a90 	vmov	s13, r3
- 8000c48:	f839 3010 	ldrh.w	r3, [r9, r0, lsl #1]
- 8000c4c:	ee07 3a10 	vmov	s14, r3
- 8000c50:	f838 3010 	ldrh.w	r3, [r8, r0, lsl #1]
- 8000c54:	ee07 3a90 	vmov	s15, r3
- 8000c58:	eef8 6a66 	vcvt.f32.u32	s13, s13
+ 8000c20:	f6a3 0c44 	subw	ip, r3, #2116	@ 0x844
+ 8000c24:	f835 3012 	ldrh.w	r3, [r5, r2, lsl #1]
+ 8000c28:	ee06 3a90 	vmov	s13, r3
+ 8000c2c:	f838 3012 	ldrh.w	r3, [r8, r2, lsl #1]
+ 8000c30:	ee07 3a10 	vmov	s14, r3
+ 8000c34:	f837 3012 	ldrh.w	r3, [r7, r2, lsl #1]
+ 8000c38:	ee07 3a90 	vmov	s15, r3
+ 8000c3c:	eef8 6a66 	vcvt.f32.u32	s13, s13
 		uint32_t ind = i / 3;
- 8000c5c:	fbac e300 	umull	lr, r3, ip, r0
+ 8000c40:	fbae a302 	umull	sl, r3, lr, r2
 				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
- 8000c60:	eeb8 7a47 	vcvt.f32.u32	s14, s14
- 8000c64:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 8000c44:	eeb8 7a47 	vcvt.f32.u32	s14, s14
+ 8000c48:	eef8 7a67 	vcvt.f32.u32	s15, s15
 		uint32_t ind = i / 3;
- 8000c68:	085b      	lsrs	r3, r3, #1
+ 8000c4c:	085b      	lsrs	r3, r3, #1
 				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
- 8000c6a:	f203 4324 	addw	r3, r3, #1060	@ 0x424
- 8000c6e:	ee76 6ac6 	vsub.f32	s13, s13, s12
- 8000c72:	eb01 0e83 	add.w	lr, r1, r3, lsl #2
- 8000c76:	ee37 7a46 	vsub.f32	s14, s14, s12
- 8000c7a:	ee77 7ac6 	vsub.f32	s15, s15, s12
+ 8000c4e:	f203 33fa 	addw	r3, r3, #1018	@ 0x3fa
+ 8000c52:	ee76 6ac6 	vsub.f32	s13, s13, s12
+ 8000c56:	eb0c 0a83 	add.w	sl, ip, r3, lsl #2
+ 8000c5a:	ee37 7a46 	vsub.f32	s14, s14, s12
+ 8000c5e:	ee77 7ac6 	vsub.f32	s15, s15, s12
 	for (uint32_t i = 0; i < N_BLOCK; i += 3)
- 8000c7e:	3003      	adds	r0, #3
+ 8000c62:	3203      	adds	r2, #3
 				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
- 8000c80:	edce 6a00 	vstr	s13, [lr]
+ 8000c64:	edca 6a01 	vstr	s13, [sl, #4]
 	for (uint32_t i = 0; i < N_BLOCK; i += 3)
- 8000c84:	f5b0 6fb4 	cmp.w	r0, #1440	@ 0x5a0
+ 8000c68:	f5b2 6fb4 	cmp.w	r2, #1440	@ 0x5a0
 				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
- 8000c88:	eb02 0e83 	add.w	lr, r2, r3, lsl #2
+ 8000c6c:	eb00 0a83 	add.w	sl, r0, r3, lsl #2
 				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000c8c:	eb04 0383 	add.w	r3, r4, r3, lsl #2
+ 8000c70:	eb01 0383 	add.w	r3, r1, r3, lsl #2
 				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
- 8000c90:	ed8e 7a00 	vstr	s14, [lr]
+ 8000c74:	ed8a 7a00 	vstr	s14, [sl]
 				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000c94:	edc3 7a00 	vstr	s15, [r3]
+ 8000c78:	edc3 7a00 	vstr	s15, [r3]
 	for (uint32_t i = 0; i < N_BLOCK; i += 3)
- 8000c98:	d1d2      	bne.n	8000c40 <main+0x108>
+ 8000c7c:	d1d2      	bne.n	8000c24 <main+0xec>
+			arm_fir_f32(&mics[i].bp_hfir, mics[i].raw, mics[i].samples, N_SAMPLE);
+ 8000c7e:	ab0f      	add	r3, sp, #60	@ 0x3c
+ 8000c80:	f503 52bb 	add.w	r2, r3, #5984	@ 0x1760
+ 8000c84:	a920      	add	r1, sp, #128	@ 0x80
+ 8000c86:	320c      	adds	r2, #12
+ 8000c88:	f44f 73f0 	mov.w	r3, #480	@ 0x1e0
+ 8000c8c:	f601 71a8 	addw	r1, r1, #4008	@ 0xfa8
+ 8000c90:	a815      	add	r0, sp, #84	@ 0x54
+ 8000c92:	f000 f9c3 	bl	800101c <arm_fir_f32>
+ 8000c96:	aa0f      	add	r2, sp, #60	@ 0x3c
+ 8000c98:	a90f      	add	r1, sp, #60	@ 0x3c
+ 8000c9a:	f502 42a9 	add.w	r2, r2, #21632	@ 0x5480
+ 8000c9e:	f501 419a 	add.w	r1, r1, #19712	@ 0x4d00
+ 8000ca2:	f44f 73f0 	mov.w	r3, #480	@ 0x1e0
+ 8000ca6:	3258      	adds	r2, #88	@ 0x58
+ 8000ca8:	3158      	adds	r1, #88	@ 0x58
+ 8000caa:	f50d 5077 	add.w	r0, sp, #15808	@ 0x3dc0
+ 8000cae:	f000 f9b5 	bl	800101c <arm_fir_f32>
+ 8000cb2:	aa0f      	add	r2, sp, #60	@ 0x3c
+ 8000cb4:	f502 410a 	add.w	r1, r2, #35328	@ 0x8a00
+ 8000cb8:	f502 40f5 	add.w	r0, r2, #31360	@ 0x7a80
+ 8000cbc:	aa20      	add	r2, sp, #128	@ 0x80
+ 8000cbe:	f44f 73f0 	mov.w	r3, #480	@ 0x1e0
+ 8000cc2:	31c4      	adds	r1, #196	@ 0xc4
+ 8000cc4:	f502 4212 	add.w	r2, r2, #37376	@ 0x9200
+ 8000cc8:	3070      	adds	r0, #112	@ 0x70
+ 8000cca:	f000 f9a7 	bl	800101c <arm_fir_f32>
 		compute_envelope(mics);
- 8000c9a:	a810      	add	r0, sp, #64	@ 0x40
- 8000c9c:	e9cd 1205 	strd	r1, r2, [sp, #20]
- 8000ca0:	f7ff fef8 	bl	8000a94 <compute_envelope>
-		if (!triggered)			// wait for event detection and some period of time between updates
- 8000ca4:	e9dd 3104 	ldrd	r3, r1, [sp, #16]
- 8000ca8:	9a06      	ldr	r2, [sp, #24]
- 8000caa:	2b00      	cmp	r3, #0
- 8000cac:	d03b      	beq.n	8000d26 <main+0x1ee>
-			last_pos_update = TIM5->CNT * TIME_PERIOD;
- 8000cae:	4b5e      	ldr	r3, [pc, #376]	@ (8000e28 <main+0x2f0>)
- 8000cb0:	6a5b      	ldr	r3, [r3, #36]	@ 0x24
- 8000cb2:	9b03      	ldr	r3, [sp, #12]
- 8000cb4:	f103 0c01 	add.w	ip, r3, #1
-			triggered = 0;
- 8000cb8:	2300      	movs	r3, #0
- 8000cba:	9304      	str	r3, [sp, #16]
+ 8000cce:	a80f      	add	r0, sp, #60	@ 0x3c
+ 8000cd0:	f7ff fee0 	bl	8000a94 <compute_envelope>
+			arm_copy_f32(mics[i].envelope, mics[i].buffer + window_ind * N_SAMPLE, N_SAMPLE); 		// copy envelope to buffer for processing later
+ 8000cd4:	ab0f      	add	r3, sp, #60	@ 0x3c
+ 8000cd6:	9804      	ldr	r0, [sp, #16]
+ 8000cd8:	f503 5119 	add.w	r1, r3, #9792	@ 0x2640
+ 8000cdc:	f503 53f7 	add.w	r3, r3, #7904	@ 0x1ee0
+ 8000ce0:	330c      	adds	r3, #12
+ 8000ce2:	ebc0 1a00 	rsb	sl, r0, r0, lsl #4
+ 8000ce6:	9308      	str	r3, [sp, #32]
+ 8000ce8:	4618      	mov	r0, r3
+ 8000cea:	9b04      	ldr	r3, [sp, #16]
+ 8000cec:	312c      	adds	r1, #44	@ 0x2c
+ 8000cee:	eb01 11ca 	add.w	r1, r1, sl, lsl #7
+ 8000cf2:	011b      	lsls	r3, r3, #4
+ 8000cf4:	f44f 72f0 	mov.w	r2, #480	@ 0x1e0
+ 8000cf8:	930a      	str	r3, [sp, #40]	@ 0x28
+ 8000cfa:	f000 f9d9 	bl	80010b0 <arm_copy_f32>
+ 8000cfe:	ab0f      	add	r3, sp, #60	@ 0x3c
+ 8000d00:	f503 41c7 	add.w	r1, r3, #25472	@ 0x6380
+ 8000d04:	f503 40b8 	add.w	r0, r3, #23552	@ 0x5c00
+ 8000d08:	ea4f 1aca 	mov.w	sl, sl, lsl #7
+ 8000d0c:	3158      	adds	r1, #88	@ 0x58
+ 8000d0e:	f44f 72f0 	mov.w	r2, #480	@ 0x1e0
+ 8000d12:	4451      	add	r1, sl
+ 8000d14:	3058      	adds	r0, #88	@ 0x58
+ 8000d16:	f000 f9cb 	bl	80010b0 <arm_copy_f32>
+ 8000d1a:	ab20      	add	r3, sp, #128	@ 0x80
+ 8000d1c:	f503 4121 	add.w	r1, r3, #41216	@ 0xa100
+ 8000d20:	f44f 72f0 	mov.w	r2, #480	@ 0x1e0
+ 8000d24:	4451      	add	r1, sl
+ 8000d26:	f50d 401a 	add.w	r0, sp, #39424	@ 0x9a00
+ 8000d2a:	f000 f9c1 	bl	80010b0 <arm_copy_f32>
+		if (!triggered && samples - last_trigger_sample > N_UPDATE_DELAY)			// wait for event detection after N_UPDATE_DELAY samples since last event
+ 8000d2e:	9b07      	ldr	r3, [sp, #28]
+ 8000d30:	b9d3      	cbnz	r3, 8000d68 <main+0x230>
+ 8000d32:	9b05      	ldr	r3, [sp, #20]
+ 8000d34:	9a09      	ldr	r2, [sp, #36]	@ 0x24
+ 8000d36:	1a9a      	subs	r2, r3, r2
+ 8000d38:	f5b2 7ffa 	cmp.w	r2, #500	@ 0x1f4
+ 8000d3c:	9b08      	ldr	r3, [sp, #32]
+ 8000d3e:	d84b      	bhi.n	8000dd8 <main+0x2a0>
 		if (++window_ind == N_WINDOW)
- 8000cbc:	fa5f f38c 	uxtb.w	r3, ip
+ 8000d40:	9b04      	ldr	r3, [sp, #16]
+ 8000d42:	3301      	adds	r3, #1
+ 8000d44:	b2db      	uxtb	r3, r3
 			window_ind = 0;
- 8000cc0:	2b02      	cmp	r3, #2
- 8000cc2:	bf08      	it	eq
- 8000cc4:	2300      	moveq	r3, #0
- 8000cc6:	9303      	str	r3, [sp, #12]
- 8000cc8:	e79a      	b.n	8000c00 <main+0xc8>
+ 8000d46:	2b02      	cmp	r3, #2
+ 8000d48:	bf08      	it	eq
+ 8000d4a:	2300      	moveq	r3, #0
+ 8000d4c:	9304      	str	r3, [sp, #16]
+ 8000d4e:	9b05      	ldr	r3, [sp, #20]
+ 8000d50:	9306      	str	r3, [sp, #24]
+ 8000d52:	e73c      	b.n	8000bce <main+0x96>
+				if (thresh_ind_sorted[i] != -1)
+ 8000d54:	4613      	mov	r3, r2
+					ref_sample = thresh_ind_sorted[i] + window_ind * N_SAMPLE;				// calculate reference sample location in buffer
+ 8000d56:	9a0a      	ldr	r2, [sp, #40]	@ 0x28
+ 8000d58:	9904      	ldr	r1, [sp, #16]
+ 8000d5a:	1a52      	subs	r2, r2, r1
+ 8000d5c:	eb03 1242 	add.w	r2, r3, r2, lsl #5
+ 8000d60:	920b      	str	r2, [sp, #44]	@ 0x2c
+					last_trigger_sample = samples - (N_SAMPLE - thresh_ind_sorted[i]);		// compute global sample value
+ 8000d62:	9a06      	ldr	r2, [sp, #24]
+ 8000d64:	441a      	add	r2, r3
+ 8000d66:	9209      	str	r2, [sp, #36]	@ 0x24
+		if (triggered && samples > last_trigger_sample + N_SAMPLES_AFTER)		// wait until enough samples have been taken after peak is detected
+ 8000d68:	9b09      	ldr	r3, [sp, #36]	@ 0x24
+ 8000d6a:	9a05      	ldr	r2, [sp, #20]
+ 8000d6c:	33e5      	adds	r3, #229	@ 0xe5
+ 8000d6e:	4293      	cmp	r3, r2
+ 8000d70:	d37e      	bcc.n	8000e70 <main+0x338>
+ 8000d72:	2301      	movs	r3, #1
+ 8000d74:	9307      	str	r3, [sp, #28]
+ 8000d76:	e7e3      	b.n	8000d40 <main+0x208>
 				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000cca:	f835 3010 	ldrh.w	r3, [r5, r0, lsl #1]
- 8000cce:	ee06 3a90 	vmov	s13, r3
- 8000cd2:	f837 3010 	ldrh.w	r3, [r7, r0, lsl #1]
- 8000cd6:	ee07 3a10 	vmov	s14, r3
- 8000cda:	f83b 3010 	ldrh.w	r3, [fp, r0, lsl #1]
- 8000cde:	ee07 3a90 	vmov	s15, r3
- 8000ce2:	eef8 6a66 	vcvt.f32.u32	s13, s13
+ 8000d78:	f6a3 0c44 	subw	ip, r3, #2116	@ 0x844
+ 8000d7c:	f834 3012 	ldrh.w	r3, [r4, r2, lsl #1]
+ 8000d80:	ee06 3a90 	vmov	s13, r3
+ 8000d84:	f836 3012 	ldrh.w	r3, [r6, r2, lsl #1]
+ 8000d88:	ee07 3a10 	vmov	s14, r3
+ 8000d8c:	f839 3012 	ldrh.w	r3, [r9, r2, lsl #1]
+ 8000d90:	ee07 3a90 	vmov	s15, r3
+ 8000d94:	eef8 6a66 	vcvt.f32.u32	s13, s13
 		uint32_t ind = i / 3;
- 8000ce6:	fbac e300 	umull	lr, r3, ip, r0
+ 8000d98:	fbae a302 	umull	sl, r3, lr, r2
 				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000cea:	eeb8 7a47 	vcvt.f32.u32	s14, s14
- 8000cee:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 8000d9c:	eeb8 7a47 	vcvt.f32.u32	s14, s14
+ 8000da0:	eef8 7a67 	vcvt.f32.u32	s15, s15
 		uint32_t ind = i / 3;
- 8000cf2:	085b      	lsrs	r3, r3, #1
+ 8000da4:	085b      	lsrs	r3, r3, #1
 				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000cf4:	f203 4324 	addw	r3, r3, #1060	@ 0x424
- 8000cf8:	ee76 6ac6 	vsub.f32	s13, s13, s12
- 8000cfc:	eb01 0e83 	add.w	lr, r1, r3, lsl #2
- 8000d00:	ee37 7a46 	vsub.f32	s14, s14, s12
- 8000d04:	ee77 7ac6 	vsub.f32	s15, s15, s12
+ 8000da6:	f203 33fa 	addw	r3, r3, #1018	@ 0x3fa
+ 8000daa:	ee76 6ac6 	vsub.f32	s13, s13, s12
+ 8000dae:	eb0c 0a83 	add.w	sl, ip, r3, lsl #2
+ 8000db2:	ee37 7a46 	vsub.f32	s14, s14, s12
+ 8000db6:	ee77 7ac6 	vsub.f32	s15, s15, s12
 	for (uint32_t i = 0; i < N_BLOCK; i += 3)
- 8000d08:	3003      	adds	r0, #3
+ 8000dba:	3203      	adds	r2, #3
 				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000d0a:	edce 6a00 	vstr	s13, [lr]
+ 8000dbc:	edca 6a01 	vstr	s13, [sl, #4]
 	for (uint32_t i = 0; i < N_BLOCK; i += 3)
- 8000d0e:	f5b0 6fb4 	cmp.w	r0, #1440	@ 0x5a0
+ 8000dc0:	f5b2 6fb4 	cmp.w	r2, #1440	@ 0x5a0
 				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
- 8000d12:	eb02 0e83 	add.w	lr, r2, r3, lsl #2
- 8000d16:	eb04 0383 	add.w	r3, r4, r3, lsl #2
- 8000d1a:	ed8e 7a00 	vstr	s14, [lr]
- 8000d1e:	edc3 7a00 	vstr	s15, [r3]
+ 8000dc4:	eb00 0a83 	add.w	sl, r0, r3, lsl #2
+ 8000dc8:	eb01 0383 	add.w	r3, r1, r3, lsl #2
+ 8000dcc:	ed8a 7a00 	vstr	s14, [sl]
+ 8000dd0:	edc3 7a00 	vstr	s15, [r3]
 	for (uint32_t i = 0; i < N_BLOCK; i += 3)
- 8000d22:	d1d2      	bne.n	8000cca <main+0x192>
- 8000d24:	e7b9      	b.n	8000c9a <main+0x162>
- 8000d26:	f50d 50fe 	add.w	r0, sp, #8128	@ 0x1fc0
- 8000d2a:	3010      	adds	r0, #16
- 8000d2c:	ab0d      	add	r3, sp, #52	@ 0x34
- 8000d2e:	f10d 0e28 	add.w	lr, sp, #40	@ 0x28
- 8000d32:	9305      	str	r3, [sp, #20]
-		if (!triggered)			// wait for event detection and some period of time between updates
- 8000d34:	4684      	mov	ip, r0
- 8000d36:	4664      	mov	r4, ip
-	for (uint32_t i = 0; i < len; i++)
- 8000d38:	2300      	movs	r3, #0
- 8000d3a:	e003      	b.n	8000d44 <main+0x20c>
- 8000d3c:	3301      	adds	r3, #1
- 8000d3e:	f5b3 7ff0 	cmp.w	r3, #480	@ 0x1e0
- 8000d42:	d048      	beq.n	8000dd6 <main+0x29e>
-		if (src[i] > thresh)
- 8000d44:	ecf4 7a01 	vldmia	r4!, {s15}
- 8000d48:	eef4 7ac8 	vcmpe.f32	s15, s16
- 8000d4c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8000d50:	ddf4      	ble.n	8000d3c <main+0x204>
-				thresh_ind[i] = thresh_search(mics[i].envelope, N_SAMPLE, ENERGY_THRESH);
- 8000d52:	f84e 3b04 	str.w	r3, [lr], #4
+ 8000dd4:	d1d2      	bne.n	8000d7c <main+0x244>
+ 8000dd6:	e752      	b.n	8000c7e <main+0x146>
+ 8000dd8:	461a      	mov	r2, r3
+ 8000dda:	a90c      	add	r1, sp, #48	@ 0x30
+ 8000ddc:	f10d 0c3c 	add.w	ip, sp, #60	@ 0x3c
 			for (uint32_t i = 0; i < N_MICS; i++)
- 8000d56:	9b05      	ldr	r3, [sp, #20]
- 8000d58:	f50c 5c58 	add.w	ip, ip, #13824	@ 0x3600
- 8000d5c:	4573      	cmp	r3, lr
- 8000d5e:	f10c 0c18 	add.w	ip, ip, #24
- 8000d62:	d1e8      	bne.n	8000d36 <main+0x1fe>
+ 8000de0:	f643 506c 	movw	r0, #15724	@ 0x3d6c
+	for (uint32_t i = 0; i < N_BLOCK; i += 3)
+ 8000de4:	4696      	mov	lr, r2
+	for (uint32_t i = 0; i < len; i++)
+ 8000de6:	2300      	movs	r3, #0
+ 8000de8:	e003      	b.n	8000df2 <main+0x2ba>
+ 8000dea:	3301      	adds	r3, #1
+ 8000dec:	f5b3 7ff0 	cmp.w	r3, #480	@ 0x1e0
+ 8000df0:	d024      	beq.n	8000e3c <main+0x304>
+		if (src[i] > thresh)
+ 8000df2:	ecfe 7a01 	vldmia	lr!, {s15}
+ 8000df6:	eef4 7ac8 	vcmpe.f32	s15, s16
+ 8000dfa:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8000dfe:	ddf4      	ble.n	8000dea <main+0x2b2>
+				thresh_ind[i] = thresh_search(mics[i].envelope, N_SAMPLE, ENERGY_THRESH);
+ 8000e00:	f841 3b04 	str.w	r3, [r1], #4
+			for (uint32_t i = 0; i < N_MICS; i++)
+ 8000e04:	4561      	cmp	r1, ip
+ 8000e06:	4402      	add	r2, r0
+ 8000e08:	d1ec      	bne.n	8000de4 <main+0x2ac>
 }
 
 void simple_sort3(int32_t * src, int32_t * dst)
 {
 
 	if (src[0] <= src[1] && src[0] <= src[2])
- 8000d64:	ab0a      	add	r3, sp, #40	@ 0x28
- 8000d66:	e9d3 e400 	ldrd	lr, r4, [r3]
- 8000d6a:	45a6      	cmp	lr, r4
- 8000d6c:	689b      	ldr	r3, [r3, #8]
- 8000d6e:	9006      	str	r0, [sp, #24]
- 8000d70:	dd34      	ble.n	8000ddc <main+0x2a4>
+ 8000e0a:	aa0c      	add	r2, sp, #48	@ 0x30
+ 8000e0c:	e9d2 1300 	ldrd	r1, r3, [r2]
+ 8000e10:	4299      	cmp	r1, r3
+ 8000e12:	6892      	ldr	r2, [r2, #8]
+ 8000e14:	f340 80aa 	ble.w	8000f6c <main+0x434>
 		{
 			dst[1] = src[2];
 			dst[2] = src[1];
 		}
 	}
 	else if (src[1] <= src[0] && src[1] <= src[2])
- 8000d72:	42a3      	cmp	r3, r4
- 8000d74:	46a4      	mov	ip, r4
- 8000d76:	db45      	blt.n	8000e04 <main+0x2cc>
+ 8000e18:	4293      	cmp	r3, r2
+ 8000e1a:	f300 80b2 	bgt.w	8000f82 <main+0x44a>
 	{
 		dst[0] = src[1];
 
 		if (src[0] <= src[2])
- 8000d78:	4573      	cmp	r3, lr
- 8000d7a:	da46      	bge.n	8000e0a <main+0x2d2>
- 8000d7c:	4674      	mov	r4, lr
- 8000d7e:	469e      	mov	lr, r3
- 8000d80:	4663      	mov	r3, ip
- 8000d82:	9803      	ldr	r0, [sp, #12]
- 8000d84:	f100 0c01 	add.w	ip, r0, #1
+ 8000e1e:	4291      	cmp	r1, r2
+ 8000e20:	4610      	mov	r0, r2
+		dst[0] = src[1];
+ 8000e22:	461a      	mov	r2, r3
+		if (src[0] <= src[2])
+ 8000e24:	f340 80af 	ble.w	8000f86 <main+0x44e>
 			dst[2] = src[2];
- 8000d88:	940f      	str	r4, [sp, #60]	@ 0x3c
-		dst[0] = src[0];
- 8000d8a:	a80d      	add	r0, sp, #52	@ 0x34
-				arm_copy_f32(mics[i].envelope, mics[i].buffer + window_ind * N_SAMPLE, N_SAMPLE);
- 8000d8c:	ebcc 140c 	rsb	r4, ip, ip, lsl #4
-			for (uint32_t i = 0; i < N_MICS; i++)
- 8000d90:	e9cd 1208 	strd	r1, r2, [sp, #32]
-			dst[1] = src[1];
- 8000d94:	e9c0 3e00 	strd	r3, lr, [r0]
-				arm_copy_f32(mics[i].envelope, mics[i].buffer + window_ind * N_SAMPLE, N_SAMPLE);
- 8000d98:	01e3      	lsls	r3, r4, #7
- 8000d9a:	9305      	str	r3, [sp, #20]
-			for (uint32_t i = 0; i < N_MICS; i++)
- 8000d9c:	9c06      	ldr	r4, [sp, #24]
- 8000d9e:	f8cd c018 	str.w	ip, [sp, #24]
- 8000da2:	4603      	mov	r3, r0
-				arm_copy_f32(mics[i].envelope, mics[i].buffer + window_ind * N_SAMPLE, N_SAMPLE);
- 8000da4:	9303      	str	r3, [sp, #12]
- 8000da6:	9b05      	ldr	r3, [sp, #20]
- 8000da8:	f44f 72f0 	mov.w	r2, #480	@ 0x1e0
- 8000dac:	1919      	adds	r1, r3, r4
- 8000dae:	4620      	mov	r0, r4
- 8000db0:	f000 f8d2 	bl	8000f58 <arm_copy_f32>
+		}
+		else
+		{
+			dst[1] = src[2];
+			dst[2] = src[0];
+ 8000e28:	460b      	mov	r3, r1
+			dst[1] = src[2];
+ 8000e2a:	4601      	mov	r1, r0
 				if (thresh_ind_sorted[i] != -1)
- 8000db4:	9b03      	ldr	r3, [sp, #12]
- 8000db6:	f853 2b04 	ldr.w	r2, [r3], #4
-			for (uint32_t i = 0; i < N_MICS; i++)
- 8000dba:	f504 5458 	add.w	r4, r4, #13824	@ 0x3600
-				if (thresh_ind_sorted[i] != -1)
- 8000dbe:	3201      	adds	r2, #1
-			for (uint32_t i = 0; i < N_MICS; i++)
- 8000dc0:	f104 0418 	add.w	r4, r4, #24
-				if (thresh_ind_sorted[i] != -1)
- 8000dc4:	d112      	bne.n	8000dec <main+0x2b4>
-			for (uint32_t i = 0; i < N_MICS; i++)
- 8000dc6:	9a07      	ldr	r2, [sp, #28]
- 8000dc8:	4294      	cmp	r4, r2
- 8000dca:	d1eb      	bne.n	8000da4 <main+0x26c>
- 8000dcc:	e9dd 1208 	ldrd	r1, r2, [sp, #32]
- 8000dd0:	f8dd c018 	ldr.w	ip, [sp, #24]
- 8000dd4:	e772      	b.n	8000cbc <main+0x184>
+ 8000e2c:	1c50      	adds	r0, r2, #1
+ 8000e2e:	d191      	bne.n	8000d54 <main+0x21c>
+ 8000e30:	1c48      	adds	r0, r1, #1
+ 8000e32:	f040 80aa 	bne.w	8000f8a <main+0x452>
+ 8000e36:	1c5a      	adds	r2, r3, #1
+ 8000e38:	d082      	beq.n	8000d40 <main+0x208>
+ 8000e3a:	e78c      	b.n	8000d56 <main+0x21e>
 	return -1;
- 8000dd6:	f04f 33ff 	mov.w	r3, #4294967295
- 8000dda:	e7ba      	b.n	8000d52 <main+0x21a>
+ 8000e3c:	f04f 33ff 	mov.w	r3, #4294967295
+				thresh_ind[i] = thresh_search(mics[i].envelope, N_SAMPLE, ENERGY_THRESH);
+ 8000e40:	f841 3b04 	str.w	r3, [r1], #4
+			for (uint32_t i = 0; i < N_MICS; i++)
+ 8000e44:	4561      	cmp	r1, ip
+ 8000e46:	4402      	add	r2, r0
+ 8000e48:	d1cc      	bne.n	8000de4 <main+0x2ac>
+ 8000e4a:	e7de      	b.n	8000e0a <main+0x2d2>
+ 8000e4c:	08002234 	.word	0x08002234
+ 8000e50:	08002230 	.word	0x08002230
+ 8000e54:	0501bd00 	.word	0x0501bd00
+ 8000e58:	20000024 	.word	0x20000024
+ 8000e5c:	20000b64 	.word	0x20000b64
+ 8000e60:	45fa0000 	.word	0x45fa0000
+ 8000e64:	20000020 	.word	0x20000020
+ 8000e68:	40026400 	.word	0x40026400
+ 8000e6c:	aaaaaaab 	.word	0xaaaaaaab
+			int32_t start_sample = ref_sample - N_SAMPLES_BEFORE;
+ 8000e70:	9a0b      	ldr	r2, [sp, #44]	@ 0x2c
+ 8000e72:	f1a2 031a 	sub.w	r3, r2, #26
+			if (start_sample > 0 && stop_sample < N_BUFFER)					// if N_FFT is not wrapped in buffer...
+ 8000e76:	2b00      	cmp	r3, #0
+			int32_t stop_sample = ref_sample + N_SAMPLES_AFTER;
+ 8000e78:	f102 02e5 	add.w	r2, r2, #229	@ 0xe5
+			if (start_sample > 0 && stop_sample < N_BUFFER)					// if N_FFT is not wrapped in buffer...
+ 8000e7c:	dd3f      	ble.n	8000efe <main+0x3c6>
+ 8000e7e:	f5b2 7f70 	cmp.w	r2, #960	@ 0x3c0
+ 8000e82:	da40      	bge.n	8000f06 <main+0x3ce>
+					arm_copy_f32(mics[i].buffer + start_sample, mics[i].fft_window, N_FFT);
+ 8000e84:	aa0f      	add	r2, sp, #60	@ 0x3c
+ 8000e86:	f502 5019 	add.w	r0, r2, #9792	@ 0x2640
+ 8000e8a:	f502 5155 	add.w	r1, r2, #13632	@ 0x3540
+ 8000e8e:	302c      	adds	r0, #44	@ 0x2c
+ 8000e90:	eb00 0083 	add.w	r0, r0, r3, lsl #2
+ 8000e94:	312c      	adds	r1, #44	@ 0x2c
+ 8000e96:	f44f 7280 	mov.w	r2, #256	@ 0x100
+ 8000e9a:	ea4f 0a83 	mov.w	sl, r3, lsl #2
+ 8000e9e:	f000 f907 	bl	80010b0 <arm_copy_f32>
+ 8000ea2:	ab0f      	add	r3, sp, #60	@ 0x3c
+ 8000ea4:	f503 40c7 	add.w	r0, r3, #25472	@ 0x6380
+ 8000ea8:	f503 41e5 	add.w	r1, r3, #29312	@ 0x7280
+ 8000eac:	3058      	adds	r0, #88	@ 0x58
+ 8000eae:	f44f 7280 	mov.w	r2, #256	@ 0x100
+ 8000eb2:	4450      	add	r0, sl
+ 8000eb4:	3158      	adds	r1, #88	@ 0x58
+ 8000eb6:	f000 f8fb 	bl	80010b0 <arm_copy_f32>
+ 8000eba:	ab20      	add	r3, sp, #128	@ 0x80
+ 8000ebc:	f503 4021 	add.w	r0, r3, #41216	@ 0xa100
+ 8000ec0:	f44f 7280 	mov.w	r2, #256	@ 0x100
+ 8000ec4:	4450      	add	r0, sl
+ 8000ec6:	f503 4130 	add.w	r1, r3, #45056	@ 0xb000
+ 8000eca:	f000 f8f1 	bl	80010b0 <arm_copy_f32>
+				for (uint32_t i = 0; i < N_FFT; i++)
+ 8000ece:	f10d 0a3c 	add.w	sl, sp, #60	@ 0x3c
+				arm_rfft_fast_f32(&mics[i].hfft, mics[i].fft_window, mics[i].fft, 0);
+ 8000ed2:	f50a 5265 	add.w	r2, sl, #14656	@ 0x3940
+ 8000ed6:	f50a 5155 	add.w	r1, sl, #13632	@ 0x3540
+ 8000eda:	2300      	movs	r3, #0
+ 8000edc:	4650      	mov	r0, sl
+ 8000ede:	322c      	adds	r2, #44	@ 0x2c
+ 8000ee0:	312c      	adds	r1, #44	@ 0x2c
+ 8000ee2:	f000 ff67 	bl	8001db4 <arm_rfft_fast_f32>
+			for (uint32_t i = 0; i < N_MICS; i++)
+ 8000ee6:	f50a 5a75 	add.w	sl, sl, #15680	@ 0x3d40
+ 8000eea:	f50d 4338 	add.w	r3, sp, #47104	@ 0xb800
+ 8000eee:	f10a 0a2c 	add.w	sl, sl, #44	@ 0x2c
+ 8000ef2:	3380      	adds	r3, #128	@ 0x80
+ 8000ef4:	459a      	cmp	sl, r3
+ 8000ef6:	d1ec      	bne.n	8000ed2 <main+0x39a>
+			triggered = 0;
+ 8000ef8:	2300      	movs	r3, #0
+ 8000efa:	9307      	str	r3, [sp, #28]
+ 8000efc:	e720      	b.n	8000d40 <main+0x208>
+				if (start_sample < 0)
+ 8000efe:	d002      	beq.n	8000f06 <main+0x3ce>
+					curr_sample = (int32_t)N_BUFFER + start_sample;			// if start is on other end of buffer, move pointer back
+ 8000f00:	9b0b      	ldr	r3, [sp, #44]	@ 0x2c
+ 8000f02:	f203 33a6 	addw	r3, r3, #934	@ 0x3a6
+				for (uint32_t i = 0; i < N_FFT; i++)
+ 8000f06:	aa0f      	add	r2, sp, #60	@ 0x3c
+ 8000f08:	f502 5155 	add.w	r1, r2, #13632	@ 0x3540
+ 8000f0c:	f502 4ce5 	add.w	ip, r2, #29312	@ 0x7280
+ 8000f10:	aa20      	add	r2, sp, #128	@ 0x80
+ 8000f12:	312c      	adds	r1, #44	@ 0x2c
+ 8000f14:	f10c 0c58 	add.w	ip, ip, #88	@ 0x58
+ 8000f18:	f502 4e30 	add.w	lr, r2, #45056	@ 0xb000
+						mics[j].fft_window[i] = mics[j].buffer[curr_sample];	// copy buffer sample to FFT window
+ 8000f1c:	a80f      	add	r0, sp, #60	@ 0x3c
+ 8000f1e:	f641 0af5 	movw	sl, #6389	@ 0x18f5
+ 8000f22:	f603 129a 	addw	r2, r3, #2458	@ 0x99a
+ 8000f26:	eb00 0282 	add.w	r2, r0, r2, lsl #2
+ 8000f2a:	edd2 7a01 	vldr	s15, [r2, #4]
+ 8000f2e:	eb03 020a 	add.w	r2, r3, sl
+ 8000f32:	ece1 7a01 	vstmia	r1!, {s15}
+ 8000f36:	eb00 0282 	add.w	r2, r0, r2, lsl #2
+ 8000f3a:	edd2 7a01 	vldr	s15, [r2, #4]
+ 8000f3e:	f503 5221 	add.w	r2, r3, #10304	@ 0x2840
+ 8000f42:	3210      	adds	r2, #16
+ 8000f44:	eb00 0282 	add.w	r2, r0, r2, lsl #2
+ 8000f48:	ecec 7a01 	vstmia	ip!, {s15}
+					if (++curr_sample == N_BUFFER)								// wrap pointer back to front on overflow
+ 8000f4c:	3301      	adds	r3, #1
+						mics[j].fft_window[i] = mics[j].buffer[curr_sample];	// copy buffer sample to FFT window
+ 8000f4e:	6852      	ldr	r2, [r2, #4]
+ 8000f50:	f84e 2b04 	str.w	r2, [lr], #4
+					if (++curr_sample == N_BUFFER)								// wrap pointer back to front on overflow
+ 8000f54:	f5b3 7f70 	cmp.w	r3, #960	@ 0x3c0
+ 8000f58:	d003      	beq.n	8000f62 <main+0x42a>
+				for (uint32_t i = 0; i < N_FFT; i++)
+ 8000f5a:	9a03      	ldr	r2, [sp, #12]
+ 8000f5c:	4291      	cmp	r1, r2
+ 8000f5e:	d1e0      	bne.n	8000f22 <main+0x3ea>
+ 8000f60:	e7b5      	b.n	8000ece <main+0x396>
+ 8000f62:	9b03      	ldr	r3, [sp, #12]
+ 8000f64:	4299      	cmp	r1, r3
+ 8000f66:	d0b2      	beq.n	8000ece <main+0x396>
+ 8000f68:	2300      	movs	r3, #0
+ 8000f6a:	e7da      	b.n	8000f22 <main+0x3ea>
 	if (src[0] <= src[1] && src[0] <= src[2])
- 8000ddc:	4573      	cmp	r3, lr
- 8000dde:	dbd0      	blt.n	8000d82 <main+0x24a>
+ 8000f6c:	4291      	cmp	r1, r2
+ 8000f6e:	f73f af5d 	bgt.w	8000e2c <main+0x2f4>
 		if (src[1] <= src[2])
- 8000de0:	42a3      	cmp	r3, r4
- 8000de2:	da0a      	bge.n	8000dfa <main+0x2c2>
- 8000de4:	46f4      	mov	ip, lr
- 8000de6:	469e      	mov	lr, r3
- 8000de8:	4663      	mov	r3, ip
- 8000dea:	e7ca      	b.n	8000d82 <main+0x24a>
-					triggered = 1;
- 8000dec:	2301      	movs	r3, #1
- 8000dee:	e9dd 1208 	ldrd	r1, r2, [sp, #32]
- 8000df2:	f8dd c018 	ldr.w	ip, [sp, #24]
- 8000df6:	9304      	str	r3, [sp, #16]
- 8000df8:	e760      	b.n	8000cbc <main+0x184>
- 8000dfa:	46a4      	mov	ip, r4
- 8000dfc:	461c      	mov	r4, r3
- 8000dfe:	4673      	mov	r3, lr
- 8000e00:	46e6      	mov	lr, ip
- 8000e02:	e7be      	b.n	8000d82 <main+0x24a>
+ 8000f72:	4293      	cmp	r3, r2
+ 8000f74:	4610      	mov	r0, r2
+		dst[0] = src[0];
+ 8000f76:	460a      	mov	r2, r1
+		if (src[1] <= src[2])
+ 8000f78:	f73f af57 	bgt.w	8000e2a <main+0x2f2>
+			dst[1] = src[0];
+			dst[2] = src[1];
+		}
+		else
+		{
+			dst[1] = src[1];
+ 8000f7c:	4619      	mov	r1, r3
+			dst[2] = src[0];
+ 8000f7e:	4603      	mov	r3, r0
+ 8000f80:	e754      	b.n	8000e2c <main+0x2f4>
 	else if (src[1] <= src[0] && src[1] <= src[2])
- 8000e04:	4674      	mov	r4, lr
- 8000e06:	46e6      	mov	lr, ip
- 8000e08:	e7bb      	b.n	8000d82 <main+0x24a>
- 8000e0a:	461c      	mov	r4, r3
- 8000e0c:	4663      	mov	r3, ip
- 8000e0e:	e7b8      	b.n	8000d82 <main+0x24a>
- 8000e10:	08001254 	.word	0x08001254
- 8000e14:	0501bd00 	.word	0x0501bd00
- 8000e18:	20000024 	.word	0x20000024
- 8000e1c:	20000b64 	.word	0x20000b64
- 8000e20:	45fa0000 	.word	0x45fa0000
- 8000e24:	40023800 	.word	0x40023800
- 8000e28:	40000c00 	.word	0x40000c00
- 8000e2c:	20000020 	.word	0x20000020
- 8000e30:	40026400 	.word	0x40026400
- 8000e34:	aaaaaaab 	.word	0xaaaaaaab
+ 8000f82:	4608      	mov	r0, r1
+ 8000f84:	e7fa      	b.n	8000f7c <main+0x444>
+			dst[2] = src[2];
+ 8000f86:	4603      	mov	r3, r0
+ 8000f88:	e750      	b.n	8000e2c <main+0x2f4>
+				if (thresh_ind_sorted[i] != -1)
+ 8000f8a:	460b      	mov	r3, r1
+ 8000f8c:	e6e3      	b.n	8000d56 <main+0x21e>
+ 8000f8e:	bf00      	nop
 
-08000e38 <NMI_Handler>:
+08000f90 <NMI_Handler>:
 {
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
    while (1)
- 8000e38:	e7fe      	b.n	8000e38 <NMI_Handler>
- 8000e3a:	bf00      	nop
+ 8000f90:	e7fe      	b.n	8000f90 <NMI_Handler>
+ 8000f92:	bf00      	nop
 
-08000e3c <HardFault_Handler>:
+08000f94 <HardFault_Handler>:
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
 
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
- 8000e3c:	e7fe      	b.n	8000e3c <HardFault_Handler>
- 8000e3e:	bf00      	nop
+ 8000f94:	e7fe      	b.n	8000f94 <HardFault_Handler>
+ 8000f96:	bf00      	nop
 
-08000e40 <MemManage_Handler>:
+08000f98 <MemManage_Handler>:
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
 
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
- 8000e40:	e7fe      	b.n	8000e40 <MemManage_Handler>
- 8000e42:	bf00      	nop
+ 8000f98:	e7fe      	b.n	8000f98 <MemManage_Handler>
+ 8000f9a:	bf00      	nop
 
-08000e44 <BusFault_Handler>:
+08000f9c <BusFault_Handler>:
 void BusFault_Handler(void)
 {
   /* USER CODE BEGIN BusFault_IRQn 0 */
 
   /* USER CODE END BusFault_IRQn 0 */
   while (1)
- 8000e44:	e7fe      	b.n	8000e44 <BusFault_Handler>
- 8000e46:	bf00      	nop
+ 8000f9c:	e7fe      	b.n	8000f9c <BusFault_Handler>
+ 8000f9e:	bf00      	nop
 
-08000e48 <UsageFault_Handler>:
+08000fa0 <UsageFault_Handler>:
 void UsageFault_Handler(void)
 {
   /* USER CODE BEGIN UsageFault_IRQn 0 */
 
   /* USER CODE END UsageFault_IRQn 0 */
   while (1)
- 8000e48:	e7fe      	b.n	8000e48 <UsageFault_Handler>
- 8000e4a:	bf00      	nop
+ 8000fa0:	e7fe      	b.n	8000fa0 <UsageFault_Handler>
+ 8000fa2:	bf00      	nop
 
-08000e4c <SVC_Handler>:
+08000fa4 <SVC_Handler>:
 
   /* USER CODE END SVCall_IRQn 0 */
   /* USER CODE BEGIN SVCall_IRQn 1 */
 
   /* USER CODE END SVCall_IRQn 1 */
 }
- 8000e4c:	4770      	bx	lr
- 8000e4e:	bf00      	nop
+ 8000fa4:	4770      	bx	lr
+ 8000fa6:	bf00      	nop
 
-08000e50 <DebugMon_Handler>:
+08000fa8 <DebugMon_Handler>:
 
 /**
   * @brief This function handles Debug monitor.
   */
 void DebugMon_Handler(void)
- 8000e50:	4770      	bx	lr
- 8000e52:	bf00      	nop
+ 8000fa8:	4770      	bx	lr
+ 8000faa:	bf00      	nop
 
-08000e54 <PendSV_Handler>:
+08000fac <PendSV_Handler>:
 }
 
 /**
   * @brief This function handles Pendable request for system service.
   */
 void PendSV_Handler(void)
- 8000e54:	4770      	bx	lr
- 8000e56:	bf00      	nop
+ 8000fac:	4770      	bx	lr
+ 8000fae:	bf00      	nop
 
-08000e58 <SysTick_Handler>:
+08000fb0 <SysTick_Handler>:
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
- 8000e58:	f000 b886 	b.w	8000f68 <HAL_IncTick>
+ 8000fb0:	f000 bfc8 	b.w	8001f44 <HAL_IncTick>
 
-08000e5c <SystemInit>:
+08000fb4 <SystemInit>:
   */
 void SystemInit(void)
 {
   /* FPU settings ------------------------------------------------------------*/
   #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
- 8000e5c:	4a03      	ldr	r2, [pc, #12]	@ (8000e6c <SystemInit+0x10>)
- 8000e5e:	f8d2 3088 	ldr.w	r3, [r2, #136]	@ 0x88
- 8000e62:	f443 0370 	orr.w	r3, r3, #15728640	@ 0xf00000
- 8000e66:	f8c2 3088 	str.w	r3, [r2, #136]	@ 0x88
+ 8000fb4:	4a03      	ldr	r2, [pc, #12]	@ (8000fc4 <SystemInit+0x10>)
+ 8000fb6:	f8d2 3088 	ldr.w	r3, [r2, #136]	@ 0x88
+ 8000fba:	f443 0370 	orr.w	r3, r3, #15728640	@ 0xf00000
+ 8000fbe:	f8c2 3088 	str.w	r3, [r2, #136]	@ 0x88
 
   /* Configure the Vector Table location -------------------------------------*/
 #if defined(USER_VECT_TAB_ADDRESS)
   SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
 #endif /* USER_VECT_TAB_ADDRESS */
 }
- 8000e6a:	4770      	bx	lr
- 8000e6c:	e000ed00 	.word	0xe000ed00
+ 8000fc2:	4770      	bx	lr
+ 8000fc4:	e000ed00 	.word	0xe000ed00
 
-08000e70 <Reset_Handler>:
+08000fc8 <Reset_Handler>:
 
     .section  .text.Reset_Handler
   .weak  Reset_Handler
   .type  Reset_Handler, %function
 Reset_Handler:  
   ldr   sp, =_estack    		 /* set stack pointer */
- 8000e70:	f8df d034 	ldr.w	sp, [pc, #52]	@ 8000ea8 <LoopFillZerobss+0xe>
+ 8000fc8:	f8df d034 	ldr.w	sp, [pc, #52]	@ 8001000 <LoopFillZerobss+0xe>
 
 /* Call the clock system initialization function.*/
   bl  SystemInit  
- 8000e74:	f7ff fff2 	bl	8000e5c <SystemInit>
+ 8000fcc:	f7ff fff2 	bl	8000fb4 <SystemInit>
 
 /* Copy the data segment initializers from flash to SRAM */  
   ldr r0, =_sdata
- 8000e78:	480c      	ldr	r0, [pc, #48]	@ (8000eac <LoopFillZerobss+0x12>)
+ 8000fd0:	480c      	ldr	r0, [pc, #48]	@ (8001004 <LoopFillZerobss+0x12>)
   ldr r1, =_edata
- 8000e7a:	490d      	ldr	r1, [pc, #52]	@ (8000eb0 <LoopFillZerobss+0x16>)
+ 8000fd2:	490d      	ldr	r1, [pc, #52]	@ (8001008 <LoopFillZerobss+0x16>)
   ldr r2, =_sidata
- 8000e7c:	4a0d      	ldr	r2, [pc, #52]	@ (8000eb4 <LoopFillZerobss+0x1a>)
+ 8000fd4:	4a0d      	ldr	r2, [pc, #52]	@ (800100c <LoopFillZerobss+0x1a>)
   movs r3, #0
- 8000e7e:	2300      	movs	r3, #0
+ 8000fd6:	2300      	movs	r3, #0
   b LoopCopyDataInit
- 8000e80:	e002      	b.n	8000e88 <LoopCopyDataInit>
+ 8000fd8:	e002      	b.n	8000fe0 <LoopCopyDataInit>
 
-08000e82 <CopyDataInit>:
+08000fda <CopyDataInit>:
 
 CopyDataInit:
   ldr r4, [r2, r3]
- 8000e82:	58d4      	ldr	r4, [r2, r3]
+ 8000fda:	58d4      	ldr	r4, [r2, r3]
   str r4, [r0, r3]
- 8000e84:	50c4      	str	r4, [r0, r3]
+ 8000fdc:	50c4      	str	r4, [r0, r3]
   adds r3, r3, #4
- 8000e86:	3304      	adds	r3, #4
+ 8000fde:	3304      	adds	r3, #4
 
-08000e88 <LoopCopyDataInit>:
+08000fe0 <LoopCopyDataInit>:
 
 LoopCopyDataInit:
   adds r4, r0, r3
- 8000e88:	18c4      	adds	r4, r0, r3
+ 8000fe0:	18c4      	adds	r4, r0, r3
   cmp r4, r1
- 8000e8a:	428c      	cmp	r4, r1
+ 8000fe2:	428c      	cmp	r4, r1
   bcc CopyDataInit
- 8000e8c:	d3f9      	bcc.n	8000e82 <CopyDataInit>
+ 8000fe4:	d3f9      	bcc.n	8000fda <CopyDataInit>
   
 /* Zero fill the bss segment. */
   ldr r2, =_sbss
- 8000e8e:	4a0a      	ldr	r2, [pc, #40]	@ (8000eb8 <LoopFillZerobss+0x1e>)
+ 8000fe6:	4a0a      	ldr	r2, [pc, #40]	@ (8001010 <LoopFillZerobss+0x1e>)
   ldr r4, =_ebss
- 8000e90:	4c0a      	ldr	r4, [pc, #40]	@ (8000ebc <LoopFillZerobss+0x22>)
+ 8000fe8:	4c0a      	ldr	r4, [pc, #40]	@ (8001014 <LoopFillZerobss+0x22>)
   movs r3, #0
- 8000e92:	2300      	movs	r3, #0
+ 8000fea:	2300      	movs	r3, #0
   b LoopFillZerobss
- 8000e94:	e001      	b.n	8000e9a <LoopFillZerobss>
+ 8000fec:	e001      	b.n	8000ff2 <LoopFillZerobss>
 
-08000e96 <FillZerobss>:
+08000fee <FillZerobss>:
 
 FillZerobss:
   str  r3, [r2]
- 8000e96:	6013      	str	r3, [r2, #0]
+ 8000fee:	6013      	str	r3, [r2, #0]
   adds r2, r2, #4
- 8000e98:	3204      	adds	r2, #4
+ 8000ff0:	3204      	adds	r2, #4
 
-08000e9a <LoopFillZerobss>:
+08000ff2 <LoopFillZerobss>:
 
 LoopFillZerobss:
   cmp r2, r4
- 8000e9a:	42a2      	cmp	r2, r4
+ 8000ff2:	42a2      	cmp	r2, r4
   bcc FillZerobss
- 8000e9c:	d3fb      	bcc.n	8000e96 <FillZerobss>
+ 8000ff4:	d3fb      	bcc.n	8000fee <FillZerobss>
  
 /* Call static constructors */
     bl __libc_init_array
- 8000e9e:	f000 f9a9 	bl	80011f4 <__libc_init_array>
+ 8000ff6:	f001 f8eb 	bl	80021d0 <__libc_init_array>
 /* Call the application's entry point.*/
   bl  main
- 8000ea2:	f7ff fe49 	bl	8000b38 <main>
+ 8000ffa:	f7ff fd9d 	bl	8000b38 <main>
   bx  lr    
- 8000ea6:	4770      	bx	lr
+ 8000ffe:	4770      	bx	lr
   ldr   sp, =_estack    		 /* set stack pointer */
- 8000ea8:	20018000 	.word	0x20018000
+ 8001000:	20018000 	.word	0x20018000
   ldr r0, =_sdata
- 8000eac:	20000000 	.word	0x20000000
+ 8001004:	20000000 	.word	0x20000000
   ldr r1, =_edata
- 8000eb0:	20000004 	.word	0x20000004
+ 8001008:	20000004 	.word	0x20000004
   ldr r2, =_sidata
- 8000eb4:	0800131c 	.word	0x0800131c
+ 800100c:	08002cac 	.word	0x08002cac
   ldr r2, =_sbss
- 8000eb8:	20000004 	.word	0x20000004
+ 8001010:	20000004 	.word	0x20000004
   ldr r4, =_ebss
- 8000ebc:	200016ac 	.word	0x200016ac
+ 8001014:	200016ac 	.word	0x200016ac
 
-08000ec0 <ADC_IRQHandler>:
+08001018 <ADC_IRQHandler>:
  * @retval None       
 */
     .section  .text.Default_Handler,"ax",%progbits
 Default_Handler:
 Infinite_Loop:
   b  Infinite_Loop
- 8000ec0:	e7fe      	b.n	8000ec0 <ADC_IRQHandler>
+ 8001018:	e7fe      	b.n	8001018 <ADC_IRQHandler>
 	...
 
-08000ec4 <arm_fir_f32>:
+0800101c <arm_fir_f32>:
 ARM_DSP_ATTRIBUTE void arm_fir_f32(
   const arm_fir_instance_f32 * S,
   const float32_t * pSrc,
         float32_t * pDst,
         uint32_t blockSize)
 {
- 8000ec4:	e92d 43f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, lr}
- 8000ec8:	4690      	mov	r8, r2
+ 800101c:	e92d 43f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, lr}
+ 8001020:	4690      	mov	r8, r2
   const float32_t *pCoeffs = S->pCoeffs;               /* Coefficient pointer */
         float32_t *pStateCurnt;                        /* Points to the current sample of the state */
         float32_t *px;                                 /* Temporary pointer for state buffer */
   const float32_t *pb;                                 /* Temporary pointer for coefficient buffer */
         float32_t acc0;                                /* Accumulator */
         uint32_t numTaps = S->numTaps;                 /* Number of filter coefficients in the filter */
- 8000eca:	8802      	ldrh	r2, [r0, #0]
+ 8001022:	8802      	ldrh	r2, [r0, #0]
         float32_t *pState = S->pState;                 /* State pointer */
- 8000ecc:	6846      	ldr	r6, [r0, #4]
+ 8001024:	6846      	ldr	r6, [r0, #4]
   const float32_t *pCoeffs = S->pCoeffs;               /* Coefficient pointer */
- 8000ece:	f8d0 9008 	ldr.w	r9, [r0, #8]
+ 8001026:	f8d0 9008 	ldr.w	r9, [r0, #8]
         float32_t c0;                                           /* Temporary variable to hold coefficient value */
 #endif
 
   /* S->pState points to state array which contains previous frame (numTaps - 1) samples */
   /* pStateCurnt points to the location where the new input data should be written */
   pStateCurnt = &(S->pState[(numTaps - 1U)]);
- 8000ed2:	f102 4080 	add.w	r0, r2, #1073741824	@ 0x40000000
- 8000ed6:	3801      	subs	r0, #1
- 8000ed8:	eb06 0580 	add.w	r5, r6, r0, lsl #2
+ 800102a:	f102 4080 	add.w	r0, r2, #1073741824	@ 0x40000000
+ 800102e:	3801      	subs	r0, #1
+ 8001030:	eb06 0580 	add.w	r5, r6, r0, lsl #2
   /* Initialize blkCnt with number of taps */
   blkCnt = blockSize;
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
   while (blkCnt > 0U)
- 8000edc:	b33b      	cbz	r3, 8000f2e <arm_fir_f32+0x6a>
- 8000ede:	460f      	mov	r7, r1
- 8000ee0:	461c      	mov	r4, r3
+ 8001034:	b33b      	cbz	r3, 8001086 <arm_fir_f32+0x6a>
+ 8001036:	460f      	mov	r7, r1
+ 8001038:	461c      	mov	r4, r3
   blkCnt = blockSize;
- 8000ee2:	4619      	mov	r1, r3
+ 800103a:	4619      	mov	r1, r3
         float32_t *pState = S->pState;                 /* State pointer */
- 8000ee4:	4633      	mov	r3, r6
+ 800103c:	4633      	mov	r3, r6
   {
     /* Copy one sample at a time into state buffer */
     *pStateCurnt++ = *pSrc++;
- 8000ee6:	f857 0b04 	ldr.w	r0, [r7], #4
- 8000eea:	f845 0b04 	str.w	r0, [r5], #4
+ 800103e:	f857 0b04 	ldr.w	r0, [r7], #4
+ 8001042:	f845 0b04 	str.w	r0, [r5], #4
 
     /* Set the accumulator to zero */
     acc0 = 0.0f;
- 8000eee:	eddf 7a11 	vldr	s15, [pc, #68]	@ 8000f34 <arm_fir_f32+0x70>
+ 8001046:	eddf 7a11 	vldr	s15, [pc, #68]	@ 800108c <arm_fir_f32+0x70>
     pb = pCoeffs;
 
     i = numTaps;
 
     /* Perform the multiply-accumulates */
     while (i > 0U)
- 8000ef2:	b152      	cbz	r2, 8000f0a <arm_fir_f32+0x46>
+ 800104a:	b152      	cbz	r2, 8001062 <arm_fir_f32+0x46>
     i = numTaps;
- 8000ef4:	4610      	mov	r0, r2
+ 800104c:	4610      	mov	r0, r2
     pb = pCoeffs;
- 8000ef6:	46ce      	mov	lr, r9
+ 800104e:	46ce      	mov	lr, r9
     px = pState;
- 8000ef8:	469c      	mov	ip, r3
+ 8001050:	469c      	mov	ip, r3
     {
       /* acc =  b[numTaps-1] * x[n-numTaps-1] + b[numTaps-2] * x[n-numTaps-2] + b[numTaps-3] * x[n-numTaps-3] +...+ b[0] * x[0] */
       acc0 += *px++ * *pb++;
- 8000efa:	ecfc 6a01 	vldmia	ip!, {s13}
- 8000efe:	ecbe 7a01 	vldmia	lr!, {s14}
+ 8001052:	ecfc 6a01 	vldmia	ip!, {s13}
+ 8001056:	ecbe 7a01 	vldmia	lr!, {s14}
     while (i > 0U)
- 8000f02:	3801      	subs	r0, #1
+ 800105a:	3801      	subs	r0, #1
       acc0 += *px++ * *pb++;
- 8000f04:	eee6 7a87 	vfma.f32	s15, s13, s14
+ 800105c:	eee6 7a87 	vfma.f32	s15, s13, s14
     while (i > 0U)
- 8000f08:	d1f7      	bne.n	8000efa <arm_fir_f32+0x36>
+ 8001060:	d1f7      	bne.n	8001052 <arm_fir_f32+0x36>
   while (blkCnt > 0U)
- 8000f0a:	3901      	subs	r1, #1
+ 8001062:	3901      	subs	r1, #1
 
       i--;
     }
 
     /* Store result in destination buffer. */
     *pDst++ = acc0;
- 8000f0c:	ece8 7a01 	vstmia	r8!, {s15}
+ 8001064:	ece8 7a01 	vstmia	r8!, {s15}
 
     /* Advance state pointer by 1 for the next sample */
     pState = pState + 1U;
- 8000f10:	f103 0304 	add.w	r3, r3, #4
+ 8001068:	f103 0304 	add.w	r3, r3, #4
   while (blkCnt > 0U)
- 8000f14:	d1e7      	bne.n	8000ee6 <arm_fir_f32+0x22>
- 8000f16:	eb06 0184 	add.w	r1, r6, r4, lsl #2
+ 800106c:	d1e7      	bne.n	800103e <arm_fir_f32+0x22>
+ 800106e:	eb06 0184 	add.w	r1, r6, r4, lsl #2
   tapCnt = (numTaps - 1U);
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
   /* Copy remaining data */
   while (tapCnt > 0U)
- 8000f1a:	1e53      	subs	r3, r2, #1
- 8000f1c:	d005      	beq.n	8000f2a <arm_fir_f32+0x66>
+ 8001072:	1e53      	subs	r3, r2, #1
+ 8001074:	d005      	beq.n	8001082 <arm_fir_f32+0x66>
   {
     *pStateCurnt++ = *pState++;
- 8000f1e:	f851 2b04 	ldr.w	r2, [r1], #4
- 8000f22:	f846 2b04 	str.w	r2, [r6], #4
+ 8001076:	f851 2b04 	ldr.w	r2, [r1], #4
+ 800107a:	f846 2b04 	str.w	r2, [r6], #4
   while (tapCnt > 0U)
- 8000f26:	3b01      	subs	r3, #1
- 8000f28:	d1f9      	bne.n	8000f1e <arm_fir_f32+0x5a>
+ 800107e:	3b01      	subs	r3, #1
+ 8001080:	d1f9      	bne.n	8001076 <arm_fir_f32+0x5a>
 
     /* Decrement loop counter */
     tapCnt--;
   }
 
 }
- 8000f2a:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
+ 8001082:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
         float32_t *pState = S->pState;                 /* State pointer */
- 8000f2e:	4631      	mov	r1, r6
- 8000f30:	e7f3      	b.n	8000f1a <arm_fir_f32+0x56>
- 8000f32:	bf00      	nop
- 8000f34:	00000000 	.word	0x00000000
+ 8001086:	4631      	mov	r1, r6
+ 8001088:	e7f3      	b.n	8001072 <arm_fir_f32+0x56>
+ 800108a:	bf00      	nop
+ 800108c:	00000000 	.word	0x00000000
 
-08000f38 <arm_fir_init_f32>:
+08001090 <arm_fir_init_f32>:
         arm_fir_instance_f32 * S,
         uint16_t numTaps,
   const float32_t * pCoeffs,
         float32_t * pState,
         uint32_t blockSize)
 {
- 8000f38:	b510      	push	{r4, lr}
- 8000f3a:	4604      	mov	r4, r0
+ 8001090:	b510      	push	{r4, lr}
+ 8001092:	4604      	mov	r4, r0
 
   /* Clear state buffer. The size is always (blockSize + numTaps - 1) */
 #if defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE)
   memset(pState, 0, (numTaps + (blockSize - 1U) + blockSize) * sizeof(float32_t));
 #else
   memset(pState, 0, (numTaps + (blockSize - 1U)) * sizeof(float32_t));
- 8000f3c:	9802      	ldr	r0, [sp, #8]
+ 8001094:	9802      	ldr	r0, [sp, #8]
   S->numTaps = numTaps;
- 8000f3e:	8021      	strh	r1, [r4, #0]
+ 8001096:	8021      	strh	r1, [r4, #0]
   memset(pState, 0, (numTaps + (blockSize - 1U)) * sizeof(float32_t));
- 8000f40:	f100 3cff 	add.w	ip, r0, #4294967295
- 8000f44:	448c      	add	ip, r1
+ 8001098:	f100 3cff 	add.w	ip, r0, #4294967295
+ 800109c:	448c      	add	ip, r1
   S->pCoeffs = pCoeffs;
- 8000f46:	60a2      	str	r2, [r4, #8]
+ 800109e:	60a2      	str	r2, [r4, #8]
   memset(pState, 0, (numTaps + (blockSize - 1U)) * sizeof(float32_t));
- 8000f48:	2100      	movs	r1, #0
- 8000f4a:	ea4f 028c 	mov.w	r2, ip, lsl #2
- 8000f4e:	4618      	mov	r0, r3
- 8000f50:	f000 f948 	bl	80011e4 <memset>
+ 80010a0:	2100      	movs	r1, #0
+ 80010a2:	ea4f 028c 	mov.w	r2, ip, lsl #2
+ 80010a6:	4618      	mov	r0, r3
+ 80010a8:	f001 f88a 	bl	80021c0 <memset>
 #endif
   /* Assign state pointer */
   S->pState = pState;
- 8000f54:	6060      	str	r0, [r4, #4]
+ 80010ac:	6060      	str	r0, [r4, #4]
 }
- 8000f56:	bd10      	pop	{r4, pc}
+ 80010ae:	bd10      	pop	{r4, pc}
 
-08000f58 <arm_copy_f32>:
+080010b0 <arm_copy_f32>:
   /* Initialize blkCnt with number of samples */
   blkCnt = blockSize;
 
 #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
 
   while (blkCnt > 0U)
- 8000f58:	b12a      	cbz	r2, 8000f66 <arm_copy_f32+0xe>
+ 80010b0:	b12a      	cbz	r2, 80010be <arm_copy_f32+0xe>
   {
     /* C = A */
 
     /* Copy and store result in destination buffer */
     *pDst++ = *pSrc++;
- 8000f5a:	f850 3b04 	ldr.w	r3, [r0], #4
- 8000f5e:	f841 3b04 	str.w	r3, [r1], #4
+ 80010b2:	f850 3b04 	ldr.w	r3, [r0], #4
+ 80010b6:	f841 3b04 	str.w	r3, [r1], #4
   while (blkCnt > 0U)
- 8000f62:	3a01      	subs	r2, #1
- 8000f64:	d1f9      	bne.n	8000f5a <arm_copy_f32+0x2>
+ 80010ba:	3a01      	subs	r2, #1
+ 80010bc:	d1f9      	bne.n	80010b2 <arm_copy_f32+0x2>
 
     /* Decrement loop counter */
     blkCnt--;
   }
 }
- 8000f66:	4770      	bx	lr
+ 80010be:	4770      	bx	lr
 
-08000f68 <HAL_IncTick>:
+080010c0 <arm_bitreversal_32>:
+  const uint16_t bitRevLen,
+  const uint16_t *pBitRevTab)
+{
+  uint32_t a, b, i, tmp;
+
+  for (i = 0; i < bitRevLen; )
+ 80010c0:	b331      	cbz	r1, 8001110 <arm_bitreversal_32+0x50>
+{
+ 80010c2:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+  for (i = 0; i < bitRevLen; )
+ 80010c6:	f04f 0e00 	mov.w	lr, #0
+ 80010ca:	f102 0802 	add.w	r8, r2, #2
+  {
+     a = pBitRevTab[i    ] >> 2;
+ 80010ce:	f832 c01e 	ldrh.w	ip, [r2, lr, lsl #1]
+     b = pBitRevTab[i + 1] >> 2;
+ 80010d2:	f838 301e 	ldrh.w	r3, [r8, lr, lsl #1]
+     a = pBitRevTab[i    ] >> 2;
+ 80010d6:	ea4f 0c9c 	mov.w	ip, ip, lsr #2
+     b = pBitRevTab[i + 1] >> 2;
+ 80010da:	089b      	lsrs	r3, r3, #2
+
+     //real
+     tmp = pSrc[a];
+ 80010dc:	f850 702c 	ldr.w	r7, [r0, ip, lsl #2]
+     pSrc[a] = pSrc[b];
+ 80010e0:	f850 6023 	ldr.w	r6, [r0, r3, lsl #2]
+ 80010e4:	f840 602c 	str.w	r6, [r0, ip, lsl #2]
+     tmp = pSrc[a];
+ 80010e8:	ea4f 058c 	mov.w	r5, ip, lsl #2
+     pSrc[a] = pSrc[b];
+ 80010ec:	009c      	lsls	r4, r3, #2
+     pSrc[b] = tmp;
+ 80010ee:	f840 7023 	str.w	r7, [r0, r3, lsl #2]
+
+     //complex
+     tmp = pSrc[a+1];
+ 80010f2:	f105 0c04 	add.w	ip, r5, #4
+     pSrc[a+1] = pSrc[b+1];
+ 80010f6:	1d23      	adds	r3, r4, #4
+     pSrc[b+1] = tmp;
+
+    i += 2;
+ 80010f8:	f10e 0e02 	add.w	lr, lr, #2
+     tmp = pSrc[a+1];
+ 80010fc:	f850 500c 	ldr.w	r5, [r0, ip]
+     pSrc[a+1] = pSrc[b+1];
+ 8001100:	58c4      	ldr	r4, [r0, r3]
+ 8001102:	f840 400c 	str.w	r4, [r0, ip]
+  for (i = 0; i < bitRevLen; )
+ 8001106:	458e      	cmp	lr, r1
+     pSrc[b+1] = tmp;
+ 8001108:	50c5      	str	r5, [r0, r3]
+  for (i = 0; i < bitRevLen; )
+ 800110a:	d3e0      	bcc.n	80010ce <arm_bitreversal_32+0xe>
+  }
+}
+ 800110c:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+ 8001110:	4770      	bx	lr
+ 8001112:	bf00      	nop
+
+08001114 <arm_cfft_f32>:
+ARM_DSP_ATTRIBUTE void arm_cfft_f32(
+  const arm_cfft_instance_f32 * S,
+        float32_t * p1,
+        uint8_t ifftFlag,
+        uint8_t bitReverseFlag)
+{
+ 8001114:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+ 8001118:	ed2d 8b0a 	vpush	{d8-d12}
+ 800111c:	b08f      	sub	sp, #60	@ 0x3c
+  uint32_t  L = S->fftLen, l;
+  float32_t invL, * pSrc;
+
+  if (ifftFlag == 1U)
+ 800111e:	2a01      	cmp	r2, #1
+  uint32_t  L = S->fftLen, l;
+ 8001120:	8805      	ldrh	r5, [r0, #0]
+{
+ 8001122:	9202      	str	r2, [sp, #8]
+ 8001124:	4683      	mov	fp, r0
+ 8001126:	460c      	mov	r4, r1
+ 8001128:	9301      	str	r3, [sp, #4]
+  if (ifftFlag == 1U)
+ 800112a:	f000 8138 	beq.w	800139e <arm_cfft_f32+0x28a>
+      *pSrc = -*pSrc;
+      pSrc += 2;
+    }
+  }
+
+  switch (L)
+ 800112e:	f5b5 7f80 	cmp.w	r5, #256	@ 0x100
+ 8001132:	f000 8146 	beq.w	80013c2 <arm_cfft_f32+0x2ae>
+ 8001136:	d835      	bhi.n	80011a4 <arm_cfft_f32+0x90>
+ 8001138:	2d40      	cmp	r5, #64	@ 0x40
+ 800113a:	f000 8124 	beq.w	8001386 <arm_cfft_f32+0x272>
+ 800113e:	d84a      	bhi.n	80011d6 <arm_cfft_f32+0xc2>
+ 8001140:	2d10      	cmp	r5, #16
+ 8001142:	d04a      	beq.n	80011da <arm_cfft_f32+0xc6>
+ 8001144:	2d20      	cmp	r5, #32
+ 8001146:	f000 813c 	beq.w	80013c2 <arm_cfft_f32+0x2ae>
+  case 4096:
+    arm_radix8_butterfly_f32 ( p1, L, (float32_t *) S->pTwiddle, 1);
+    break;
+  }
+
+  if ( bitReverseFlag )
+ 800114a:	9b01      	ldr	r3, [sp, #4]
+ 800114c:	b133      	cbz	r3, 800115c <arm_cfft_f32+0x48>
+    arm_bitreversal_32 ((uint32_t*) p1, S->bitRevLength, S->pBitRevTable);
+ 800114e:	f8db 2008 	ldr.w	r2, [fp, #8]
+ 8001152:	f8bb 100c 	ldrh.w	r1, [fp, #12]
+ 8001156:	4620      	mov	r0, r4
+ 8001158:	f7ff ffb2 	bl	80010c0 <arm_bitreversal_32>
+
+  if (ifftFlag == 1U)
+ 800115c:	9b02      	ldr	r3, [sp, #8]
+ 800115e:	2b01      	cmp	r3, #1
+ 8001160:	d134      	bne.n	80011cc <arm_cfft_f32+0xb8>
+  {
+    invL = 1.0f / (float32_t)L;
+ 8001162:	ee07 5a90 	vmov	s15, r5
+ 8001166:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 800116a:	eeb7 7a00 	vmov.f32	s14, #112	@ 0x3f800000  1.0
+ 800116e:	eec7 6a27 	vdiv.f32	s13, s14, s15
+
+    /* Conjugate and scale output data */
+    pSrc = p1;
+    for (l= 0; l < L; l++)
+ 8001172:	b35d      	cbz	r5, 80011cc <arm_cfft_f32+0xb8>
+ 8001174:	3408      	adds	r4, #8
+ 8001176:	2300      	movs	r3, #0
+ 8001178:	3301      	adds	r3, #1
+ 800117a:	429d      	cmp	r5, r3
+ 800117c:	f104 0408 	add.w	r4, r4, #8
+    {
+      *pSrc++ *=   invL ;
+ 8001180:	ed14 7a04 	vldr	s14, [r4, #-16]
+      *pSrc    = -(*pSrc) * invL;
+ 8001184:	ed54 7a03 	vldr	s15, [r4, #-12]
+      *pSrc++ *=   invL ;
+ 8001188:	ee27 7a26 	vmul.f32	s14, s14, s13
+      *pSrc    = -(*pSrc) * invL;
+ 800118c:	ee67 7ae6 	vnmul.f32	s15, s15, s13
+      *pSrc++ *=   invL ;
+ 8001190:	ed04 7a04 	vstr	s14, [r4, #-16]
+      *pSrc    = -(*pSrc) * invL;
+ 8001194:	ed44 7a03 	vstr	s15, [r4, #-12]
+    for (l= 0; l < L; l++)
+ 8001198:	d1ee      	bne.n	8001178 <arm_cfft_f32+0x64>
+      pSrc++;
+    }
+  }
+}
+ 800119a:	b00f      	add	sp, #60	@ 0x3c
+ 800119c:	ecbd 8b0a 	vpop	{d8-d12}
+ 80011a0:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+  switch (L)
+ 80011a4:	f5b5 6f00 	cmp.w	r5, #2048	@ 0x800
+ 80011a8:	f000 810b 	beq.w	80013c2 <arm_cfft_f32+0x2ae>
+ 80011ac:	f200 80e7 	bhi.w	800137e <arm_cfft_f32+0x26a>
+ 80011b0:	f5b5 7f00 	cmp.w	r5, #512	@ 0x200
+ 80011b4:	f000 80e7 	beq.w	8001386 <arm_cfft_f32+0x272>
+ 80011b8:	f5b5 6f80 	cmp.w	r5, #1024	@ 0x400
+ 80011bc:	d00d      	beq.n	80011da <arm_cfft_f32+0xc6>
+  if ( bitReverseFlag )
+ 80011be:	9b01      	ldr	r3, [sp, #4]
+ 80011c0:	2b00      	cmp	r3, #0
+ 80011c2:	d1c4      	bne.n	800114e <arm_cfft_f32+0x3a>
+  if (ifftFlag == 1U)
+ 80011c4:	9b02      	ldr	r3, [sp, #8]
+ 80011c6:	2b01      	cmp	r3, #1
+ 80011c8:	f000 80d0 	beq.w	800136c <arm_cfft_f32+0x258>
+}
+ 80011cc:	b00f      	add	sp, #60	@ 0x3c
+ 80011ce:	ecbd 8b0a 	vpop	{d8-d12}
+ 80011d2:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+  switch (L)
+ 80011d6:	2d80      	cmp	r5, #128	@ 0x80
+ 80011d8:	d1f1      	bne.n	80011be <arm_cfft_f32+0xaa>
+  L >>= 1;
+ 80011da:	0869      	lsrs	r1, r5, #1
+  const float32_t * tw = (float32_t *) S->pTwiddle;
+ 80011dc:	f8db 2004 	ldr.w	r2, [fp, #4]
+  pMid1 = p1 + L;
+ 80011e0:	0088      	lsls	r0, r1, #2
+ 80011e2:	3010      	adds	r0, #16
+  float32_t * p2 = p1 + L;
+ 80011e4:	eb04 0685 	add.w	r6, r4, r5, lsl #2
+  for (l = L >> 2; l > 0; l-- )
+ 80011e8:	f104 0310 	add.w	r3, r4, #16
+ 80011ec:	ea4f 0ed5 	mov.w	lr, r5, lsr #3
+ 80011f0:	eb04 0c00 	add.w	ip, r4, r0
+ 80011f4:	eb03 1e0e 	add.w	lr, r3, lr, lsl #4
+ 80011f8:	4430      	add	r0, r6
+ 80011fa:	f102 0810 	add.w	r8, r2, #16
+ 80011fe:	f106 0710 	add.w	r7, r6, #16
+    t2[0] = p2[0];
+ 8001202:	ed17 1a04 	vldr	s2, [r7, #-16]
+    t2[1] = p2[1];
+ 8001206:	ed57 1a03 	vldr	s3, [r7, #-12]
+    t4[0] = pMid2[0];
+ 800120a:	ed10 5a04 	vldr	s10, [r0, #-16]
+    t4[1] = pMid2[1];
+ 800120e:	ed50 5a03 	vldr	s11, [r0, #-12]
+    t2[2] = p2[2];
+ 8001212:	ed57 8a02 	vldr	s17, [r7, #-8]
+    t2[3] = p2[3];
+ 8001216:	ed17 8a01 	vldr	s16, [r7, #-4]
+    t4[2] = pMid2[2];
+ 800121a:	ed10 7a02 	vldr	s14, [r0, #-8]
+    t4[3] = pMid2[3];
+ 800121e:	ed50 7a01 	vldr	s15, [r0, #-4]
+    t1[0] = p1[0];
+ 8001222:	ed13 4a04 	vldr	s8, [r3, #-16]
+    t1[1] = p1[1];
+ 8001226:	ed53 4a03 	vldr	s9, [r3, #-12]
+    t1[2] = p1[2];
+ 800122a:	ed13 6a02 	vldr	s12, [r3, #-8]
+    t1[3] = p1[3];
+ 800122e:	ed53 6a01 	vldr	s13, [r3, #-4]
+    t3[0] = pMid1[0];
+ 8001232:	ed1c 2a04 	vldr	s4, [ip, #-16]
+    t3[1] = pMid1[1];
+ 8001236:	ed5c 2a03 	vldr	s5, [ip, #-12]
+    t3[2] = pMid1[2];
+ 800123a:	ed1c 0a02 	vldr	s0, [ip, #-8]
+    t3[3] = pMid1[3];
+ 800123e:	ed5c 0a01 	vldr	s1, [ip, #-4]
+    *p1++ = t1[0] + t2[0];
+ 8001242:	ee74 ba01 	vadd.f32	s23, s8, s2
+    *p1++ = t1[1] + t2[1];
+ 8001246:	ee34 baa1 	vadd.f32	s22, s9, s3
+    *pMid1++ = t3[0] + t4[0];
+ 800124a:	ee72 9a05 	vadd.f32	s19, s4, s10
+    *pMid1++ = t3[1] + t4[1];
+ 800124e:	ee32 9aa5 	vadd.f32	s18, s5, s11
+    *pMid1++ = t3[2] + t4[2];
+ 8001252:	ee30 3a07 	vadd.f32	s6, s0, s14
+    *pMid1++ = t3[3] + t4[3]; /* col 1 */
+ 8001256:	ee70 3aa7 	vadd.f32	s7, s1, s15
+    *p1++ = t1[2] + t2[2];
+ 800125a:	ee76 aa28 	vadd.f32	s21, s12, s17
+    *p1++ = t1[3] + t2[3];    /* col 1 */
+ 800125e:	ee36 aa88 	vadd.f32	s20, s13, s16
+    *p1++ = t1[0] + t2[0];
+ 8001262:	ed43 ba04 	vstr	s23, [r3, #-16]
+    *p1++ = t1[1] + t2[1];
+ 8001266:	ed03 ba03 	vstr	s22, [r3, #-12]
+    *p1++ = t1[2] + t2[2];
+ 800126a:	ed43 aa02 	vstr	s21, [r3, #-8]
+    *p1++ = t1[3] + t2[3];    /* col 1 */
+ 800126e:	ed03 aa01 	vstr	s20, [r3, #-4]
+    *pMid1++ = t3[0] + t4[0];
+ 8001272:	ed4c 9a04 	vstr	s19, [ip, #-16]
+    *pMid1++ = t3[1] + t4[1];
+ 8001276:	ed0c 9a03 	vstr	s18, [ip, #-12]
+    *pMid1++ = t3[2] + t4[2];
+ 800127a:	ed0c 3a02 	vstr	s6, [ip, #-8]
+    *pMid1++ = t3[3] + t4[3]; /* col 1 */
+ 800127e:	ed4c 3a01 	vstr	s7, [ip, #-4]
+    twI = *tw++;
+ 8001282:	ed58 3a03 	vldr	s7, [r8, #-12]
+    twR = *tw++;
+ 8001286:	ed18 3a04 	vldr	s6, [r8, #-16]
+    t2[0] = t1[0] - t2[0];
+ 800128a:	ee34 4a41 	vsub.f32	s8, s8, s2
+    t2[1] = t1[1] - t2[1];
+ 800128e:	ee74 4ae1 	vsub.f32	s9, s9, s3
+    t4[1] = t4[1] - t3[1];
+ 8001292:	ee75 5ae2 	vsub.f32	s11, s11, s5
+    t4[0] = t4[0] - t3[0];
+ 8001296:	ee35 5a42 	vsub.f32	s10, s10, s4
+    m1 = t2[1] * twI;
+ 800129a:	ee24 1aa3 	vmul.f32	s2, s9, s7
+    *p2++ = m2 - m3;
+ 800129e:	ee63 1ac4 	vnmul.f32	s3, s7, s8
+    *pMid2++ = m0 - m1;
+ 80012a2:	ee23 2a65 	vnmul.f32	s4, s6, s11
+    *p2++ = m0 + m1;
+ 80012a6:	eea4 1a03 	vfma.f32	s2, s8, s6
+  for (l = L >> 2; l > 0; l-- )
+ 80012aa:	3310      	adds	r3, #16
+ 80012ac:	459e      	cmp	lr, r3
+    m3 = t4[0] * twR;
+ 80012ae:	ee65 2a03 	vmul.f32	s5, s10, s6
+    *p2++ = m2 - m3;
+ 80012b2:	eeb0 4a61 	vmov.f32	s8, s3
+ 80012b6:	eea4 4a83 	vfma.f32	s8, s9, s6
+  for (l = L >> 2; l > 0; l-- )
+ 80012ba:	f10c 0c10 	add.w	ip, ip, #16
+ 80012be:	f108 0810 	add.w	r8, r8, #16
+    *pMid2++ = m0 - m1;
+ 80012c2:	eef0 4a42 	vmov.f32	s9, s4
+ 80012c6:	eee5 4a23 	vfma.f32	s9, s10, s7
+  for (l = L >> 2; l > 0; l-- )
+ 80012ca:	f107 0710 	add.w	r7, r7, #16
+ 80012ce:	f100 0010 	add.w	r0, r0, #16
+    *pMid2++ = m2 + m3;
+ 80012d2:	eeb0 5a62 	vmov.f32	s10, s5
+ 80012d6:	eea5 5aa3 	vfma.f32	s10, s11, s7
+    *p2++ = m2 - m3;
+ 80012da:	ed07 4a07 	vstr	s8, [r7, #-28]	@ 0xffffffe4
+    *p2++ = m0 + m1;
+ 80012de:	ed07 1a08 	vstr	s2, [r7, #-32]	@ 0xffffffe0
+    *pMid2++ = m0 - m1;
+ 80012e2:	ed40 4a08 	vstr	s9, [r0, #-32]	@ 0xffffffe0
+    *pMid2++ = m2 + m3;
+ 80012e6:	ed00 5a07 	vstr	s10, [r0, #-28]	@ 0xffffffe4
+    twI = *tw++;
+ 80012ea:	ed58 5a05 	vldr	s11, [r8, #-20]	@ 0xffffffec
+    twR = *tw++;
+ 80012ee:	ed18 5a06 	vldr	s10, [r8, #-24]	@ 0xffffffe8
+    t2[2] = t1[2] - t2[2];
+ 80012f2:	ee36 6a68 	vsub.f32	s12, s12, s17
+    t2[3] = t1[3] - t2[3];    /* for col 2 */
+ 80012f6:	ee76 6ac8 	vsub.f32	s13, s13, s16
+    t4[3] = t4[3] - t3[3];    /* for col 2 */
+ 80012fa:	ee77 7ae0 	vsub.f32	s15, s15, s1
+    t4[2] = t4[2] - t3[2];
+ 80012fe:	ee37 7a40 	vsub.f32	s14, s14, s0
+    m1 = t2[3] * twI;
+ 8001302:	ee26 3aa5 	vmul.f32	s6, s13, s11
+    *p2++ = m2 - m3;
+ 8001306:	ee65 3ac6 	vnmul.f32	s7, s11, s12
+    *pMid2++ = m0 - m1;
+ 800130a:	ee25 4a67 	vnmul.f32	s8, s10, s15
+    *p2++ = m0 + m1;
+ 800130e:	eea6 3a05 	vfma.f32	s6, s12, s10
+    m3 = t4[2] * twR;
+ 8001312:	ee67 4a05 	vmul.f32	s9, s14, s10
+    *p2++ = m2 - m3;
+ 8001316:	eeb0 6a63 	vmov.f32	s12, s7
+ 800131a:	eea6 6a85 	vfma.f32	s12, s13, s10
+    *pMid2++ = m0 - m1;
+ 800131e:	eef0 6a44 	vmov.f32	s13, s8
+ 8001322:	eee7 6a25 	vfma.f32	s13, s14, s11
+    *pMid2++ = m2 + m3;
+ 8001326:	eeb0 7a64 	vmov.f32	s14, s9
+ 800132a:	eea7 7aa5 	vfma.f32	s14, s15, s11
+    *p2++ = m0 + m1;
+ 800132e:	ed07 3a06 	vstr	s6, [r7, #-24]	@ 0xffffffe8
+    *p2++ = m2 - m3;
+ 8001332:	ed07 6a05 	vstr	s12, [r7, #-20]	@ 0xffffffec
+    *pMid2++ = m0 - m1;
+ 8001336:	ed40 6a06 	vstr	s13, [r0, #-24]	@ 0xffffffe8
+    *pMid2++ = m2 + m3;
+ 800133a:	ed00 7a05 	vstr	s14, [r0, #-20]	@ 0xffffffec
+  for (l = L >> 2; l > 0; l-- )
+ 800133e:	f47f af60 	bne.w	8001202 <arm_cfft_f32+0xee>
+  arm_radix8_butterfly_f32 (pCol1, L, (float32_t *) S->pTwiddle, 2U);
+ 8001342:	b28f      	uxth	r7, r1
+ 8001344:	2302      	movs	r3, #2
+ 8001346:	4639      	mov	r1, r7
+ 8001348:	4620      	mov	r0, r4
+ 800134a:	f000 fa79 	bl	8001840 <arm_radix8_butterfly_f32>
+  arm_radix8_butterfly_f32 (pCol2, L, (float32_t *) S->pTwiddle, 2U);
+ 800134e:	2302      	movs	r3, #2
+ 8001350:	f8db 2004 	ldr.w	r2, [fp, #4]
+ 8001354:	4639      	mov	r1, r7
+ 8001356:	4630      	mov	r0, r6
+ 8001358:	f000 fa72 	bl	8001840 <arm_radix8_butterfly_f32>
+  if ( bitReverseFlag )
+ 800135c:	9b01      	ldr	r3, [sp, #4]
+ 800135e:	2b00      	cmp	r3, #0
+ 8001360:	f47f aef5 	bne.w	800114e <arm_cfft_f32+0x3a>
+  if (ifftFlag == 1U)
+ 8001364:	9b02      	ldr	r3, [sp, #8]
+ 8001366:	2b01      	cmp	r3, #1
+ 8001368:	f47f af30 	bne.w	80011cc <arm_cfft_f32+0xb8>
+    invL = 1.0f / (float32_t)L;
+ 800136c:	ee07 5a90 	vmov	s15, r5
+ 8001370:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 8001374:	eeb7 7a00 	vmov.f32	s14, #112	@ 0x3f800000  1.0
+ 8001378:	eec7 6a27 	vdiv.f32	s13, s14, s15
+    for (l= 0; l < L; l++)
+ 800137c:	e6fa      	b.n	8001174 <arm_cfft_f32+0x60>
+  switch (L)
+ 800137e:	f5b5 5f80 	cmp.w	r5, #4096	@ 0x1000
+ 8001382:	f47f af1c 	bne.w	80011be <arm_cfft_f32+0xaa>
+    arm_radix8_butterfly_f32 ( p1, L, (float32_t *) S->pTwiddle, 1);
+ 8001386:	2301      	movs	r3, #1
+ 8001388:	f8db 2004 	ldr.w	r2, [fp, #4]
+ 800138c:	4629      	mov	r1, r5
+ 800138e:	4620      	mov	r0, r4
+ 8001390:	f000 fa56 	bl	8001840 <arm_radix8_butterfly_f32>
+  if ( bitReverseFlag )
+ 8001394:	9b01      	ldr	r3, [sp, #4]
+ 8001396:	2b00      	cmp	r3, #0
+ 8001398:	f43f af14 	beq.w	80011c4 <arm_cfft_f32+0xb0>
+ 800139c:	e6d7      	b.n	800114e <arm_cfft_f32+0x3a>
+    for (l = 0; l < L; l++)
+ 800139e:	2d00      	cmp	r5, #0
+ 80013a0:	f000 8233 	beq.w	800180a <arm_cfft_f32+0x6f6>
+ 80013a4:	f101 030c 	add.w	r3, r1, #12
+ 80013a8:	2200      	movs	r2, #0
+      *pSrc = -*pSrc;
+ 80013aa:	ed53 7a02 	vldr	s15, [r3, #-8]
+    for (l = 0; l < L; l++)
+ 80013ae:	3201      	adds	r2, #1
+      *pSrc = -*pSrc;
+ 80013b0:	eef1 7a67 	vneg.f32	s15, s15
+    for (l = 0; l < L; l++)
+ 80013b4:	4295      	cmp	r5, r2
+      *pSrc = -*pSrc;
+ 80013b6:	ed43 7a02 	vstr	s15, [r3, #-8]
+    for (l = 0; l < L; l++)
+ 80013ba:	f103 0308 	add.w	r3, r3, #8
+ 80013be:	d1f4      	bne.n	80013aa <arm_cfft_f32+0x296>
+ 80013c0:	e6b5      	b.n	800112e <arm_cfft_f32+0x1a>
+    uint32_t    L  = S->fftLen >> 1;
+ 80013c2:	086b      	lsrs	r3, r5, #1
+    float32_t * p3 = p2 + L;
+ 80013c4:	eb04 01c3 	add.w	r1, r4, r3, lsl #3
+    p1ap3_0 = p1[0] + p3[0];
+ 80013c8:	ed91 6a00 	vldr	s12, [r1]
+    p1ap3_1 = p1[1] + p3[1];
+ 80013cc:	edd1 5a01 	vldr	s11, [r1, #4]
+    p1ap3_0 = p1[0] + p3[0];
+ 80013d0:	ed94 7a00 	vldr	s14, [r4]
+    p1ap3_1 = p1[1] + p3[1];
+ 80013d4:	edd4 7a01 	vldr	s15, [r4, #4]
+    tw2 = tw3 = tw4 = (float32_t *) S->pTwiddle;
+ 80013d8:	f8db 6004 	ldr.w	r6, [fp, #4]
+ 80013dc:	9606      	str	r6, [sp, #24]
+    float32_t * p4 = p3 + L;
+ 80013de:	eb01 0283 	add.w	r2, r1, r3, lsl #2
+    p1ap3_0 = p1[0] + p3[0];
+ 80013e2:	ee77 6a06 	vadd.f32	s13, s14, s12
+    p1sp3_0 = p1[0] - p3[0];
+ 80013e6:	ee37 7a46 	vsub.f32	s14, s14, s12
+    p1ap3_1 = p1[1] + p3[1];
+ 80013ea:	ee37 6aa5 	vadd.f32	s12, s15, s11
+    p1sp3_1 = p1[1] - p3[1];
+ 80013ee:	ee77 7ae5 	vsub.f32	s15, s15, s11
+    t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 80013f2:	edd2 5a00 	vldr	s11, [r2]
+    t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 80013f6:	ed92 2a01 	vldr	s4, [r2, #4]
+ 80013fa:	9203      	str	r2, [sp, #12]
+    float32_t * p2 = p1 + L;
+ 80013fc:	eb04 0083 	add.w	r0, r4, r3, lsl #2
+    t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 8001400:	ed90 5a00 	vldr	s10, [r0]
+    t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 8001404:	edd0 2a01 	vldr	s5, [r0, #4]
+    float32_t * p3 = p2 + L;
+ 8001408:	9105      	str	r1, [sp, #20]
+    *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 800140a:	ee36 3aa5 	vadd.f32	s6, s13, s11
+    t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 800140e:	ee77 3aa5 	vadd.f32	s7, s15, s11
+    *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 8001412:	ee33 3a05 	vadd.f32	s6, s6, s10
+    t4[0] = p1sp3_0 - p2[1] + p4[1];
+ 8001416:	ee77 4a02 	vadd.f32	s9, s14, s4
+    *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 800141a:	ed84 3a00 	vstr	s6, [r4]
+    t3[0] = p1ap3_0 - p2[0] - p4[0];
+ 800141e:	ee76 6ac5 	vsub.f32	s13, s13, s10
+    t4[1] = p1sp3_1 + p2[0] - p4[0];
+ 8001422:	ee77 7a85 	vadd.f32	s15, s15, s10
+    t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 8001426:	ee73 3ac5 	vsub.f32	s7, s7, s10
+    t4[0] = p1sp3_0 - p2[1] + p4[1];
+ 800142a:	ee34 5ae2 	vsub.f32	s10, s9, s5
+    *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 800142e:	edd2 4a01 	vldr	s9, [r2, #4]
+    float32_t * p2 = p1 + L;
+ 8001432:	9004      	str	r0, [sp, #16]
+    t3[1] = p1ap3_1 - p2[1] - p4[1];
+ 8001434:	ee36 4a62 	vsub.f32	s8, s12, s5
+    t3[0] = p1ap3_0 - p2[0] - p4[0];
+ 8001438:	ee76 6ae5 	vsub.f32	s13, s13, s11
+    t4[1] = p1sp3_1 + p2[0] - p4[0];
+ 800143c:	ee77 7ae5 	vsub.f32	s15, s15, s11
+    t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 8001440:	ee37 7a22 	vadd.f32	s14, s14, s5
+    *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 8001444:	edd0 5a01 	vldr	s11, [r0, #4]
+ 8001448:	950d      	str	r5, [sp, #52]	@ 0x34
+ 800144a:	ee36 6a24 	vadd.f32	s12, s12, s9
+    t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 800144e:	ee37 7a42 	vsub.f32	s14, s14, s4
+    t3[1] = p1ap3_1 - p2[1] - p4[1];
+ 8001452:	ee34 4a42 	vsub.f32	s8, s8, s4
+    *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 8001456:	ee36 6a25 	vadd.f32	s12, s12, s11
+    L >>= 1;
+ 800145a:	085f      	lsrs	r7, r3, #1
+    *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 800145c:	ed84 6a01 	vstr	s12, [r4, #4]
+ 8001460:	eb02 0383 	add.w	r3, r2, r3, lsl #2
+    *p2++ = t2[0];
+ 8001464:	ed80 7a00 	vstr	s14, [r0]
+    *p2++ = t2[1];
+ 8001468:	edc0 3a01 	vstr	s7, [r0, #4]
+    *p3++ = t3[0];
+ 800146c:	edc1 6a00 	vstr	s13, [r1]
+    *p3++ = t3[1];
+ 8001470:	ed81 4a01 	vstr	s8, [r1, #4]
+    *p4++ = t4[0];
+ 8001474:	ed82 5a00 	vstr	s10, [r2]
+    *p4++ = t4[1];
+ 8001478:	edc2 7a01 	vstr	s15, [r2, #4]
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 800147c:	1eba      	subs	r2, r7, #2
+    L >>= 1;
+ 800147e:	9708      	str	r7, [sp, #32]
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 8001480:	0857      	lsrs	r7, r2, #1
+ 8001482:	9707      	str	r7, [sp, #28]
+ 8001484:	3b0c      	subs	r3, #12
+ 8001486:	930b      	str	r3, [sp, #44]	@ 0x2c
+ 8001488:	f106 0820 	add.w	r8, r6, #32
+    tw3 += twMod3;
+ 800148c:	f106 0310 	add.w	r3, r6, #16
+ 8001490:	f106 0930 	add.w	r9, r6, #48	@ 0x30
+ 8001494:	9e07      	ldr	r6, [sp, #28]
+ 8001496:	9309      	str	r3, [sp, #36]	@ 0x24
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 8001498:	f1a0 0c0c 	sub.w	ip, r0, #12
+ 800149c:	469a      	mov	sl, r3
+ 800149e:	0133      	lsls	r3, r6, #4
+ 80014a0:	460a      	mov	r2, r1
+ 80014a2:	f8cd c030 	str.w	ip, [sp, #48]	@ 0x30
+ 80014a6:	930a      	str	r3, [sp, #40]	@ 0x28
+ 80014a8:	eb08 1306 	add.w	r3, r8, r6, lsl #4
+ 80014ac:	f102 0e10 	add.w	lr, r2, #16
+ 80014b0:	461d      	mov	r5, r3
+ 80014b2:	9a03      	ldr	r2, [sp, #12]
+ 80014b4:	e9dd 360b 	ldrd	r3, r6, [sp, #44]	@ 0x2c
+ 80014b8:	f1a2 0c0c 	sub.w	ip, r2, #12
+ 80014bc:	f104 0710 	add.w	r7, r4, #16
+ 80014c0:	3010      	adds	r0, #16
+ 80014c2:	390c      	subs	r1, #12
+ 80014c4:	3210      	adds	r2, #16
+      t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 80014c6:	ed12 8a02 	vldr	s16, [r2, #-8]
+ 80014ca:	ed50 2a02 	vldr	s5, [r0, #-8]
+      p1ap3_0 = p1[0] + p3[0];
+ 80014ce:	ed1e 6a02 	vldr	s12, [lr, #-8]
+ 80014d2:	ed17 3a02 	vldr	s6, [r7, #-8]
+      t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 80014d6:	ed12 2a01 	vldr	s4, [r2, #-4]
+      p1ap3_1 = p1[1] + p3[1];
+ 80014da:	ed1e 7a01 	vldr	s14, [lr, #-4]
+      t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 80014de:	ed50 aa01 	vldr	s21, [r0, #-4]
+      p1ap3_1 = p1[1] + p3[1];
+ 80014e2:	ed57 6a01 	vldr	s13, [r7, #-4]
+      p1ap3_0 = p1[0] + p3[0];
+ 80014e6:	ee33 4a06 	vadd.f32	s8, s6, s12
+      *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 80014ea:	ee72 7a88 	vadd.f32	s15, s5, s16
+      p1ap3_1 = p1[1] + p3[1];
+ 80014ee:	ee76 4a87 	vadd.f32	s9, s13, s14
+      *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 80014f2:	ee77 7a84 	vadd.f32	s15, s15, s8
+      p1sp3_0 = p1[0] - p3[0];
+ 80014f6:	ee33 3a46 	vsub.f32	s6, s6, s12
+      *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 80014fa:	ed47 7a02 	vstr	s15, [r7, #-8]
+      *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 80014fe:	ed52 5a01 	vldr	s11, [r2, #-4]
+ 8001502:	ed50 7a01 	vldr	s15, [r0, #-4]
+ 8001506:	ee77 7aa5 	vadd.f32	s15, s15, s11
+      p1sp3_1 = p1[1] - p3[1];
+ 800150a:	ee76 6ac7 	vsub.f32	s13, s13, s14
+      *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 800150e:	ee77 7aa4 	vadd.f32	s15, s15, s9
+      t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 8001512:	ee73 9a42 	vsub.f32	s19, s6, s4
+      *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 8001516:	ed47 7a01 	vstr	s15, [r7, #-4]
+      t2[2] = pEnd2[0] - pEnd4[0] + p1sp3_1;
+ 800151a:	edd3 ba02 	vldr	s23, [r3, #8]
+      p1ap3_0 = pEnd1[ 0] + pEnd3[0];
+ 800151e:	ed9c 6a02 	vldr	s12, [ip, #8]
+ 8001522:	edd6 1a02 	vldr	s3, [r6, #8]
+      t2[2] = pEnd2[0] - pEnd4[0] + p1sp3_1;
+ 8001526:	edd1 5a02 	vldr	s11, [r1, #8]
+      t2[3] = pEnd1[0] - pEnd3[0] - pEnd2[-1] + pEnd4[-1];
+ 800152a:	ed93 ba01 	vldr	s22, [r3, #4]
+      p1ap3_1 = pEnd1[-1] + pEnd3[-1];
+ 800152e:	ed9c 1a01 	vldr	s2, [ip, #4]
+      t2[3] = pEnd1[0] - pEnd3[0] - pEnd2[-1] + pEnd4[-1];
+ 8001532:	ed91 0a01 	vldr	s0, [r1, #4]
+      p1ap3_1 = pEnd1[-1] + pEnd3[-1];
+ 8001536:	ed96 aa01 	vldr	s20, [r6, #4]
+      p1ap3_0 = pEnd1[ 0] + pEnd3[0];
+ 800153a:	ee31 ca86 	vadd.f32	s24, s3, s12
+ 800153e:	ee75 0aab 	vadd.f32	s1, s11, s23
+      p1ap3_1 = pEnd1[-1] + pEnd3[-1];
+ 8001542:	ee3a 5a01 	vadd.f32	s10, s20, s2
+      *pEnd1-- = p1ap3_0 + pEnd2[ 0] + pEnd4[ 0];
+ 8001546:	ee70 7a8c 	vadd.f32	s15, s1, s24
+      t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 800154a:	ee36 9ae2 	vsub.f32	s18, s13, s5
+      *pEnd1-- = p1ap3_0 + pEnd2[ 0] + pEnd4[ 0];
+ 800154e:	edc6 7a02 	vstr	s15, [r6, #8]
+      *pEnd1-- = p1ap3_1 + pEnd2[-1] + pEnd4[-1];
+ 8001552:	edd3 8a01 	vldr	s17, [r3, #4]
+ 8001556:	edd1 7a01 	vldr	s15, [r1, #4]
+ 800155a:	ee77 7aa8 	vadd.f32	s15, s15, s17
+      t2[2] = pEnd2[0] - pEnd4[0] + p1sp3_1;
+ 800155e:	ee35 7aeb 	vsub.f32	s14, s11, s23
+      *pEnd1-- = p1ap3_1 + pEnd2[-1] + pEnd4[-1];
+ 8001562:	ee77 7a85 	vadd.f32	s15, s15, s10
+      t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 8001566:	ee39 9a08 	vadd.f32	s18, s18, s16
+      *pEnd1-- = p1ap3_1 + pEnd2[-1] + pEnd4[-1];
+ 800156a:	edc6 7a01 	vstr	s15, [r6, #4]
+      twI = *tw2++;
+ 800156e:	ed5a 8a01 	vldr	s17, [sl, #-4]
+      twR = *tw2++;
+ 8001572:	ed5a 7a02 	vldr	s15, [sl, #-8]
+      t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 8001576:	ee79 9aaa 	vadd.f32	s19, s19, s21
+      t3[3] = p1ap3_0 - pEnd2[ 0] - pEnd4[ 0];
+ 800157a:	ee7c 5a65 	vsub.f32	s11, s24, s11
+      t2[3] = pEnd1[0] - pEnd3[0] - pEnd2[-1] + pEnd4[-1];
+ 800157e:	ee71 3a8b 	vadd.f32	s7, s3, s22
+      m0 = -t3[3] * twR;
+ 8001582:	ee70 0acc 	vsub.f32	s1, s1, s24
+      t3[3] = p1ap3_0 - pEnd2[ 0] - pEnd4[ 0];
+ 8001586:	ee75 5aeb 	vsub.f32	s11, s11, s23
+      m1 = t2[1] * twI;
+ 800158a:	ee29 ca28 	vmul.f32	s24, s18, s17
+      *p2++ = m2 - m3;
+ 800158e:	ee68 bae9 	vnmul.f32	s23, s17, s19
+      *p2++ = m0 + m1;
+ 8001592:	eea9 caa7 	vfma.f32	s24, s19, s15
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 8001596:	f108 0810 	add.w	r8, r8, #16
+ 800159a:	3708      	adds	r7, #8
+      t2[3] = pEnd1[0] - pEnd3[0] - pEnd2[-1] + pEnd4[-1];
+ 800159c:	ee73 3ac6 	vsub.f32	s7, s7, s12
+      *p2++ = m2 - m3;
+ 80015a0:	eef0 9a6b 	vmov.f32	s19, s23
+ 80015a4:	eee9 9a27 	vfma.f32	s19, s18, s15
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 80015a8:	3e08      	subs	r6, #8
+ 80015aa:	f10a 0a08 	add.w	sl, sl, #8
+      t2[2] = pEnd2[0] - pEnd4[0] + p1sp3_1;
+ 80015ae:	ee37 9a41 	vsub.f32	s18, s14, s2
+      t2[3] = pEnd1[0] - pEnd3[0] - pEnd2[-1] + pEnd4[-1];
+ 80015b2:	ee73 3ac0 	vsub.f32	s7, s7, s0
+      t3[2] = p1ap3_1 - pEnd2[-1] - pEnd4[-1];
+ 80015b6:	ee35 5a40 	vsub.f32	s10, s10, s0
+      t2[2] = pEnd2[0] - pEnd4[0] + p1sp3_1;
+ 80015ba:	ee39 9a0a 	vadd.f32	s18, s18, s20
+      t3[2] = p1ap3_1 - pEnd2[-1] - pEnd4[-1];
+ 80015be:	ee35 5a4b 	vsub.f32	s10, s10, s22
+      t4[3] = pEnd4[-1] - pEnd2[-1] - p1sp3_0;
+ 80015c2:	ee36 6a0b 	vadd.f32	s12, s12, s22
+      m3 = t2[3] * twR;
+ 80015c6:	ee23 baa7 	vmul.f32	s22, s7, s15
+      *pEnd2-- = m0 - m1;
+ 80015ca:	ee67 7ac9 	vnmul.f32	s15, s15, s18
+      *p2++ = m2 - m3;
+ 80015ce:	ed40 9a01 	vstr	s19, [r0, #-4]
+      *pEnd2-- = m2 + m3;
+ 80015d2:	eef0 9a4b 	vmov.f32	s19, s22
+      *pEnd2-- = m0 - m1;
+ 80015d6:	eee3 7aa8 	vfma.f32	s15, s7, s17
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 80015da:	3008      	adds	r0, #8
+ 80015dc:	3908      	subs	r1, #8
+      *pEnd2-- = m2 + m3;
+ 80015de:	eee9 9a28 	vfma.f32	s19, s18, s17
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 80015e2:	f10e 0e08 	add.w	lr, lr, #8
+ 80015e6:	f1ac 0c08 	sub.w	ip, ip, #8
+      t3[0] = p1ap3_0 - p2[0] - p4[0];
+ 80015ea:	ee34 4a62 	vsub.f32	s8, s8, s5
+      t3[1] = p1ap3_1 - p2[1] - p4[1];
+ 80015ee:	ee74 4aea 	vsub.f32	s9, s9, s21
+      *p2++ = m0 + m1;
+ 80015f2:	ed00 ca04 	vstr	s24, [r0, #-16]
+      *pEnd2-- = m2 + m3;
+ 80015f6:	edc1 9a03 	vstr	s19, [r1, #12]
+      *pEnd2-- = m0 - m1;
+ 80015fa:	edc1 7a04 	vstr	s15, [r1, #16]
+      twI = tw3[1];
+ 80015fe:	ed58 7a07 	vldr	s15, [r8, #-28]	@ 0xffffffe4
+      twR = tw3[0];
+ 8001602:	ed58 3a08 	vldr	s7, [r8, #-32]	@ 0xffffffe0
+      t3[0] = p1ap3_0 - p2[0] - p4[0];
+ 8001606:	ee34 4a48 	vsub.f32	s8, s8, s16
+      t3[1] = p1ap3_1 - p2[1] - p4[1];
+ 800160a:	ee74 4ac2 	vsub.f32	s9, s9, s4
+      t4[1] = p1sp3_1 + p2[0] - p4[0];
+ 800160e:	ee76 6ac8 	vsub.f32	s13, s13, s16
+      m1 = t3[1] * twI;
+ 8001612:	ee64 8aa7 	vmul.f32	s17, s9, s15
+      *p3++ = m2 - m3;
+ 8001616:	ee27 8ac4 	vnmul.f32	s16, s15, s8
+      m3 =  t3[3] * twI;
+ 800161a:	ee65 5aa7 	vmul.f32	s11, s11, s15
+      *pEnd3-- = m0 - m1;
+ 800161e:	ee67 7ac5 	vnmul.f32	s15, s15, s10
+      *p3++ = m0 + m1;
+ 8001622:	eee4 8a23 	vfma.f32	s17, s8, s7
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 8001626:	4545      	cmp	r5, r8
+ 8001628:	f109 0918 	add.w	r9, r9, #24
+      *p3++ = m2 - m3;
+ 800162c:	eeb0 4a48 	vmov.f32	s8, s16
+ 8001630:	eea4 4aa3 	vfma.f32	s8, s9, s7
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 8001634:	f102 0208 	add.w	r2, r2, #8
+ 8001638:	f1a3 0308 	sub.w	r3, r3, #8
+      *pEnd3-- = m3 - m2;
+ 800163c:	eee5 5a63 	vfms.f32	s11, s10, s7
+      *pEnd3-- = m0 - m1;
+ 8001640:	eee3 7aa0 	vfma.f32	s15, s7, s1
+      t4[2] = pEnd2[ 0] - pEnd4[ 0] - p1sp3_1;
+ 8001644:	ee37 7a4a 	vsub.f32	s14, s14, s20
+      t4[0] = p1sp3_0 - p2[1] + p4[1];
+ 8001648:	ee33 3a6a 	vsub.f32	s6, s6, s21
+      *p3++ = m0 + m1;
+ 800164c:	ed4e 8a04 	vstr	s17, [lr, #-16]
+      t4[3] = pEnd4[-1] - pEnd2[-1] - p1sp3_0;
+ 8001650:	ee36 6a40 	vsub.f32	s12, s12, s0
+      *p3++ = m2 - m3;
+ 8001654:	ed0e 4a03 	vstr	s8, [lr, #-12]
+      *pEnd3-- = m0 - m1;
+ 8001658:	edcc 7a04 	vstr	s15, [ip, #16]
+      *pEnd3-- = m3 - m2;
+ 800165c:	edcc 5a03 	vstr	s11, [ip, #12]
+      twR = tw4[0];
+ 8001660:	ed19 5a0c 	vldr	s10, [r9, #-48]	@ 0xffffffd0
+      twI = tw4[1];
+ 8001664:	ed59 5a0b 	vldr	s11, [r9, #-44]	@ 0xffffffd4
+      t4[2] = pEnd2[ 0] - pEnd4[ 0] - p1sp3_1;
+ 8001668:	ee77 7a01 	vadd.f32	s15, s14, s2
+      t4[0] = p1sp3_0 - p2[1] + p4[1];
+ 800166c:	ee33 3a02 	vadd.f32	s6, s6, s4
+      t4[3] = pEnd4[-1] - pEnd2[-1] - p1sp3_0;
+ 8001670:	ee36 7a61 	vsub.f32	s14, s12, s3
+      t4[1] = p1sp3_1 + p2[0] - p4[0];
+ 8001674:	ee76 6aa2 	vadd.f32	s13, s13, s5
+      *p4++ = m2 - m3;
+ 8001678:	ee25 4ac3 	vnmul.f32	s8, s11, s6
+      *pEnd4-- = m0 - m1;
+ 800167c:	ee65 4a67 	vnmul.f32	s9, s10, s15
+      m3 = t4[3] * twR;
+ 8001680:	ee27 6a05 	vmul.f32	s12, s14, s10
+      *p4++ = m2 - m3;
+ 8001684:	eea6 4a85 	vfma.f32	s8, s13, s10
+      m1 = t4[1] * twI;
+ 8001688:	ee66 3aa5 	vmul.f32	s7, s13, s11
+      *pEnd4-- = m0 - m1;
+ 800168c:	eef0 6a64 	vmov.f32	s13, s9
+ 8001690:	eee7 6a25 	vfma.f32	s13, s14, s11
+      *pEnd4-- = m2 + m3;
+ 8001694:	eeb0 7a46 	vmov.f32	s14, s12
+      *p4++ = m0 + m1;
+ 8001698:	eee3 3a05 	vfma.f32	s7, s6, s10
+      *pEnd4-- = m2 + m3;
+ 800169c:	eea7 7aa5 	vfma.f32	s14, s15, s11
+      *p4++ = m0 + m1;
+ 80016a0:	ed42 3a04 	vstr	s7, [r2, #-16]
+      *p4++ = m2 - m3;
+ 80016a4:	ed02 4a03 	vstr	s8, [r2, #-12]
+      *pEnd4-- = m0 - m1;
+ 80016a8:	edc3 6a04 	vstr	s13, [r3, #16]
+      *pEnd4-- = m2 + m3;
+ 80016ac:	ed83 7a03 	vstr	s14, [r3, #12]
+    for (l = (L - 2) >> 1; l > 0; l-- )
+ 80016b0:	f47f af09 	bne.w	80014c6 <arm_cfft_f32+0x3b2>
+ 80016b4:	e9dd 0309 	ldrd	r0, r3, [sp, #36]	@ 0x24
+ 80016b8:	4418      	add	r0, r3
+ 80016ba:	9b07      	ldr	r3, [sp, #28]
+ 80016bc:	9f05      	ldr	r7, [sp, #20]
+ 80016be:	9906      	ldr	r1, [sp, #24]
+    arm_radix8_butterfly_f32 (pCol1, L, (float32_t *) S->pTwiddle, 4U);
+ 80016c0:	f8bd 6020 	ldrh.w	r6, [sp, #32]
+ 80016c4:	9d0d      	ldr	r5, [sp, #52]	@ 0x34
+ 80016c6:	00da      	lsls	r2, r3, #3
+ 80016c8:	3208      	adds	r2, #8
+ 80016ca:	eb07 0c02 	add.w	ip, r7, r2
+ 80016ce:	eb04 0e02 	add.w	lr, r4, r2
+ 80016d2:	9f03      	ldr	r7, [sp, #12]
+    p1ap3_0 = p1[0] + p3[0];
+ 80016d4:	ed9c 5a00 	vldr	s10, [ip]
+ 80016d8:	edde 7a00 	vldr	s15, [lr]
+    p1ap3_1 = p1[1] + p3[1];
+ 80016dc:	eddc 5a01 	vldr	s11, [ip, #4]
+ 80016e0:	ed9e 7a01 	vldr	s14, [lr, #4]
+ 80016e4:	3301      	adds	r3, #1
+ 80016e6:	eb03 0343 	add.w	r3, r3, r3, lsl #1
+ 80016ea:	eb07 0802 	add.w	r8, r7, r2
+    p1ap3_0 = p1[0] + p3[0];
+ 80016ee:	eb01 03c3 	add.w	r3, r1, r3, lsl #3
+ 80016f2:	9904      	ldr	r1, [sp, #16]
+    t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 80016f4:	edd8 4a00 	vldr	s9, [r8]
+    t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 80016f8:	edd8 2a01 	vldr	s5, [r8, #4]
+    p1ap3_0 = p1[0] + p3[0];
+ 80016fc:	ee77 6a85 	vadd.f32	s13, s15, s10
+    p1sp3_0 = p1[0] - p3[0];
+ 8001700:	188f      	adds	r7, r1, r2
+    t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 8001702:	ed97 4a00 	vldr	s8, [r7]
+    t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 8001706:	ed97 3a01 	vldr	s6, [r7, #4]
+ 800170a:	9906      	ldr	r1, [sp, #24]
+    p1ap3_1 = p1[1] + p3[1];
+ 800170c:	ee37 6a25 	vadd.f32	s12, s14, s11
+    p1sp3_1 = p1[1] - p3[1];
+ 8001710:	ee37 7a65 	vsub.f32	s14, s14, s11
+    *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 8001714:	ee76 5aa4 	vadd.f32	s11, s13, s9
+    p1sp3_0 = p1[0] - p3[0];
+ 8001718:	ee77 7ac5 	vsub.f32	s15, s15, s10
+    *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 800171c:	ee75 5a84 	vadd.f32	s11, s11, s8
+    t4[0] = p1sp3_0 - p2[1] + p4[1];
+ 8001720:	ee37 5aa2 	vadd.f32	s10, s15, s5
+    *p1++ = p1ap3_0 + p2[0] + p4[0];
+ 8001724:	edce 5a00 	vstr	s11, [lr]
+    *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 8001728:	edd8 5a01 	vldr	s11, [r8, #4]
+ 800172c:	ed97 2a01 	vldr	s4, [r7, #4]
+ 8001730:	ee76 5a25 	vadd.f32	s11, s12, s11
+    t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 8001734:	ee77 3a44 	vsub.f32	s7, s14, s8
+    *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 8001738:	ee75 5a82 	vadd.f32	s11, s11, s4
+    t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 800173c:	ee77 7a83 	vadd.f32	s15, s15, s6
+    *p1++ = p1ap3_1 + p2[1] + p4[1];
+ 8001740:	edce 5a01 	vstr	s11, [lr, #4]
+ 8001744:	440a      	add	r2, r1
+    twI = tw2[1];
+ 8001746:	edd2 5a01 	vldr	s11, [r2, #4]
+    twR = tw2[0];
+ 800174a:	edd2 1a00 	vldr	s3, [r2]
+    t2[0] = p1sp3_0 + p2[1] - p4[1];
+ 800174e:	ee77 7ae2 	vsub.f32	s15, s15, s5
+    t2[1] = p1sp3_1 - p2[0] + p4[0];
+ 8001752:	ee73 3aa4 	vadd.f32	s7, s7, s9
+    *p2++ = m2 - m3;
+ 8001756:	ee25 2ae7 	vnmul.f32	s4, s11, s15
+    m1 = t2[1] * twI;
+ 800175a:	ee63 5aa5 	vmul.f32	s11, s7, s11
+    *p2++ = m2 - m3;
+ 800175e:	eea3 2aa1 	vfma.f32	s4, s7, s3
+    arm_radix8_butterfly_f32 (pCol1, L, (float32_t *) S->pTwiddle, 4U);
+ 8001762:	460a      	mov	r2, r1
+ 8001764:	4631      	mov	r1, r6
+    *p2++ = m0 + m1;
+ 8001766:	eee7 5aa1 	vfma.f32	s11, s15, s3
+    t3[0] = p1ap3_0 - p2[0] - p4[0];
+ 800176a:	ee76 7ac4 	vsub.f32	s15, s13, s8
+    t3[1] = p1ap3_1 - p2[1] - p4[1];
+ 800176e:	ee76 6a43 	vsub.f32	s13, s12, s6
+    *p2++ = m2 - m3;
+ 8001772:	ed87 2a01 	vstr	s4, [r7, #4]
+    *p2++ = m0 + m1;
+ 8001776:	edc7 5a00 	vstr	s11, [r7]
+    t3[0] = p1ap3_0 - p2[0] - p4[0];
+ 800177a:	ee77 7ae4 	vsub.f32	s15, s15, s9
+    t3[1] = p1ap3_1 - p2[1] - p4[1];
+ 800177e:	ee76 6ae2 	vsub.f32	s13, s13, s5
+    twI = tw3[1];
+ 8001782:	ed90 6a01 	vldr	s12, [r0, #4]
+    twR = tw3[0];
+ 8001786:	edd0 3a00 	vldr	s7, [r0]
+    *p3++ = m2 - m3;
+ 800178a:	ee66 5a67 	vnmul.f32	s11, s12, s15
+    m1 = t3[1] * twI;
+ 800178e:	ee26 6a86 	vmul.f32	s12, s13, s12
+    *p3++ = m2 - m3;
+ 8001792:	eee6 5aa3 	vfma.f32	s11, s13, s7
+    arm_radix8_butterfly_f32 (pCol1, L, (float32_t *) S->pTwiddle, 4U);
+ 8001796:	4620      	mov	r0, r4
+    *p3++ = m0 + m1;
+ 8001798:	eea7 6aa3 	vfma.f32	s12, s15, s7
+    t4[1] = p1sp3_1 + p2[0] - p4[0];
+ 800179c:	ee77 7a04 	vadd.f32	s15, s14, s8
+    *p3++ = m0 + m1;
+ 80017a0:	ed8c 6a00 	vstr	s12, [ip]
+    *p3++ = m2 - m3;
+ 80017a4:	edcc 5a01 	vstr	s11, [ip, #4]
+    t4[0] = p1sp3_0 - p2[1] + p4[1];
+ 80017a8:	ee75 6a43 	vsub.f32	s13, s10, s6
+    t4[1] = p1sp3_1 + p2[0] - p4[0];
+ 80017ac:	ee77 7ae4 	vsub.f32	s15, s15, s9
+    twI = tw4[1];
+ 80017b0:	ed93 7a01 	vldr	s14, [r3, #4]
+    twR = tw4[0];
+ 80017b4:	edd3 5a00 	vldr	s11, [r3]
+    *p4++ = m2 - m3;
+ 80017b8:	ee27 6a66 	vnmul.f32	s12, s14, s13
+    m1 = t4[1] * twI;
+ 80017bc:	ee27 7a87 	vmul.f32	s14, s15, s14
+    *p4++ = m2 - m3;
+ 80017c0:	eea7 6aa5 	vfma.f32	s12, s15, s11
+    arm_radix8_butterfly_f32 (pCol1, L, (float32_t *) S->pTwiddle, 4U);
+ 80017c4:	2304      	movs	r3, #4
+    *p4++ = m0 + m1;
+ 80017c6:	eea6 7aa5 	vfma.f32	s14, s13, s11
+    *p4++ = m2 - m3;
+ 80017ca:	ed88 6a01 	vstr	s12, [r8, #4]
+    *p4++ = m0 + m1;
+ 80017ce:	ed88 7a00 	vstr	s14, [r8]
+    arm_radix8_butterfly_f32 (pCol1, L, (float32_t *) S->pTwiddle, 4U);
+ 80017d2:	f000 f835 	bl	8001840 <arm_radix8_butterfly_f32>
+    arm_radix8_butterfly_f32 (pCol2, L, (float32_t *) S->pTwiddle, 4U);
+ 80017d6:	9804      	ldr	r0, [sp, #16]
+ 80017d8:	f8db 2004 	ldr.w	r2, [fp, #4]
+ 80017dc:	2304      	movs	r3, #4
+ 80017de:	4631      	mov	r1, r6
+ 80017e0:	f000 f82e 	bl	8001840 <arm_radix8_butterfly_f32>
+    arm_radix8_butterfly_f32 (pCol3, L, (float32_t *) S->pTwiddle, 4U);
+ 80017e4:	9805      	ldr	r0, [sp, #20]
+ 80017e6:	f8db 2004 	ldr.w	r2, [fp, #4]
+ 80017ea:	2304      	movs	r3, #4
+ 80017ec:	4631      	mov	r1, r6
+ 80017ee:	f000 f827 	bl	8001840 <arm_radix8_butterfly_f32>
+    arm_radix8_butterfly_f32 (pCol4, L, (float32_t *) S->pTwiddle, 4U);
+ 80017f2:	2304      	movs	r3, #4
+ 80017f4:	9803      	ldr	r0, [sp, #12]
+ 80017f6:	f8db 2004 	ldr.w	r2, [fp, #4]
+ 80017fa:	4631      	mov	r1, r6
+ 80017fc:	f000 f820 	bl	8001840 <arm_radix8_butterfly_f32>
+  if ( bitReverseFlag )
+ 8001800:	9b01      	ldr	r3, [sp, #4]
+ 8001802:	2b00      	cmp	r3, #0
+ 8001804:	f43f acde 	beq.w	80011c4 <arm_cfft_f32+0xb0>
+ 8001808:	e4a1      	b.n	800114e <arm_cfft_f32+0x3a>
+ 800180a:	9b01      	ldr	r3, [sp, #4]
+ 800180c:	2b00      	cmp	r3, #0
+ 800180e:	f43f acdd 	beq.w	80011cc <arm_cfft_f32+0xb8>
+    arm_bitreversal_32 ((uint32_t*) p1, S->bitRevLength, S->pBitRevTable);
+ 8001812:	6882      	ldr	r2, [r0, #8]
+ 8001814:	8981      	ldrh	r1, [r0, #12]
+ 8001816:	4620      	mov	r0, r4
+ 8001818:	f7ff fc52 	bl	80010c0 <arm_bitreversal_32>
+  if (ifftFlag == 1U)
+ 800181c:	e4a1      	b.n	8001162 <arm_cfft_f32+0x4e>
+ 800181e:	bf00      	nop
+
+08001820 <arm_cfft_init_128_f32>:
+
+  @par          Use of this function is mandatory only for the Helium and Neon versions of the FFT.
+                Other versions can still initialize directly the data structure using 
+                variables declared in arm_const_structs.h
+ */
+CFFTINIT_F32(128,64)
+ 8001820:	4b06      	ldr	r3, [pc, #24]	@ (800183c <arm_cfft_init_128_f32+0x1c>)
+ 8001822:	8999      	ldrh	r1, [r3, #12]
+ 8001824:	8181      	strh	r1, [r0, #12]
+ 8001826:	e9d3 3201 	ldrd	r3, r2, [r3, #4]
+ 800182a:	f04f 0c80 	mov.w	ip, #128	@ 0x80
+ 800182e:	e9c0 3201 	strd	r3, r2, [r0, #4]
+ 8001832:	f8a0 c000 	strh.w	ip, [r0]
+ 8001836:	2000      	movs	r0, #0
+ 8001838:	4770      	bx	lr
+ 800183a:	bf00      	nop
+ 800183c:	08002c94 	.word	0x08002c94
+
+08001840 <arm_radix8_butterfly_f32>:
+ARM_DSP_ATTRIBUTE void arm_radix8_butterfly_f32(
+  float32_t * pSrc,
+  uint16_t fftLen,
+  const float32_t * pCoef,
+  uint16_t twidCoefModifier)
+{
+ 8001840:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+ 8001844:	ed2d 8b10 	vpush	{d8-d15}
+ 8001848:	b08f      	sub	sp, #60	@ 0x3c
+ 800184a:	e9cd 320a 	strd	r3, r2, [sp, #40]	@ 0x28
+ 800184e:	4603      	mov	r3, r0
+ 8001850:	3304      	adds	r3, #4
+         pSrc[2 * i7 + 1] = t2 + r3;
+         r1 = (r6 - r8) * C81;
+         r6 = (r6 + r8) * C81;
+         r2 = (s6 - s8) * C81;
+         s6 = (s6 + s8) * C81;
+         t1 = r5 - r1;
+ 8001852:	ed9f cabc 	vldr	s24, [pc, #752]	@ 8001b44 <arm_radix8_butterfly_f32+0x304>
+{
+ 8001856:	900c      	str	r0, [sp, #48]	@ 0x30
+ 8001858:	468a      	mov	sl, r1
+   n2 = fftLen;
+ 800185a:	468b      	mov	fp, r1
+ 800185c:	930d      	str	r3, [sp, #52]	@ 0x34
+      n2 = n2 >> 3;
+ 800185e:	ea4f 07db 	mov.w	r7, fp, lsr #3
+ 8001862:	eb07 0187 	add.w	r1, r7, r7, lsl #2
+ 8001866:	ea4f 00cb 	mov.w	r0, fp, lsl #3
+ 800186a:	9000      	str	r0, [sp, #0]
+ 800186c:	00c8      	lsls	r0, r1, #3
+ 800186e:	ebc7 01c7 	rsb	r1, r7, r7, lsl #3
+ 8001872:	9b0c      	ldr	r3, [sp, #48]	@ 0x30
+ 8001874:	9002      	str	r0, [sp, #8]
+ 8001876:	ea4f 09c7 	mov.w	r9, r7, lsl #3
+ 800187a:	00c8      	lsls	r0, r1, #3
+ 800187c:	ea4f 1807 	mov.w	r8, r7, lsl #4
+ 8001880:	9005      	str	r0, [sp, #20]
+ 8001882:	f108 0104 	add.w	r1, r8, #4
+ 8001886:	f109 0004 	add.w	r0, r9, #4
+ 800188a:	eb07 0647 	add.w	r6, r7, r7, lsl #1
+ 800188e:	eb03 1247 	add.w	r2, r3, r7, lsl #5
+ 8001892:	4418      	add	r0, r3
+ 8001894:	4419      	add	r1, r3
+ 8001896:	017b      	lsls	r3, r7, #5
+ 8001898:	9301      	str	r3, [sp, #4]
+ 800189a:	0133      	lsls	r3, r6, #4
+ 800189c:	eb02 1507 	add.w	r5, r2, r7, lsl #4
+ 80018a0:	9303      	str	r3, [sp, #12]
+ 80018a2:	00f3      	lsls	r3, r6, #3
+ 80018a4:	eba5 04c6 	sub.w	r4, r5, r6, lsl #3
+ 80018a8:	9304      	str	r3, [sp, #16]
+ 80018aa:	9e0d      	ldr	r6, [sp, #52]	@ 0x34
+      i1 = 0;
+ 80018ac:	9b00      	ldr	r3, [sp, #0]
+      n2 = n2 >> 3;
+ 80018ae:	9709      	str	r7, [sp, #36]	@ 0x24
+      i1 = 0;
+ 80018b0:	eb02 0cc7 	add.w	ip, r2, r7, lsl #3
+ 80018b4:	f04f 0e00 	mov.w	lr, #0
+ 80018b8:	eb04 1747 	add.w	r7, r4, r7, lsl #5
+         r3 = pSrc[2 * i3] + pSrc[2 * i7];
+ 80018bc:	edd5 9a00 	vldr	s19, [r5]
+         r4 = pSrc[2 * i4] + pSrc[2 * i8];
+ 80018c0:	ed94 4a00 	vldr	s8, [r4]
+ 80018c4:	ed97 9a00 	vldr	s18, [r7]
+         r3 = pSrc[2 * i3] + pSrc[2 * i7];
+ 80018c8:	ed11 2a01 	vldr	s4, [r1, #-4]
+         r1 = pSrc[2 * i1] + pSrc[2 * i5];
+ 80018cc:	ed92 6a00 	vldr	s12, [r2]
+         r2 = pSrc[2 * i2] + pSrc[2 * i6];
+ 80018d0:	ed9c 5a00 	vldr	s10, [ip]
+         r1 = pSrc[2 * i1] + pSrc[2 * i5];
+ 80018d4:	ed56 3a01 	vldr	s7, [r6, #-4]
+         r2 = pSrc[2 * i2] + pSrc[2 * i6];
+ 80018d8:	ed50 7a01 	vldr	s15, [r0, #-4]
+         r4 = pSrc[2 * i4] + pSrc[2 * i8];
+ 80018dc:	ee34 8a09 	vadd.f32	s16, s8, s18
+         r2 = pSrc[2 * i2] + pSrc[2 * i6];
+ 80018e0:	ee37 0a85 	vadd.f32	s0, s15, s10
+         r3 = pSrc[2 * i3] + pSrc[2 * i7];
+ 80018e4:	ee32 3a29 	vadd.f32	s6, s4, s19
+         r1 = pSrc[2 * i1] + pSrc[2 * i5];
+ 80018e8:	ee33 7a86 	vadd.f32	s14, s7, s12
+         r2 = r2 + r4;
+ 80018ec:	ee70 5a08 	vadd.f32	s11, s0, s16
+         r1 = r1 + r3;
+ 80018f0:	ee77 6a03 	vadd.f32	s13, s14, s6
+         r6 = pSrc[2 * i2] - pSrc[2 * i6];
+ 80018f4:	ee77 7ac5 	vsub.f32	s15, s15, s10
+         pSrc[2 * i1] = r1 + r2;
+ 80018f8:	ee36 5aa5 	vadd.f32	s10, s13, s11
+         pSrc[2 * i5] = r1 - r2;
+ 80018fc:	ee76 6ae5 	vsub.f32	s13, s13, s11
+         pSrc[2 * i1] = r1 + r2;
+ 8001900:	ed06 5a01 	vstr	s10, [r6, #-4]
+         pSrc[2 * i5] = r1 - r2;
+ 8001904:	edc2 6a00 	vstr	s13, [r2]
+         r2 = pSrc[2 * i2 + 1] + pSrc[2 * i6 + 1];
+ 8001908:	ed9c ba01 	vldr	s22, [ip, #4]
+ 800190c:	edd0 ba00 	vldr	s23, [r0]
+         r4 = pSrc[2 * i4 + 1] + pSrc[2 * i8 + 1];
+ 8001910:	ed94 1a01 	vldr	s2, [r4, #4]
+         r1 = pSrc[2 * i1 + 1] + pSrc[2 * i5 + 1];
+ 8001914:	edd2 aa01 	vldr	s21, [r2, #4]
+ 8001918:	edd6 5a00 	vldr	s11, [r6]
+         r4 = pSrc[2 * i4 + 1] + pSrc[2 * i8 + 1];
+ 800191c:	edd7 2a01 	vldr	s5, [r7, #4]
+         s3 = pSrc[2 * i3 + 1] + pSrc[2 * i7 + 1];
+ 8001920:	ed91 aa00 	vldr	s20, [r1]
+ 8001924:	edd5 1a01 	vldr	s3, [r5, #4]
+         s6 = pSrc[2 * i2 + 1] - pSrc[2 * i6 + 1];
+ 8001928:	ee7b 6acb 	vsub.f32	s13, s23, s22
+         r1 = (r6 - r8) * C81;
+ 800192c:	ee37 5ac4 	vsub.f32	s10, s15, s8
+         r2 = (s6 - s8) * C81;
+ 8001930:	ee76 4ac1 	vsub.f32	s9, s13, s2
+         s5 = pSrc[2 * i1 + 1] - pSrc[2 * i5 + 1];
+ 8001934:	ee75 0aea 	vsub.f32	s1, s11, s21
+         r5 = pSrc[2 * i1] - pSrc[2 * i5];
+ 8001938:	ee73 3ac6 	vsub.f32	s7, s7, s12
+         r1 = (r6 - r8) * C81;
+ 800193c:	ee35 5a09 	vadd.f32	s10, s10, s18
+         r2 = (s6 - s8) * C81;
+ 8001940:	ee34 6aa2 	vadd.f32	s12, s9, s5
+         r5 = r5 + r1;
+         r8 = r7 - r6;
+         r7 = r7 + r6;
+         t2 = s5 - r2;
+ 8001944:	eef0 8a60 	vmov.f32	s17, s1
+         t1 = r5 - r1;
+ 8001948:	eef0 4a63 	vmov.f32	s9, s7
+ 800194c:	eee5 4a4c 	vfms.f32	s9, s10, s24
+         pSrc[2 * i2 + 1] = s5 - r7;
+         pSrc[2 * i8 + 1] = s5 + r7;
+         pSrc[2 * i6 + 1] = t2 - r8;
+         pSrc[2 * i4 + 1] = t2 + r8;
+
+         i1 += n1;
+ 8001950:	44de      	add	lr, fp
+      } while (i1 < fftLen);
+ 8001952:	45f2      	cmp	sl, lr
+         t2 = s5 - r2;
+ 8001954:	eee6 8a4c 	vfms.f32	s17, s12, s24
+         r6 = (r6 + r8) * C81;
+ 8001958:	ee77 7ac9 	vsub.f32	s15, s15, s18
+         s6 = (s6 + s8) * C81;
+ 800195c:	ee76 6ae2 	vsub.f32	s13, s13, s5
+         r6 = (r6 + r8) * C81;
+ 8001960:	ee77 7a84 	vadd.f32	s15, s15, s8
+         r7 = pSrc[2 * i3] - pSrc[2 * i7];
+ 8001964:	ee32 9a69 	vsub.f32	s18, s4, s19
+         s7 = pSrc[2 * i3 + 1] - pSrc[2 * i7 + 1];
+ 8001968:	ee3a 4a61 	vsub.f32	s8, s20, s3
+         s6 = (s6 + s8) * C81;
+ 800196c:	ee76 6a81 	vadd.f32	s13, s13, s2
+         r1 = pSrc[2 * i1 + 1] + pSrc[2 * i5 + 1];
+ 8001970:	ee75 5aaa 	vadd.f32	s11, s11, s21
+ 8001974:	ee39 2ac2 	vsub.f32	s4, s19, s4
+         s3 = pSrc[2 * i3 + 1] + pSrc[2 * i7 + 1];
+ 8001978:	ee7a aa21 	vadd.f32	s21, s20, s3
+ 800197c:	ee71 1aca 	vsub.f32	s3, s3, s20
+         r2 = pSrc[2 * i2 + 1] + pSrc[2 * i6 + 1];
+ 8001980:	ee7b ba8b 	vadd.f32	s23, s23, s22
+         r5 = r5 + r1;
+ 8001984:	eee5 3a0c 	vfma.f32	s7, s10, s24
+         s7 = s7 + s6;
+ 8001988:	eeb0 aa44 	vmov.f32	s20, s8
+ 800198c:	eeb0 ba64 	vmov.f32	s22, s9
+         r7 = r7 + r6;
+ 8001990:	eeb0 5a49 	vmov.f32	s10, s18
+ 8001994:	eef0 9a68 	vmov.f32	s19, s17
+         r4 = pSrc[2 * i4 + 1] + pSrc[2 * i8 + 1];
+ 8001998:	ee31 1a22 	vadd.f32	s2, s2, s5
+         r7 = r7 + r6;
+ 800199c:	eea7 5a8c 	vfma.f32	s10, s15, s24
+         s5 = s5 + r2;
+ 80019a0:	eee6 0a0c 	vfma.f32	s1, s12, s24
+         s7 = s7 + s6;
+ 80019a4:	eea6 aa8c 	vfma.f32	s20, s13, s24
+         t2 = r1 - s3;
+ 80019a8:	ee35 6aea 	vsub.f32	s12, s11, s21
+ 80019ac:	eee6 1a8c 	vfma.f32	s3, s13, s24
+         t1 = r1 - r3;
+ 80019b0:	ee37 7a43 	vsub.f32	s14, s14, s6
+         r1 = r1 + s3;
+ 80019b4:	eee7 9acc 	vfms.f32	s19, s15, s24
+ 80019b8:	eea6 bacc 	vfms.f32	s22, s13, s24
+ 80019bc:	eea7 2a8c 	vfma.f32	s4, s15, s24
+         r2 = r2 + r4;
+ 80019c0:	ee7b 2a81 	vadd.f32	s5, s23, s2
+         pSrc[2 * i3]     = t1 + s3;
+ 80019c4:	ee77 6a41 	vsub.f32	s13, s14, s2
+         r1 = r1 + s3;
+ 80019c8:	ee75 7aaa 	vadd.f32	s15, s11, s21
+         pSrc[2 * i3 + 1] = t2 - r3;
+ 80019cc:	ee36 3a40 	vsub.f32	s6, s12, s0
+         pSrc[2 * i7]     = t1 - s3;
+ 80019d0:	ee37 7a6b 	vsub.f32	s14, s14, s23
+         pSrc[2 * i7 + 1] = t2 + r3;
+ 80019d4:	ee36 6a48 	vsub.f32	s12, s12, s16
+         pSrc[2 * i1 + 1] = r1 + r2;
+ 80019d8:	ee77 aaa2 	vadd.f32	s21, s15, s5
+         pSrc[2 * i7]     = t1 - s3;
+ 80019dc:	ee37 7a01 	vadd.f32	s14, s14, s2
+         pSrc[2 * i5 + 1] = r1 - r2;
+ 80019e0:	ee77 7ae2 	vsub.f32	s15, s15, s5
+         pSrc[2 * i2]     = r5 + s7;
+ 80019e4:	ee33 1a8a 	vadd.f32	s2, s7, s20
+         pSrc[2 * i3]     = t1 + s3;
+ 80019e8:	ee76 2aab 	vadd.f32	s5, s13, s23
+         pSrc[2 * i4]     = t1 - s8;
+ 80019ec:	ee74 4aa1 	vadd.f32	s9, s9, s3
+         pSrc[2 * i3 + 1] = t2 - r3;
+ 80019f0:	ee33 3a08 	vadd.f32	s6, s6, s16
+         pSrc[2 * i2 + 1] = s5 - r7;
+ 80019f4:	ee70 1ac5 	vsub.f32	s3, s1, s10
+         pSrc[2 * i7 + 1] = t2 + r3;
+ 80019f8:	ee36 6a00 	vadd.f32	s12, s12, s0
+         pSrc[2 * i8]     = r5 - s7;
+ 80019fc:	ee73 3aca 	vsub.f32	s7, s7, s20
+         pSrc[2 * i6]     = t1 + s8;
+ 8001a00:	ee34 4a0b 	vadd.f32	s8, s8, s22
+         pSrc[2 * i8 + 1] = s5 + r7;
+ 8001a04:	ee35 5a20 	vadd.f32	s10, s10, s1
+         pSrc[2 * i6 + 1] = t2 - r8;
+ 8001a08:	ee78 5a82 	vadd.f32	s11, s17, s4
+         pSrc[2 * i4 + 1] = t2 + r8;
+ 8001a0c:	ee79 6a29 	vadd.f32	s13, s18, s19
+         pSrc[2 * i1 + 1] = r1 + r2;
+ 8001a10:	edc6 aa00 	vstr	s21, [r6]
+         pSrc[2 * i5 + 1] = r1 - r2;
+ 8001a14:	edc2 7a01 	vstr	s15, [r2, #4]
+      } while (i1 < fftLen);
+ 8001a18:	441e      	add	r6, r3
+         pSrc[2 * i3]     = t1 + s3;
+ 8001a1a:	ed41 2a01 	vstr	s5, [r1, #-4]
+      } while (i1 < fftLen);
+ 8001a1e:	441a      	add	r2, r3
+         pSrc[2 * i7]     = t1 - s3;
+ 8001a20:	ed85 7a00 	vstr	s14, [r5]
+         pSrc[2 * i3 + 1] = t2 - r3;
+ 8001a24:	ed81 3a00 	vstr	s6, [r1]
+         pSrc[2 * i7 + 1] = t2 + r3;
+ 8001a28:	ed85 6a01 	vstr	s12, [r5, #4]
+      } while (i1 < fftLen);
+ 8001a2c:	4419      	add	r1, r3
+         pSrc[2 * i2]     = r5 + s7;
+ 8001a2e:	ed00 1a01 	vstr	s2, [r0, #-4]
+      } while (i1 < fftLen);
+ 8001a32:	441d      	add	r5, r3
+         pSrc[2 * i8]     = r5 - s7;
+ 8001a34:	edc7 3a00 	vstr	s7, [r7]
+         pSrc[2 * i6]     = t1 + s8;
+ 8001a38:	ed8c 4a00 	vstr	s8, [ip]
+         pSrc[2 * i4]     = t1 - s8;
+ 8001a3c:	edc4 4a00 	vstr	s9, [r4]
+         pSrc[2 * i2 + 1] = s5 - r7;
+ 8001a40:	edc0 1a00 	vstr	s3, [r0]
+         pSrc[2 * i8 + 1] = s5 + r7;
+ 8001a44:	ed87 5a01 	vstr	s10, [r7, #4]
+      } while (i1 < fftLen);
+ 8001a48:	4418      	add	r0, r3
+         pSrc[2 * i6 + 1] = t2 - r8;
+ 8001a4a:	edcc 5a01 	vstr	s11, [ip, #4]
+      } while (i1 < fftLen);
+ 8001a4e:	441f      	add	r7, r3
+         pSrc[2 * i4 + 1] = t2 + r8;
+ 8001a50:	edc4 6a01 	vstr	s13, [r4, #4]
+      } while (i1 < fftLen);
+ 8001a54:	449c      	add	ip, r3
+ 8001a56:	441c      	add	r4, r3
+ 8001a58:	f63f af30 	bhi.w	80018bc <arm_radix8_butterfly_f32+0x7c>
+
+      if (n2 < 8)
+ 8001a5c:	461f      	mov	r7, r3
+ 8001a5e:	9b09      	ldr	r3, [sp, #36]	@ 0x24
+ 8001a60:	2b07      	cmp	r3, #7
+ 8001a62:	f240 81a1 	bls.w	8001da8 <arm_radix8_butterfly_f32+0x568>
+ 8001a66:	9d01      	ldr	r5, [sp, #4]
+ 8001a68:	9e0c      	ldr	r6, [sp, #48]	@ 0x30
+ 8001a6a:	9c02      	ldr	r4, [sp, #8]
+ 8001a6c:	9803      	ldr	r0, [sp, #12]
+ 8001a6e:	9904      	ldr	r1, [sp, #16]
+ 8001a70:	9a05      	ldr	r2, [sp, #20]
+ 8001a72:	3508      	adds	r5, #8
+ 8001a74:	f109 0908 	add.w	r9, r9, #8
+ 8001a78:	1973      	adds	r3, r6, r5
+ 8001a7a:	3408      	adds	r4, #8
+ 8001a7c:	9308      	str	r3, [sp, #32]
+ 8001a7e:	eb06 0309 	add.w	r3, r6, r9
+ 8001a82:	3008      	adds	r0, #8
+ 8001a84:	9307      	str	r3, [sp, #28]
+ 8001a86:	1933      	adds	r3, r6, r4
+ 8001a88:	3108      	adds	r1, #8
+ 8001a8a:	9306      	str	r3, [sp, #24]
+ 8001a8c:	1833      	adds	r3, r6, r0
+ 8001a8e:	3208      	adds	r2, #8
+ 8001a90:	9305      	str	r3, [sp, #20]
+ 8001a92:	1873      	adds	r3, r6, r1
+ 8001a94:	f108 080c 	add.w	r8, r8, #12
+ 8001a98:	9304      	str	r3, [sp, #16]
+ 8001a9a:	18b3      	adds	r3, r6, r2
+ 8001a9c:	9303      	str	r3, [sp, #12]
+ 8001a9e:	eb06 0308 	add.w	r3, r6, r8
+ 8001aa2:	9301      	str	r3, [sp, #4]
+ 8001aa4:	f106 030c 	add.w	r3, r6, #12
+ 8001aa8:	9302      	str	r3, [sp, #8]
+         break;
+
+      ia1 = 0;
+      j = 1;
+ 8001aaa:	f04f 0901 	mov.w	r9, #1
+      ia1 = 0;
+ 8001aae:	f04f 0800 	mov.w	r8, #0
+ 8001ab2:	463b      	mov	r3, r7
+
+      do
+      {
+         /*  index calculation for the coefficients */
+         id  = ia1 + twidCoefModifier;
+ 8001ab4:	9a0a      	ldr	r2, [sp, #40]	@ 0x28
+ 8001ab6:	4490      	add	r8, r2
+         ia4 = ia3 + id;
+         ia5 = ia4 + id;
+         ia6 = ia5 + id;
+         ia7 = ia6 + id;
+
+         co2 = pCoef[2 * ia1];
+ 8001ab8:	9a0b      	ldr	r2, [sp, #44]	@ 0x2c
+ 8001aba:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001abe:	ed92 fa00 	vldr	s30, [r2]
+         co3 = pCoef[2 * ia2];
+ 8001ac2:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001ac6:	edd2 ea00 	vldr	s29, [r2]
+         co4 = pCoef[2 * ia3];
+ 8001aca:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001ace:	ed92 ea00 	vldr	s28, [r2]
+         co5 = pCoef[2 * ia4];
+ 8001ad2:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001ad6:	edd2 da00 	vldr	s27, [r2]
+         co6 = pCoef[2 * ia5];
+ 8001ada:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001ade:	ed92 da00 	vldr	s26, [r2]
+         co7 = pCoef[2 * ia6];
+ 8001ae2:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001ae6:	eb08 0148 	add.w	r1, r8, r8, lsl #1
+ 8001aea:	edd2 ca00 	vldr	s25, [r2]
+         co8 = pCoef[2 * ia7];
+ 8001aee:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001af2:	edd2 ba00 	vldr	s23, [r2]
+         si3 = pCoef[2 * ia2 + 1];
+         si4 = pCoef[2 * ia3 + 1];
+         si5 = pCoef[2 * ia4 + 1];
+         si6 = pCoef[2 * ia5 + 1];
+         si7 = pCoef[2 * ia6 + 1];
+         si8 = pCoef[2 * ia7 + 1];
+ 8001af6:	ed92 ba01 	vldr	s22, [r2, #4]
+ 8001afa:	eba2 1201 	sub.w	r2, r2, r1, lsl #4
+         si2 = pCoef[2 * ia1 + 1];
+ 8001afe:	edd2 aa01 	vldr	s21, [r2, #4]
+         si3 = pCoef[2 * ia2 + 1];
+ 8001b02:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001b06:	ed92 aa01 	vldr	s20, [r2, #4]
+         si4 = pCoef[2 * ia3 + 1];
+ 8001b0a:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001b0e:	edd2 9a01 	vldr	s19, [r2, #4]
+         si5 = pCoef[2 * ia4 + 1];
+ 8001b12:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001b16:	ed92 9a01 	vldr	s18, [r2, #4]
+         si6 = pCoef[2 * ia5 + 1];
+ 8001b1a:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001b1e:	edd2 8a01 	vldr	s17, [r2, #4]
+         si7 = pCoef[2 * ia6 + 1];
+ 8001b22:	eb02 02c8 	add.w	r2, r2, r8, lsl #3
+ 8001b26:	edd2 7a01 	vldr	s15, [r2, #4]
+         si8 = pCoef[2 * ia7 + 1];
+ 8001b2a:	e9dd c701 	ldrd	ip, r7, [sp, #4]
+ 8001b2e:	e9dd 6503 	ldrd	r6, r5, [sp, #12]
+ 8001b32:	e9dd 4005 	ldrd	r4, r0, [sp, #20]
+ 8001b36:	e9dd 1207 	ldrd	r1, r2, [sp, #28]
+         si7 = pCoef[2 * ia6 + 1];
+ 8001b3a:	edcd 7a00 	vstr	s15, [sp]
+
+         i1 = j;
+ 8001b3e:	46ce      	mov	lr, r9
+ 8001b40:	e002      	b.n	8001b48 <arm_radix8_butterfly_f32+0x308>
+ 8001b42:	bf00      	nop
+ 8001b44:	3f3504f3 	.word	0x3f3504f3
+            r5 = pSrc[2 * i1] - pSrc[2 * i5];
+            r2 = pSrc[2 * i2] + pSrc[2 * i6];
+            r6 = pSrc[2 * i2] - pSrc[2 * i6];
+            r3 = pSrc[2 * i3] + pSrc[2 * i7];
+            r7 = pSrc[2 * i3] - pSrc[2 * i7];
+            r4 = pSrc[2 * i4] + pSrc[2 * i8];
+ 8001b48:	edd5 4a00 	vldr	s9, [r5]
+            r3 = pSrc[2 * i3] + pSrc[2 * i7];
+ 8001b4c:	ed1c 7a01 	vldr	s14, [ip, #-4]
+            r4 = pSrc[2 * i4] + pSrc[2 * i8];
+ 8001b50:	edd6 fa00 	vldr	s31, [r6]
+            r3 = pSrc[2 * i3] + pSrc[2 * i7];
+ 8001b54:	edd4 6a00 	vldr	s13, [r4]
+            r1 = pSrc[2 * i1] + pSrc[2 * i5];
+ 8001b58:	edd2 3a00 	vldr	s7, [r2]
+            r2 = pSrc[2 * i2] + pSrc[2 * i6];
+ 8001b5c:	ed90 3a00 	vldr	s6, [r0]
+            r1 = pSrc[2 * i1] + pSrc[2 * i5];
+ 8001b60:	ed57 5a01 	vldr	s11, [r7, #-4]
+            r2 = pSrc[2 * i2] + pSrc[2 * i6];
+ 8001b64:	edd1 7a00 	vldr	s15, [r1]
+            r1 = r1 + r3;
+            r3 = r2 - r4;
+            r2 = r2 + r4;
+            pSrc[2 * i1] = r1 + r2;
+            r2 = r1 - r2;
+            s1 = pSrc[2 * i1 + 1] + pSrc[2 * i5 + 1];
+ 8001b68:	ed97 1a00 	vldr	s2, [r7]
+            r4 = pSrc[2 * i4] + pSrc[2 * i8];
+ 8001b6c:	ee74 0aaf 	vadd.f32	s1, s9, s31
+            r2 = pSrc[2 * i2] + pSrc[2 * i6];
+ 8001b70:	ee37 0a83 	vadd.f32	s0, s15, s6
+            r3 = pSrc[2 * i3] + pSrc[2 * i7];
+ 8001b74:	ee37 5a26 	vadd.f32	s10, s14, s13
+            r1 = pSrc[2 * i1] + pSrc[2 * i5];
+ 8001b78:	ee35 6aa3 	vadd.f32	s12, s11, s7
+            r2 = r2 + r4;
+ 8001b7c:	ee30 4a20 	vadd.f32	s8, s0, s1
+            r1 = r1 + r3;
+ 8001b80:	ee36 2a05 	vadd.f32	s4, s12, s10
+            r6 = pSrc[2 * i2] - pSrc[2 * i6];
+ 8001b84:	ee77 7ac3 	vsub.f32	s15, s15, s6
+            pSrc[2 * i1] = r1 + r2;
+ 8001b88:	ee32 3a04 	vadd.f32	s6, s4, s8
+            r5 = pSrc[2 * i1] - pSrc[2 * i5];
+ 8001b8c:	ee75 5ae3 	vsub.f32	s11, s11, s7
+            pSrc[2 * i1] = r1 + r2;
+ 8001b90:	ed07 3a01 	vstr	s6, [r7, #-4]
+            s5 = pSrc[2 * i1 + 1] - pSrc[2 * i5 + 1];
+            s2 = pSrc[2 * i2 + 1] + pSrc[2 * i6 + 1];
+ 8001b94:	ed90 3a01 	vldr	s6, [r0, #4]
+ 8001b98:	edd1 3a01 	vldr	s7, [r1, #4]
+            s1 = pSrc[2 * i1 + 1] + pSrc[2 * i5 + 1];
+ 8001b9c:	ed92 8a01 	vldr	s16, [r2, #4]
+            r2 = r1 - r2;
+ 8001ba0:	ee32 2a44 	vsub.f32	s4, s4, s8
+            t1 = r1 - r3;
+ 8001ba4:	ee36 6a45 	vsub.f32	s12, s12, s10
+            s6 = pSrc[2 * i2 + 1] - pSrc[2 * i6 + 1];
+            s3 = pSrc[2 * i3 + 1] + pSrc[2 * i7 + 1];
+            s7 = pSrc[2 * i3 + 1] - pSrc[2 * i7 + 1];
+            s4 = pSrc[2 * i4 + 1] + pSrc[2 * i8 + 1];
+ 8001ba8:	ed95 4a01 	vldr	s8, [r5, #4]
+            s6 = pSrc[2 * i2 + 1] - pSrc[2 * i6 + 1];
+ 8001bac:	ee33 5ac3 	vsub.f32	s10, s7, s6
+            s2 = pSrc[2 * i2 + 1] + pSrc[2 * i6 + 1];
+ 8001bb0:	ee73 3a83 	vadd.f32	s7, s7, s6
+            p2 = si7 * t2;
+            p3 = co7 * t2;
+            p4 = si7 * t1;
+            pSrc[2 * i7]     = p1 + p2;
+            pSrc[2 * i7 + 1] = p3 - p4;
+            r1 = (r6 - r8) * C81;
+ 8001bb4:	ee37 3ae4 	vsub.f32	s6, s15, s9
+            r7 = pSrc[2 * i3] - pSrc[2 * i7];
+ 8001bb8:	ee77 1a66 	vsub.f32	s3, s14, s13
+            r1 = (r6 - r8) * C81;
+ 8001bbc:	ee33 3a2f 	vadd.f32	s6, s6, s31
+ 8001bc0:	ee76 6ac7 	vsub.f32	s13, s13, s14
+            r6 = (r6 + r8) * C81;
+ 8001bc4:	ee77 7aef 	vsub.f32	s15, s15, s31
+            s4 = pSrc[2 * i4 + 1] + pSrc[2 * i8 + 1];
+ 8001bc8:	ed96 7a01 	vldr	s14, [r6, #4]
+            s1 = (s6 - s8) * C81;
+ 8001bcc:	ee75 fa44 	vsub.f32	s31, s10, s8
+            s5 = pSrc[2 * i1 + 1] - pSrc[2 * i5 + 1];
+ 8001bd0:	ee71 2a48 	vsub.f32	s5, s2, s16
+            r6 = (r6 + r8) * C81;
+ 8001bd4:	ee77 7aa4 	vadd.f32	s15, s15, s9
+            s1 = (s6 - s8) * C81;
+ 8001bd8:	ee7f fa87 	vadd.f32	s31, s31, s14
+            s6 = (s6 + s8) * C81;
+            t1 = r5 - r1;
+ 8001bdc:	eef0 4a65 	vmov.f32	s9, s11
+ 8001be0:	eee3 4a4c 	vfms.f32	s9, s6, s24
+            p3 = co4 * t2;
+            p4 = si4 * t1;
+            pSrc[2 * i4]     = p1 + p2;
+            pSrc[2 * i4 + 1] = p3 - p4;
+
+            i1 += n1;
+ 8001be4:	44de      	add	lr, fp
+         } while (i1 < fftLen);
+ 8001be6:	45f2      	cmp	sl, lr
+            r5 = r5 + r1;
+ 8001be8:	eee3 5a0c 	vfma.f32	s11, s6, s24
+            t2 = s5 - s1;
+ 8001bec:	eeb0 3a62 	vmov.f32	s6, s5
+ 8001bf0:	eeaf 3acc 	vfms.f32	s6, s31, s24
+ 8001bf4:	eee7 6a8c 	vfma.f32	s13, s15, s24
+            s6 = (s6 + s8) * C81;
+ 8001bf8:	ee35 5a47 	vsub.f32	s10, s10, s14
+            s6 = t2 - r8;
+ 8001bfc:	ee73 6a26 	vadd.f32	s13, s6, s13
+ 8001c00:	eea7 3acc 	vfms.f32	s6, s15, s24
+            s6 = (s6 + s8) * C81;
+ 8001c04:	ee35 5a04 	vadd.f32	s10, s10, s8
+            s1 = pSrc[2 * i1 + 1] + pSrc[2 * i5 + 1];
+ 8001c08:	ee31 1a08 	vadd.f32	s2, s2, s16
+            s4 = pSrc[2 * i4 + 1] + pSrc[2 * i8 + 1];
+ 8001c0c:	ee34 4a07 	vadd.f32	s8, s8, s14
+            s3 = pSrc[2 * i3 + 1] + pSrc[2 * i7 + 1];
+ 8001c10:	ed9c 8a00 	vldr	s16, [ip]
+ 8001c14:	ed94 7a01 	vldr	s14, [r4, #4]
+            s5 = s5 + s1;
+ 8001c18:	eeef 2a8c 	vfma.f32	s5, s31, s24
+ 8001c1c:	eef0 fa43 	vmov.f32	s31, s6
+            r7 = r7 + r6;
+ 8001c20:	eeb0 3a61 	vmov.f32	s6, s3
+ 8001c24:	eea7 3a8c 	vfma.f32	s6, s15, s24
+            t2 = t2 + r8;
+ 8001c28:	ee71 7aaf 	vadd.f32	s15, s3, s31
+            s3 = pSrc[2 * i3 + 1] + pSrc[2 * i7 + 1];
+ 8001c2c:	ee78 1a07 	vadd.f32	s3, s16, s14
+            s7 = pSrc[2 * i3 + 1] - pSrc[2 * i7 + 1];
+ 8001c30:	ee78 fa47 	vsub.f32	s31, s16, s14
+            t2 = s1 - s3;
+ 8001c34:	ee37 7a48 	vsub.f32	s14, s14, s16
+            s7 = s7 + s6;
+ 8001c38:	eeb0 8a6f 	vmov.f32	s16, s31
+ 8001c3c:	eea5 7a0c 	vfma.f32	s14, s10, s24
+ 8001c40:	eea5 8a0c 	vfma.f32	s16, s10, s24
+            t1 = t1 - s8;
+ 8001c44:	ee37 7a24 	vadd.f32	s14, s14, s9
+ 8001c48:	eee5 4a4c 	vfms.f32	s9, s10, s24
+            t2 = s1 - s3;
+ 8001c4c:	ee31 5a61 	vsub.f32	s10, s2, s3
+            r6 = t1 + s8;
+ 8001c50:	ee74 4aaf 	vadd.f32	s9, s9, s31
+ 8001c54:	ee75 fa60 	vsub.f32	s31, s10, s1
+            s1 = t2 - r3;
+ 8001c58:	ee35 5a40 	vsub.f32	s10, s10, s0
+            s1 = s1 + s3;
+ 8001c5c:	ee71 1a21 	vadd.f32	s3, s2, s3
+            s1 = t2 - r3;
+ 8001c60:	ee35 5a20 	vadd.f32	s10, s10, s1
+            s2 = s2 + s4;
+ 8001c64:	ee33 1a84 	vadd.f32	s2, s7, s8
+            r1 = t1 + s3;
+ 8001c68:	ee76 0a44 	vsub.f32	s1, s12, s8
+ 8001c6c:	ee36 6a63 	vsub.f32	s12, s12, s7
+ 8001c70:	ee70 0aa3 	vadd.f32	s1, s1, s7
+            t1 = t1 - s3;
+ 8001c74:	ee34 6a06 	vadd.f32	s12, s8, s12
+            pSrc[2 * i1 + 1] = s1 + s2;
+ 8001c78:	ee71 3a81 	vadd.f32	s7, s3, s2
+            pSrc[2 * i5 + 1] = p3 - p4;
+ 8001c7c:	ee22 4a49 	vnmul.f32	s8, s4, s18
+            s2 = s1 - s2;
+ 8001c80:	ee31 1ac1 	vsub.f32	s2, s3, s2
+            pSrc[2 * i1 + 1] = s1 + s2;
+ 8001c84:	edc7 3a00 	vstr	s7, [r7]
+            pSrc[2 * i5 + 1] = p3 - p4;
+ 8001c88:	eead 4a81 	vfma.f32	s8, s27, s2
+         } while (i1 < fftLen);
+ 8001c8c:	441f      	add	r7, r3
+            p2 = si5 * s2;
+ 8001c8e:	ee69 1a01 	vmul.f32	s3, s18, s2
+            p2 = si3 * s1;
+ 8001c92:	ee2a 1a05 	vmul.f32	s2, s20, s10
+            pSrc[2 * i5]     = p1 + p2;
+ 8001c96:	eeed 1a82 	vfma.f32	s3, s27, s4
+            pSrc[2 * i3]     = p1 + p2;
+ 8001c9a:	eeb0 2a41 	vmov.f32	s4, s2
+            t2 = t2 + r3;
+ 8001c9e:	ee70 fa2f 	vadd.f32	s31, s0, s31
+            p2 = si7 * t2;
+ 8001ca2:	eddd 3a00 	vldr	s7, [sp]
+            pSrc[2 * i5]     = p1 + p2;
+ 8001ca6:	edc2 1a00 	vstr	s3, [r2]
+            pSrc[2 * i3]     = p1 + p2;
+ 8001caa:	eeae 2aa0 	vfma.f32	s4, s29, s1
+            pSrc[2 * i3 + 1] = p3 - p4;
+ 8001cae:	ee60 0aca 	vnmul.f32	s1, s1, s20
+            s1 = s5 - r7;
+ 8001cb2:	ee32 1ac3 	vsub.f32	s2, s5, s6
+            pSrc[2 * i3 + 1] = p3 - p4;
+ 8001cb6:	eeee 0a85 	vfma.f32	s1, s29, s10
+            p2 = si7 * t2;
+ 8001cba:	ee23 5aaf 	vmul.f32	s10, s7, s31
+            pSrc[2 * i7 + 1] = p3 - p4;
+ 8001cbe:	ee66 3a63 	vnmul.f32	s7, s12, s7
+            pSrc[2 * i7]     = p1 + p2;
+ 8001cc2:	eeac 5a86 	vfma.f32	s10, s25, s12
+            r1 = r5 + s7;
+ 8001cc6:	ee35 6a88 	vadd.f32	s12, s11, s16
+            r5 = r5 - s7;
+ 8001cca:	ee35 8ac8 	vsub.f32	s16, s11, s16
+            pSrc[2 * i5 + 1] = p3 - p4;
+ 8001cce:	ed82 4a01 	vstr	s8, [r2, #4]
+            s5 = s5 + r7;
+ 8001cd2:	ee33 3a22 	vadd.f32	s6, s6, s5
+            p2 = si2 * s1;
+ 8001cd6:	ee6a 1a81 	vmul.f32	s3, s21, s2
+            pSrc[2 * i8 + 1] = p3 - p4;
+ 8001cda:	ee28 4a4b 	vnmul.f32	s8, s16, s22
+            pSrc[2 * i2 + 1] = p3 - p4;
+ 8001cde:	ee26 0a6a 	vnmul.f32	s0, s12, s21
+            pSrc[2 * i2]     = p1 + p2;
+ 8001ce2:	eeef 1a06 	vfma.f32	s3, s30, s12
+         } while (i1 < fftLen);
+ 8001ce6:	441a      	add	r2, r3
+            pSrc[2 * i8 + 1] = p3 - p4;
+ 8001ce8:	eeab 4a83 	vfma.f32	s8, s23, s6
+            p2 = si8 * s5;
+ 8001cec:	ee6b 2a03 	vmul.f32	s5, s22, s6
+            p2 = si4 * t2;
+ 8001cf0:	ee29 6aa7 	vmul.f32	s12, s19, s15
+            pSrc[2 * i4 + 1] = p3 - p4;
+ 8001cf4:	ee27 3a69 	vnmul.f32	s6, s14, s19
+            pSrc[2 * i2 + 1] = p3 - p4;
+ 8001cf8:	eeaf 0a01 	vfma.f32	s0, s30, s2
+            p2 = si6 * s6;
+ 8001cfc:	ee68 5aa6 	vmul.f32	s11, s17, s13
+            pSrc[2 * i6 + 1] = p3 - p4;
+ 8001d00:	ee24 1ae8 	vnmul.f32	s2, s9, s17
+            pSrc[2 * i4]     = p1 + p2;
+ 8001d04:	eeae 6a07 	vfma.f32	s12, s28, s14
+            pSrc[2 * i4 + 1] = p3 - p4;
+ 8001d08:	eeb0 7a43 	vmov.f32	s14, s6
+            pSrc[2 * i7 + 1] = p3 - p4;
+ 8001d0c:	eeec 3aaf 	vfma.f32	s7, s25, s31
+            pSrc[2 * i8]     = p1 + p2;
+ 8001d10:	eeeb 2a88 	vfma.f32	s5, s23, s16
+            pSrc[2 * i6]     = p1 + p2;
+ 8001d14:	eeed 5a24 	vfma.f32	s11, s26, s9
+            pSrc[2 * i6 + 1] = p3 - p4;
+ 8001d18:	eead 1a26 	vfma.f32	s2, s26, s13
+            pSrc[2 * i4 + 1] = p3 - p4;
+ 8001d1c:	eeae 7a27 	vfma.f32	s14, s28, s15
+            pSrc[2 * i3]     = p1 + p2;
+ 8001d20:	ed0c 2a01 	vstr	s4, [ip, #-4]
+            pSrc[2 * i3 + 1] = p3 - p4;
+ 8001d24:	edcc 0a00 	vstr	s1, [ip]
+            pSrc[2 * i7]     = p1 + p2;
+ 8001d28:	ed84 5a00 	vstr	s10, [r4]
+            pSrc[2 * i7 + 1] = p3 - p4;
+ 8001d2c:	edc4 3a01 	vstr	s7, [r4, #4]
+         } while (i1 < fftLen);
+ 8001d30:	449c      	add	ip, r3
+            pSrc[2 * i2]     = p1 + p2;
+ 8001d32:	edc1 1a00 	vstr	s3, [r1]
+            pSrc[2 * i2 + 1] = p3 - p4;
+ 8001d36:	ed81 0a01 	vstr	s0, [r1, #4]
+         } while (i1 < fftLen);
+ 8001d3a:	441c      	add	r4, r3
+            pSrc[2 * i8]     = p1 + p2;
+ 8001d3c:	edc6 2a00 	vstr	s5, [r6]
+            pSrc[2 * i8 + 1] = p3 - p4;
+ 8001d40:	ed86 4a01 	vstr	s8, [r6, #4]
+         } while (i1 < fftLen);
+ 8001d44:	4419      	add	r1, r3
+            pSrc[2 * i6]     = p1 + p2;
+ 8001d46:	edc0 5a00 	vstr	s11, [r0]
+            pSrc[2 * i6 + 1] = p3 - p4;
+ 8001d4a:	ed80 1a01 	vstr	s2, [r0, #4]
+         } while (i1 < fftLen);
+ 8001d4e:	441e      	add	r6, r3
+            pSrc[2 * i4]     = p1 + p2;
+ 8001d50:	ed85 6a00 	vstr	s12, [r5]
+         } while (i1 < fftLen);
+ 8001d54:	4418      	add	r0, r3
+            pSrc[2 * i4 + 1] = p3 - p4;
+ 8001d56:	ed85 7a01 	vstr	s14, [r5, #4]
+         } while (i1 < fftLen);
+ 8001d5a:	441d      	add	r5, r3
+ 8001d5c:	f63f aef4 	bhi.w	8001b48 <arm_radix8_butterfly_f32+0x308>
+
+         j++;
+      } while (j < n2);
+ 8001d60:	9a08      	ldr	r2, [sp, #32]
+ 8001d62:	3208      	adds	r2, #8
+ 8001d64:	9208      	str	r2, [sp, #32]
+ 8001d66:	9a07      	ldr	r2, [sp, #28]
+ 8001d68:	3208      	adds	r2, #8
+ 8001d6a:	9207      	str	r2, [sp, #28]
+ 8001d6c:	9a06      	ldr	r2, [sp, #24]
+ 8001d6e:	3208      	adds	r2, #8
+ 8001d70:	9206      	str	r2, [sp, #24]
+ 8001d72:	9a05      	ldr	r2, [sp, #20]
+ 8001d74:	3208      	adds	r2, #8
+ 8001d76:	9205      	str	r2, [sp, #20]
+ 8001d78:	9a04      	ldr	r2, [sp, #16]
+ 8001d7a:	3208      	adds	r2, #8
+ 8001d7c:	9204      	str	r2, [sp, #16]
+ 8001d7e:	9a03      	ldr	r2, [sp, #12]
+ 8001d80:	3208      	adds	r2, #8
+ 8001d82:	9203      	str	r2, [sp, #12]
+ 8001d84:	9a02      	ldr	r2, [sp, #8]
+ 8001d86:	3208      	adds	r2, #8
+ 8001d88:	9202      	str	r2, [sp, #8]
+ 8001d8a:	9a01      	ldr	r2, [sp, #4]
+ 8001d8c:	3208      	adds	r2, #8
+ 8001d8e:	9201      	str	r2, [sp, #4]
+ 8001d90:	9a09      	ldr	r2, [sp, #36]	@ 0x24
+         j++;
+ 8001d92:	f109 0901 	add.w	r9, r9, #1
+      } while (j < n2);
+ 8001d96:	454a      	cmp	r2, r9
+ 8001d98:	f47f ae8c 	bne.w	8001ab4 <arm_radix8_butterfly_f32+0x274>
+
+      twidCoefModifier <<= 3;
+ 8001d9c:	9b0a      	ldr	r3, [sp, #40]	@ 0x28
+ 8001d9e:	00db      	lsls	r3, r3, #3
+ 8001da0:	b29b      	uxth	r3, r3
+ 8001da2:	930a      	str	r3, [sp, #40]	@ 0x28
+      n2 = n2 >> 3;
+ 8001da4:	4693      	mov	fp, r2
+ 8001da6:	e55a      	b.n	800185e <arm_radix8_butterfly_f32+0x1e>
+   } while (n2 > 7);
+}
+ 8001da8:	b00f      	add	sp, #60	@ 0x3c
+ 8001daa:	ecbd 8b10 	vpop	{d8-d15}
+ 8001dae:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+ 8001db2:	bf00      	nop
+
+08001db4 <arm_rfft_fast_f32>:
+ARM_DSP_ATTRIBUTE void arm_rfft_fast_f32(
+  const arm_rfft_fast_instance_f32 * S,
+  float32_t * p,
+  float32_t * pOut,
+  uint8_t ifftFlag)
+{
+ 8001db4:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+ 8001db8:	4615      	mov	r5, r2
+ 8001dba:	4607      	mov	r7, r0
+ 8001dbc:	460c      	mov	r4, r1
+   const arm_cfft_instance_f32 * Sint = &(S->Sint);
+
+   /* Calculation of Real FFT */
+   if (ifftFlag)
+ 8001dbe:	461a      	mov	r2, r3
+ 8001dc0:	2b00      	cmp	r3, #0
+ 8001dc2:	d056      	beq.n	8001e72 <arm_rfft_fast_f32+0xbe>
+   xAR = pA[0];
+ 8001dc4:	edd1 7a00 	vldr	s15, [r1]
+   xAI = pA[1];
+ 8001dc8:	edd1 6a01 	vldr	s13, [r1, #4]
+ 8001dcc:	8800      	ldrh	r0, [r0, #0]
+ 8001dce:	6979      	ldr	r1, [r7, #20]
+   *pOut++ = 0.5f * ( xAR + xAI );
+ 8001dd0:	ee37 7aa6 	vadd.f32	s14, s15, s13
+   *pOut++ = 0.5f * ( xAR - xAI );
+ 8001dd4:	ee77 7ae6 	vsub.f32	s15, s15, s13
+   *pOut++ = 0.5f * ( xAR + xAI );
+ 8001dd8:	eeb6 4a00 	vmov.f32	s8, #96	@ 0x3f000000  0.5
+   k = (S->Sint).fftLen - 1;
+ 8001ddc:	1e43      	subs	r3, r0, #1
+   *pOut++ = 0.5f * ( xAR + xAI );
+ 8001dde:	ee27 7a04 	vmul.f32	s14, s14, s8
+   *pOut++ = 0.5f * ( xAR - xAI );
+ 8001de2:	ee67 7a84 	vmul.f32	s15, s15, s8
+   while (k > 0)
+ 8001de6:	2b00      	cmp	r3, #0
+   *pOut++ = 0.5f * ( xAR + xAI );
+ 8001de8:	ed85 7a00 	vstr	s14, [r5]
+   *pOut++ = 0.5f * ( xAR - xAI );
+ 8001dec:	edc5 7a01 	vstr	s15, [r5, #4]
+   pB  =  p + 2*k ;
+ 8001df0:	eb04 0cc3 	add.w	ip, r4, r3, lsl #3
+   while (k > 0)
+ 8001df4:	dd36      	ble.n	8001e64 <arm_rfft_fast_f32+0xb0>
+ 8001df6:	f101 0e10 	add.w	lr, r1, #16
+ 8001dfa:	ebac 00c0 	sub.w	r0, ip, r0, lsl #3
+ 8001dfe:	f104 0110 	add.w	r1, r4, #16
+ 8001e02:	f1ac 0c08 	sub.w	ip, ip, #8
+ 8001e06:	f105 0610 	add.w	r6, r5, #16
+      xBI =   pB[1]    ;
+ 8001e0a:	eddc 6a03 	vldr	s13, [ip, #12]
+      xBR =   pB[0]    ;
+ 8001e0e:	eddc 7a02 	vldr	s15, [ip, #8]
+      xAR =  pA[0];
+ 8001e12:	ed11 7a02 	vldr	s14, [r1, #-8]
+      xAI =  pA[1];
+ 8001e16:	ed11 5a01 	vldr	s10, [r1, #-4]
+      twR = *pCoeff++;
+ 8001e1a:	ed1e 6a02 	vldr	s12, [lr, #-8]
+      twI = *pCoeff++;
+ 8001e1e:	ed5e 5a01 	vldr	s11, [lr, #-4]
+      t1a = xAR - xBR ;
+ 8001e22:	ee77 4a67 	vsub.f32	s9, s14, s15
+      *pOut++ = 0.5f * (xAR + xBR - r - s ); //xAR
+ 8001e26:	ee77 7a87 	vadd.f32	s15, s15, s14
+      *pOut++ = 0.5f * (xAI - xBI + t - u ); //xAI
+ 8001e2a:	ee35 7a66 	vsub.f32	s14, s10, s13
+      *pOut++ = 0.5f * (xAR + xBR - r - s ); //xAR
+ 8001e2e:	eee6 7a64 	vfms.f32	s15, s12, s9
+   while (k > 0)
+ 8001e32:	f1ac 0c08 	sub.w	ip, ip, #8
+ 8001e36:	3608      	adds	r6, #8
+      *pOut++ = 0.5f * (xAI - xBI + t - u ); //xAI
+ 8001e38:	eea5 7aa4 	vfma.f32	s14, s11, s9
+   while (k > 0)
+ 8001e3c:	4560      	cmp	r0, ip
+ 8001e3e:	f10e 0e08 	add.w	lr, lr, #8
+      t1b = xAI + xBI ;
+ 8001e42:	ee76 6a85 	vadd.f32	s13, s13, s10
+   while (k > 0)
+ 8001e46:	f101 0108 	add.w	r1, r1, #8
+      *pOut++ = 0.5f * (xAR + xBR - r - s ); //xAR
+ 8001e4a:	eee5 7ae6 	vfms.f32	s15, s11, s13
+      *pOut++ = 0.5f * (xAI - xBI + t - u ); //xAI
+ 8001e4e:	eea6 7a66 	vfms.f32	s14, s12, s13
+      *pOut++ = 0.5f * (xAR + xBR - r - s ); //xAR
+ 8001e52:	ee67 7a84 	vmul.f32	s15, s15, s8
+      *pOut++ = 0.5f * (xAI - xBI + t - u ); //xAI
+ 8001e56:	ee27 7a04 	vmul.f32	s14, s14, s8
+      *pOut++ = 0.5f * (xAR + xBR - r - s ); //xAR
+ 8001e5a:	ed46 7a04 	vstr	s15, [r6, #-16]
+      *pOut++ = 0.5f * (xAI - xBI + t - u ); //xAI
+ 8001e5e:	ed06 7a03 	vstr	s14, [r6, #-12]
+   while (k > 0)
+ 8001e62:	d1d2      	bne.n	8001e0a <arm_rfft_fast_f32+0x56>
+   {
+      /*  Real FFT compression */
+      merge_rfft_f32(S, p, pOut);
+      /* Complex radix-4 IFFT process */
+      arm_cfft_f32( Sint, pOut, ifftFlag, 1);
+ 8001e64:	4629      	mov	r1, r5
+ 8001e66:	4638      	mov	r0, r7
+ 8001e68:	2301      	movs	r3, #1
+      arm_cfft_f32( Sint, p, ifftFlag, 1);
+
+      /*  Real FFT extraction */
+      stage_rfft_f32(S, p, pOut);
+   }
+}
+ 8001e6a:	e8bd 41f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, lr}
+      arm_cfft_f32( Sint, pOut, ifftFlag, 1);
+ 8001e6e:	f7ff b951 	b.w	8001114 <arm_cfft_f32>
+      arm_cfft_f32( Sint, p, ifftFlag, 1);
+ 8001e72:	2301      	movs	r3, #1
+ 8001e74:	f7ff f94e 	bl	8001114 <arm_cfft_f32>
+   t1b = xBI + xAI  ;
+ 8001e78:	edd4 7a01 	vldr	s15, [r4, #4]
+   xBR = pB[0];
+ 8001e7c:	ed94 6a00 	vldr	s12, [r4]
+   k = (S->Sint).fftLen - 1;
+ 8001e80:	883e      	ldrh	r6, [r7, #0]
+ 8001e82:	6978      	ldr	r0, [r7, #20]
+   t1b = xBI + xAI  ;
+ 8001e84:	ee77 7aa7 	vadd.f32	s15, s15, s15
+   *pOut++ = 0.5f * ( t1a + t1b );
+ 8001e88:	eef0 6a00 	vmov.f32	s13, #0	@ 0x40000000  2.0
+ 8001e8c:	eeb0 7a67 	vmov.f32	s14, s15
+ 8001e90:	eea6 7a26 	vfma.f32	s14, s12, s13
+   k = (S->Sint).fftLen - 1;
+ 8001e94:	3e01      	subs	r6, #1
+   *pOut++ = 0.5f * ( t1a + t1b );
+ 8001e96:	eb04 03c6 	add.w	r3, r4, r6, lsl #3
+   *pOut++ = 0.5f * ( t1a - t1b );
+ 8001e9a:	eed6 7a26 	vfnms.f32	s15, s12, s13
+ 8001e9e:	3010      	adds	r0, #16
+ 8001ea0:	f105 0210 	add.w	r2, r5, #16
+   *pOut++ = 0.5f * ( t1a + t1b );
+ 8001ea4:	eeb6 4a00 	vmov.f32	s8, #96	@ 0x3f000000  0.5
+ 8001ea8:	ee27 7a04 	vmul.f32	s14, s14, s8
+   *pOut++ = 0.5f * ( t1a - t1b );
+ 8001eac:	ee67 7a84 	vmul.f32	s15, s15, s8
+   *pOut++ = 0.5f * ( t1a + t1b );
+ 8001eb0:	ed85 7a00 	vstr	s14, [r5]
+   *pOut++ = 0.5f * ( t1a - t1b );
+ 8001eb4:	edc5 7a01 	vstr	s15, [r5, #4]
+   pA += 2;
+ 8001eb8:	f104 0110 	add.w	r1, r4, #16
+ 8001ebc:	3b08      	subs	r3, #8
+      xAR = pA[0];
+ 8001ebe:	ed11 7a02 	vldr	s14, [r1, #-8]
+      xBI = pB[1];
+ 8001ec2:	edd3 6a03 	vldr	s13, [r3, #12]
+      xBR = pB[0];
+ 8001ec6:	edd3 7a02 	vldr	s15, [r3, #8]
+      xAI = pA[1];
+ 8001eca:	ed11 5a01 	vldr	s10, [r1, #-4]
+      twR = *pCoeff++;
+ 8001ece:	ed10 6a02 	vldr	s12, [r0, #-8]
+      twI = *pCoeff++;
+ 8001ed2:	ed50 5a01 	vldr	s11, [r0, #-4]
+      t1a = xBR - xAR ;
+ 8001ed6:	ee77 4ac7 	vsub.f32	s9, s15, s14
+      *pOut++ = 0.5f * (xAR + xBR + p0 + p3 ); //xAR
+ 8001eda:	ee77 7a87 	vadd.f32	s15, s15, s14
+      *pOut++ = 0.5f * (xAI - xBI + p1 - p2 ); //xAI
+ 8001ede:	ee35 7a66 	vsub.f32	s14, s10, s13
+      *pOut++ = 0.5f * (xAR + xBR + p0 + p3 ); //xAR
+ 8001ee2:	eee6 7a24 	vfma.f32	s15, s12, s9
+      k--;
+ 8001ee6:	3e01      	subs	r6, #1
+   } while (k > 0);
+ 8001ee8:	3208      	adds	r2, #8
+      *pOut++ = 0.5f * (xAI - xBI + p1 - p2 ); //xAI
+ 8001eea:	eea5 7aa4 	vfma.f32	s14, s11, s9
+   } while (k > 0);
+ 8001eee:	2e00      	cmp	r6, #0
+ 8001ef0:	f100 0008 	add.w	r0, r0, #8
+      t1b = xBI + xAI ;
+ 8001ef4:	ee76 6a85 	vadd.f32	s13, s13, s10
+   } while (k > 0);
+ 8001ef8:	f101 0108 	add.w	r1, r1, #8
+      *pOut++ = 0.5f * (xAR + xBR + p0 + p3 ); //xAR
+ 8001efc:	eee5 7aa6 	vfma.f32	s15, s11, s13
+   } while (k > 0);
+ 8001f00:	f1a3 0308 	sub.w	r3, r3, #8
+      *pOut++ = 0.5f * (xAI - xBI + p1 - p2 ); //xAI
+ 8001f04:	eea6 7a66 	vfms.f32	s14, s12, s13
+      *pOut++ = 0.5f * (xAR + xBR + p0 + p3 ); //xAR
+ 8001f08:	ee67 7a84 	vmul.f32	s15, s15, s8
+      *pOut++ = 0.5f * (xAI - xBI + p1 - p2 ); //xAI
+ 8001f0c:	ee27 7a04 	vmul.f32	s14, s14, s8
+      *pOut++ = 0.5f * (xAR + xBR + p0 + p3 ); //xAR
+ 8001f10:	ed42 7a04 	vstr	s15, [r2, #-16]
+      *pOut++ = 0.5f * (xAI - xBI + p1 - p2 ); //xAI
+ 8001f14:	ed02 7a03 	vstr	s14, [r2, #-12]
+   } while (k > 0);
+ 8001f18:	dcd1      	bgt.n	8001ebe <arm_rfft_fast_f32+0x10a>
+}
+ 8001f1a:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+ 8001f1e:	bf00      	nop
+
+08001f20 <arm_rfft_fast_init_256_f32>:
+#else
+ARM_DSP_ATTRIBUTE arm_status arm_rfft_fast_init_256_f32( arm_rfft_fast_instance_f32 * S ) {
+
+  arm_status status;
+
+  if( !S ) return ARM_MATH_ARGUMENT_ERROR;
+ 8001f20:	b150      	cbz	r0, 8001f38 <arm_rfft_fast_init_256_f32+0x18>
+ARM_DSP_ATTRIBUTE arm_status arm_rfft_fast_init_256_f32( arm_rfft_fast_instance_f32 * S ) {
+ 8001f22:	b510      	push	{r4, lr}
+ 8001f24:	4604      	mov	r4, r0
+
+  status=arm_cfft_init_128_f32(&(S->Sint));
+ 8001f26:	f7ff fc7b 	bl	8001820 <arm_cfft_init_128_f32>
+  if (status != ARM_MATH_SUCCESS)
+ 8001f2a:	b920      	cbnz	r0, 8001f36 <arm_rfft_fast_init_256_f32+0x16>
+  {
+    return(status);
+  }
+  S->fftLenRFFT = 256U;
+
+  S->pTwiddleRFFT    = (float32_t *) twiddleCoef_rfft_256;
+ 8001f2c:	4b04      	ldr	r3, [pc, #16]	@ (8001f40 <arm_rfft_fast_init_256_f32+0x20>)
+ 8001f2e:	6163      	str	r3, [r4, #20]
+  S->fftLenRFFT = 256U;
+ 8001f30:	f44f 7280 	mov.w	r2, #256	@ 0x100
+ 8001f34:	8222      	strh	r2, [r4, #16]
+
+  return ARM_MATH_SUCCESS;
+}
+ 8001f36:	bd10      	pop	{r4, pc}
+  if( !S ) return ARM_MATH_ARGUMENT_ERROR;
+ 8001f38:	f04f 30ff 	mov.w	r0, #4294967295
+}
+ 8001f3c:	4770      	bx	lr
+ 8001f3e:	bf00      	nop
+ 8001f40:	080022f4 	.word	0x080022f4
+
+08001f44 <HAL_IncTick>:
   *      implementations in user file.
   * @retval None
   */
 __weak void HAL_IncTick(void)
 {
   uwTick += uwTickFreq;
- 8000f68:	4a03      	ldr	r2, [pc, #12]	@ (8000f78 <HAL_IncTick+0x10>)
- 8000f6a:	4b04      	ldr	r3, [pc, #16]	@ (8000f7c <HAL_IncTick+0x14>)
- 8000f6c:	6811      	ldr	r1, [r2, #0]
- 8000f6e:	781b      	ldrb	r3, [r3, #0]
- 8000f70:	440b      	add	r3, r1
- 8000f72:	6013      	str	r3, [r2, #0]
+ 8001f44:	4a03      	ldr	r2, [pc, #12]	@ (8001f54 <HAL_IncTick+0x10>)
+ 8001f46:	4b04      	ldr	r3, [pc, #16]	@ (8001f58 <HAL_IncTick+0x14>)
+ 8001f48:	6811      	ldr	r1, [r2, #0]
+ 8001f4a:	781b      	ldrb	r3, [r3, #0]
+ 8001f4c:	440b      	add	r3, r1
+ 8001f4e:	6013      	str	r3, [r2, #0]
 }
- 8000f74:	4770      	bx	lr
- 8000f76:	bf00      	nop
- 8000f78:	200016a4 	.word	0x200016a4
- 8000f7c:	20000000 	.word	0x20000000
+ 8001f50:	4770      	bx	lr
+ 8001f52:	bf00      	nop
+ 8001f54:	200016a4 	.word	0x200016a4
+ 8001f58:	20000000 	.word	0x20000000
 
-08000f80 <uart2_set_fcpu>:
+08001f5c <uart2_set_fcpu>:
 
 unsigned long f_cpu;
 
 /** Functions ----------------------------------------------------------------*/
 void uart2_set_fcpu(unsigned long freq)
 {
- 8000f80:	b480      	push	{r7}
- 8000f82:	b083      	sub	sp, #12
- 8000f84:	af00      	add	r7, sp, #0
- 8000f86:	6078      	str	r0, [r7, #4]
+ 8001f5c:	b480      	push	{r7}
+ 8001f5e:	b083      	sub	sp, #12
+ 8001f60:	af00      	add	r7, sp, #0
+ 8001f62:	6078      	str	r0, [r7, #4]
 	f_cpu = freq;
- 8000f88:	4a04      	ldr	r2, [pc, #16]	@ (8000f9c <uart2_set_fcpu+0x1c>)
- 8000f8a:	687b      	ldr	r3, [r7, #4]
- 8000f8c:	6013      	str	r3, [r2, #0]
+ 8001f64:	4a04      	ldr	r2, [pc, #16]	@ (8001f78 <uart2_set_fcpu+0x1c>)
+ 8001f66:	687b      	ldr	r3, [r7, #4]
+ 8001f68:	6013      	str	r3, [r2, #0]
 }
- 8000f8e:	bf00      	nop
- 8000f90:	370c      	adds	r7, #12
- 8000f92:	46bd      	mov	sp, r7
- 8000f94:	f85d 7b04 	ldr.w	r7, [sp], #4
- 8000f98:	4770      	bx	lr
- 8000f9a:	bf00      	nop
- 8000f9c:	200016a8 	.word	0x200016a8
+ 8001f6a:	bf00      	nop
+ 8001f6c:	370c      	adds	r7, #12
+ 8001f6e:	46bd      	mov	sp, r7
+ 8001f70:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8001f74:	4770      	bx	lr
+ 8001f76:	bf00      	nop
+ 8001f78:	200016a8 	.word	0x200016a8
 
-08000fa0 <uart2_dma1_config>:
+08001f7c <uart2_dma1_config>:
 
 	return USART_OK;
 }
 
 uart_err_type_t uart2_dma1_config(uint32_t baud, uart_data_type_t ndata, uart_stop_type_t nstop)
 {
- 8000fa0:	b5b0      	push	{r4, r5, r7, lr}
- 8000fa2:	b086      	sub	sp, #24
- 8000fa4:	af00      	add	r7, sp, #0
- 8000fa6:	60f8      	str	r0, [r7, #12]
- 8000fa8:	460b      	mov	r3, r1
- 8000faa:	72fb      	strb	r3, [r7, #11]
- 8000fac:	4613      	mov	r3, r2
- 8000fae:	72bb      	strb	r3, [r7, #10]
+ 8001f7c:	b5b0      	push	{r4, r5, r7, lr}
+ 8001f7e:	b086      	sub	sp, #24
+ 8001f80:	af00      	add	r7, sp, #0
+ 8001f82:	60f8      	str	r0, [r7, #12]
+ 8001f84:	460b      	mov	r3, r1
+ 8001f86:	72fb      	strb	r3, [r7, #11]
+ 8001f88:	4613      	mov	r3, r2
+ 8001f8a:	72bb      	strb	r3, [r7, #10]
 	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;	// enable UART2 clock
- 8000fb0:	4b85      	ldr	r3, [pc, #532]	@ (80011c8 <uart2_dma1_config+0x228>)
- 8000fb2:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
- 8000fb4:	4a84      	ldr	r2, [pc, #528]	@ (80011c8 <uart2_dma1_config+0x228>)
- 8000fb6:	f443 3300 	orr.w	r3, r3, #131072	@ 0x20000
- 8000fba:	6413      	str	r3, [r2, #64]	@ 0x40
+ 8001f8c:	4b85      	ldr	r3, [pc, #532]	@ (80021a4 <uart2_dma1_config+0x228>)
+ 8001f8e:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
+ 8001f90:	4a84      	ldr	r2, [pc, #528]	@ (80021a4 <uart2_dma1_config+0x228>)
+ 8001f92:	f443 3300 	orr.w	r3, r3, #131072	@ 0x20000
+ 8001f96:	6413      	str	r3, [r2, #64]	@ 0x40
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;	// enable GPIOA clock
- 8000fbc:	4b82      	ldr	r3, [pc, #520]	@ (80011c8 <uart2_dma1_config+0x228>)
- 8000fbe:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
- 8000fc0:	4a81      	ldr	r2, [pc, #516]	@ (80011c8 <uart2_dma1_config+0x228>)
- 8000fc2:	f043 0301 	orr.w	r3, r3, #1
- 8000fc6:	6313      	str	r3, [r2, #48]	@ 0x30
+ 8001f98:	4b82      	ldr	r3, [pc, #520]	@ (80021a4 <uart2_dma1_config+0x228>)
+ 8001f9a:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8001f9c:	4a81      	ldr	r2, [pc, #516]	@ (80021a4 <uart2_dma1_config+0x228>)
+ 8001f9e:	f043 0301 	orr.w	r3, r3, #1
+ 8001fa2:	6313      	str	r3, [r2, #48]	@ 0x30
 	RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;		// enable DMA1 clock
- 8000fc8:	4b7f      	ldr	r3, [pc, #508]	@ (80011c8 <uart2_dma1_config+0x228>)
- 8000fca:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
- 8000fcc:	4a7e      	ldr	r2, [pc, #504]	@ (80011c8 <uart2_dma1_config+0x228>)
- 8000fce:	f443 1300 	orr.w	r3, r3, #2097152	@ 0x200000
- 8000fd2:	6313      	str	r3, [r2, #48]	@ 0x30
+ 8001fa4:	4b7f      	ldr	r3, [pc, #508]	@ (80021a4 <uart2_dma1_config+0x228>)
+ 8001fa6:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8001fa8:	4a7e      	ldr	r2, [pc, #504]	@ (80021a4 <uart2_dma1_config+0x228>)
+ 8001faa:	f443 1300 	orr.w	r3, r3, #2097152	@ 0x200000
+ 8001fae:	6313      	str	r3, [r2, #48]	@ 0x30
 
 	/* Setup DMA1 for transmission */
 	// disable DMA1 to configure
 	DMA1_Stream6->CR &= ~DMA_SxCR_EN;
- 8000fd4:	4b7d      	ldr	r3, [pc, #500]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8000fd6:	681b      	ldr	r3, [r3, #0]
- 8000fd8:	4a7c      	ldr	r2, [pc, #496]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8000fda:	f023 0301 	bic.w	r3, r3, #1
- 8000fde:	6013      	str	r3, [r2, #0]
+ 8001fb0:	4b7d      	ldr	r3, [pc, #500]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fb2:	681b      	ldr	r3, [r3, #0]
+ 8001fb4:	4a7c      	ldr	r2, [pc, #496]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fb6:	f023 0301 	bic.w	r3, r3, #1
+ 8001fba:	6013      	str	r3, [r2, #0]
 	while (DMA1_Stream6->CR & DMA_SxCR_EN);
- 8000fe0:	bf00      	nop
- 8000fe2:	4b7a      	ldr	r3, [pc, #488]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8000fe4:	681b      	ldr	r3, [r3, #0]
- 8000fe6:	f003 0301 	and.w	r3, r3, #1
- 8000fea:	2b00      	cmp	r3, #0
- 8000fec:	d1f9      	bne.n	8000fe2 <uart2_dma1_config+0x42>
+ 8001fbc:	bf00      	nop
+ 8001fbe:	4b7a      	ldr	r3, [pc, #488]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fc0:	681b      	ldr	r3, [r3, #0]
+ 8001fc2:	f003 0301 	and.w	r3, r3, #1
+ 8001fc6:	2b00      	cmp	r3, #0
+ 8001fc8:	d1f9      	bne.n	8001fbe <uart2_dma1_config+0x42>
 
 	// select stream 6, channel 4 for USART2_TX
 	DMA1_Stream6->CR &= ~DMA_SxCR_CHSEL;
- 8000fee:	4b77      	ldr	r3, [pc, #476]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8000ff0:	681b      	ldr	r3, [r3, #0]
- 8000ff2:	4a76      	ldr	r2, [pc, #472]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8000ff4:	f023 6360 	bic.w	r3, r3, #234881024	@ 0xe000000
- 8000ff8:	6013      	str	r3, [r2, #0]
+ 8001fca:	4b77      	ldr	r3, [pc, #476]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fcc:	681b      	ldr	r3, [r3, #0]
+ 8001fce:	4a76      	ldr	r2, [pc, #472]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fd0:	f023 6360 	bic.w	r3, r3, #234881024	@ 0xe000000
+ 8001fd4:	6013      	str	r3, [r2, #0]
 	DMA1_Stream6->CR |= DMA_SxCR_CHSEL_2;
- 8000ffa:	4b74      	ldr	r3, [pc, #464]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8000ffc:	681b      	ldr	r3, [r3, #0]
- 8000ffe:	4a73      	ldr	r2, [pc, #460]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001000:	f043 6300 	orr.w	r3, r3, #134217728	@ 0x8000000
- 8001004:	6013      	str	r3, [r2, #0]
+ 8001fd6:	4b74      	ldr	r3, [pc, #464]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fd8:	681b      	ldr	r3, [r3, #0]
+ 8001fda:	4a73      	ldr	r2, [pc, #460]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fdc:	f043 6300 	orr.w	r3, r3, #134217728	@ 0x8000000
+ 8001fe0:	6013      	str	r3, [r2, #0]
 
 	// disable direct mode
 	DMA1_Stream6->FCR |= DMA_SxFCR_DMDIS;
- 8001006:	4b71      	ldr	r3, [pc, #452]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001008:	695b      	ldr	r3, [r3, #20]
- 800100a:	4a70      	ldr	r2, [pc, #448]	@ (80011cc <uart2_dma1_config+0x22c>)
- 800100c:	f043 0304 	orr.w	r3, r3, #4
- 8001010:	6153      	str	r3, [r2, #20]
+ 8001fe2:	4b71      	ldr	r3, [pc, #452]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fe4:	695b      	ldr	r3, [r3, #20]
+ 8001fe6:	4a70      	ldr	r2, [pc, #448]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001fe8:	f043 0304 	orr.w	r3, r3, #4
+ 8001fec:	6153      	str	r3, [r2, #20]
 
 	// normal mode, low priority, 1 byte data size (memory and peripheral)
 	DMA1_Stream6->CR &= ~(DMA_SxCR_DBM | DMA_SxCR_PL | DMA_SxCR_MSIZE | DMA_SxCR_PSIZE);
- 8001012:	4b6e      	ldr	r3, [pc, #440]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001014:	681b      	ldr	r3, [r3, #0]
- 8001016:	4a6d      	ldr	r2, [pc, #436]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001018:	f423 23ef 	bic.w	r3, r3, #489472	@ 0x77800
- 800101c:	6013      	str	r3, [r2, #0]
+ 8001fee:	4b6e      	ldr	r3, [pc, #440]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001ff0:	681b      	ldr	r3, [r3, #0]
+ 8001ff2:	4a6d      	ldr	r2, [pc, #436]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001ff4:	f423 23ef 	bic.w	r3, r3, #489472	@ 0x77800
+ 8001ff8:	6013      	str	r3, [r2, #0]
 
 	// memory increment mode
 	DMA1_Stream6->CR |= DMA_SxCR_MINC;
- 800101e:	4b6b      	ldr	r3, [pc, #428]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001020:	681b      	ldr	r3, [r3, #0]
- 8001022:	4a6a      	ldr	r2, [pc, #424]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001024:	f443 6380 	orr.w	r3, r3, #1024	@ 0x400
- 8001028:	6013      	str	r3, [r2, #0]
+ 8001ffa:	4b6b      	ldr	r3, [pc, #428]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8001ffc:	681b      	ldr	r3, [r3, #0]
+ 8001ffe:	4a6a      	ldr	r2, [pc, #424]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8002000:	f443 6380 	orr.w	r3, r3, #1024	@ 0x400
+ 8002004:	6013      	str	r3, [r2, #0]
 
 	// fixed peripheral pointer
 	DMA1_Stream6->CR &= ~DMA_SxCR_PINC;
- 800102a:	4b68      	ldr	r3, [pc, #416]	@ (80011cc <uart2_dma1_config+0x22c>)
- 800102c:	681b      	ldr	r3, [r3, #0]
- 800102e:	4a67      	ldr	r2, [pc, #412]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001030:	f423 7300 	bic.w	r3, r3, #512	@ 0x200
- 8001034:	6013      	str	r3, [r2, #0]
+ 8002006:	4b68      	ldr	r3, [pc, #416]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8002008:	681b      	ldr	r3, [r3, #0]
+ 800200a:	4a67      	ldr	r2, [pc, #412]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 800200c:	f423 7300 	bic.w	r3, r3, #512	@ 0x200
+ 8002010:	6013      	str	r3, [r2, #0]
 
 	// disable circular mode
 	DMA1_Stream6->CR &= ~DMA_SxCR_CIRC;
- 8001036:	4b65      	ldr	r3, [pc, #404]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001038:	681b      	ldr	r3, [r3, #0]
- 800103a:	4a64      	ldr	r2, [pc, #400]	@ (80011cc <uart2_dma1_config+0x22c>)
- 800103c:	f423 7380 	bic.w	r3, r3, #256	@ 0x100
- 8001040:	6013      	str	r3, [r2, #0]
+ 8002012:	4b65      	ldr	r3, [pc, #404]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8002014:	681b      	ldr	r3, [r3, #0]
+ 8002016:	4a64      	ldr	r2, [pc, #400]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8002018:	f423 7380 	bic.w	r3, r3, #256	@ 0x100
+ 800201c:	6013      	str	r3, [r2, #0]
 
 	// memory to peripheral mode
 	DMA1_Stream6->CR &= ~DMA_SxCR_DIR_1;
- 8001042:	4b62      	ldr	r3, [pc, #392]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001044:	681b      	ldr	r3, [r3, #0]
- 8001046:	4a61      	ldr	r2, [pc, #388]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001048:	f023 0380 	bic.w	r3, r3, #128	@ 0x80
- 800104c:	6013      	str	r3, [r2, #0]
+ 800201e:	4b62      	ldr	r3, [pc, #392]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8002020:	681b      	ldr	r3, [r3, #0]
+ 8002022:	4a61      	ldr	r2, [pc, #388]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8002024:	f023 0380 	bic.w	r3, r3, #128	@ 0x80
+ 8002028:	6013      	str	r3, [r2, #0]
 	DMA1_Stream6->CR |= DMA_SxCR_DIR_0;
- 800104e:	4b5f      	ldr	r3, [pc, #380]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001050:	681b      	ldr	r3, [r3, #0]
- 8001052:	4a5e      	ldr	r2, [pc, #376]	@ (80011cc <uart2_dma1_config+0x22c>)
- 8001054:	f043 0340 	orr.w	r3, r3, #64	@ 0x40
- 8001058:	6013      	str	r3, [r2, #0]
+ 800202a:	4b5f      	ldr	r3, [pc, #380]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 800202c:	681b      	ldr	r3, [r3, #0]
+ 800202e:	4a5e      	ldr	r2, [pc, #376]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8002030:	f043 0340 	orr.w	r3, r3, #64	@ 0x40
+ 8002034:	6013      	str	r3, [r2, #0]
 
 	// peripheral address is USART2_DR
 	DMA1_Stream6->PAR = (uint32_t)&(USART2->DR);
- 800105a:	4b5c      	ldr	r3, [pc, #368]	@ (80011cc <uart2_dma1_config+0x22c>)
- 800105c:	4a5c      	ldr	r2, [pc, #368]	@ (80011d0 <uart2_dma1_config+0x230>)
- 800105e:	609a      	str	r2, [r3, #8]
+ 8002036:	4b5c      	ldr	r3, [pc, #368]	@ (80021a8 <uart2_dma1_config+0x22c>)
+ 8002038:	4a5c      	ldr	r2, [pc, #368]	@ (80021ac <uart2_dma1_config+0x230>)
+ 800203a:	609a      	str	r2, [r3, #8]
 
 	/* Setup UART2 for transmission using DMA1 */
 	// alternate function mode on TX (PA2) and RX (PA3)
 	GPIOA->MODER |= GPIO_MODER_MODER2_1 | GPIO_MODER_MODER3_1;
- 8001060:	4b5c      	ldr	r3, [pc, #368]	@ (80011d4 <uart2_dma1_config+0x234>)
- 8001062:	681b      	ldr	r3, [r3, #0]
- 8001064:	4a5b      	ldr	r2, [pc, #364]	@ (80011d4 <uart2_dma1_config+0x234>)
- 8001066:	f043 03a0 	orr.w	r3, r3, #160	@ 0xa0
- 800106a:	6013      	str	r3, [r2, #0]
+ 800203c:	4b5c      	ldr	r3, [pc, #368]	@ (80021b0 <uart2_dma1_config+0x234>)
+ 800203e:	681b      	ldr	r3, [r3, #0]
+ 8002040:	4a5b      	ldr	r2, [pc, #364]	@ (80021b0 <uart2_dma1_config+0x234>)
+ 8002042:	f043 03a0 	orr.w	r3, r3, #160	@ 0xa0
+ 8002046:	6013      	str	r3, [r2, #0]
 	GPIOA->MODER &= ~(GPIO_MODER_MODER2_0 | GPIO_MODER_MODER3_0);
- 800106c:	4b59      	ldr	r3, [pc, #356]	@ (80011d4 <uart2_dma1_config+0x234>)
- 800106e:	681b      	ldr	r3, [r3, #0]
- 8001070:	4a58      	ldr	r2, [pc, #352]	@ (80011d4 <uart2_dma1_config+0x234>)
- 8001072:	f023 0350 	bic.w	r3, r3, #80	@ 0x50
- 8001076:	6013      	str	r3, [r2, #0]
+ 8002048:	4b59      	ldr	r3, [pc, #356]	@ (80021b0 <uart2_dma1_config+0x234>)
+ 800204a:	681b      	ldr	r3, [r3, #0]
+ 800204c:	4a58      	ldr	r2, [pc, #352]	@ (80021b0 <uart2_dma1_config+0x234>)
+ 800204e:	f023 0350 	bic.w	r3, r3, #80	@ 0x50
+ 8002052:	6013      	str	r3, [r2, #0]
 
 	// select alternate function mode 7 for each
 	GPIOA->AFR[0] &= ~(GPIO_AFRL_AFRL2 | GPIO_AFRL_AFRL3);
- 8001078:	4b56      	ldr	r3, [pc, #344]	@ (80011d4 <uart2_dma1_config+0x234>)
- 800107a:	6a1b      	ldr	r3, [r3, #32]
- 800107c:	4a55      	ldr	r2, [pc, #340]	@ (80011d4 <uart2_dma1_config+0x234>)
- 800107e:	f423 437f 	bic.w	r3, r3, #65280	@ 0xff00
- 8001082:	6213      	str	r3, [r2, #32]
+ 8002054:	4b56      	ldr	r3, [pc, #344]	@ (80021b0 <uart2_dma1_config+0x234>)
+ 8002056:	6a1b      	ldr	r3, [r3, #32]
+ 8002058:	4a55      	ldr	r2, [pc, #340]	@ (80021b0 <uart2_dma1_config+0x234>)
+ 800205a:	f423 437f 	bic.w	r3, r3, #65280	@ 0xff00
+ 800205e:	6213      	str	r3, [r2, #32]
 	GPIOA->AFR[0] |= GPIO_AFRL_AFRL2_0 | GPIO_AFRL_AFRL3_0 |
- 8001084:	4b53      	ldr	r3, [pc, #332]	@ (80011d4 <uart2_dma1_config+0x234>)
- 8001086:	6a1b      	ldr	r3, [r3, #32]
- 8001088:	4a52      	ldr	r2, [pc, #328]	@ (80011d4 <uart2_dma1_config+0x234>)
- 800108a:	f443 43ee 	orr.w	r3, r3, #30464	@ 0x7700
- 800108e:	6213      	str	r3, [r2, #32]
+ 8002060:	4b53      	ldr	r3, [pc, #332]	@ (80021b0 <uart2_dma1_config+0x234>)
+ 8002062:	6a1b      	ldr	r3, [r3, #32]
+ 8002064:	4a52      	ldr	r2, [pc, #328]	@ (80021b0 <uart2_dma1_config+0x234>)
+ 8002066:	f443 43ee 	orr.w	r3, r3, #30464	@ 0x7700
+ 800206a:	6213      	str	r3, [r2, #32]
 					GPIO_AFRL_AFRL2_1 | GPIO_AFRL_AFRL3_1 |
 					GPIO_AFRL_AFRL2_2 | GPIO_AFRL_AFRL3_2;
 
 	USART2->CR1 |= USART_CR1_UE;			// UART2 enable
- 8001090:	4b51      	ldr	r3, [pc, #324]	@ (80011d8 <uart2_dma1_config+0x238>)
- 8001092:	68db      	ldr	r3, [r3, #12]
- 8001094:	4a50      	ldr	r2, [pc, #320]	@ (80011d8 <uart2_dma1_config+0x238>)
- 8001096:	f443 5300 	orr.w	r3, r3, #8192	@ 0x2000
- 800109a:	60d3      	str	r3, [r2, #12]
+ 800206c:	4b51      	ldr	r3, [pc, #324]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 800206e:	68db      	ldr	r3, [r3, #12]
+ 8002070:	4a50      	ldr	r2, [pc, #320]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002072:	f443 5300 	orr.w	r3, r3, #8192	@ 0x2000
+ 8002076:	60d3      	str	r3, [r2, #12]
 
 	if (ndata == USART_DATA_8)
- 800109c:	7afb      	ldrb	r3, [r7, #11]
- 800109e:	2b00      	cmp	r3, #0
- 80010a0:	d106      	bne.n	80010b0 <uart2_dma1_config+0x110>
+ 8002078:	7afb      	ldrb	r3, [r7, #11]
+ 800207a:	2b00      	cmp	r3, #0
+ 800207c:	d106      	bne.n	800208c <uart2_dma1_config+0x110>
 	{
 		USART2->CR1 &= ~USART_CR1_M;		// 1 start, 8 data, n stop
- 80010a2:	4b4d      	ldr	r3, [pc, #308]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010a4:	68db      	ldr	r3, [r3, #12]
- 80010a6:	4a4c      	ldr	r2, [pc, #304]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010a8:	f423 5380 	bic.w	r3, r3, #4096	@ 0x1000
- 80010ac:	60d3      	str	r3, [r2, #12]
- 80010ae:	e00b      	b.n	80010c8 <uart2_dma1_config+0x128>
+ 800207e:	4b4d      	ldr	r3, [pc, #308]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002080:	68db      	ldr	r3, [r3, #12]
+ 8002082:	4a4c      	ldr	r2, [pc, #304]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002084:	f423 5380 	bic.w	r3, r3, #4096	@ 0x1000
+ 8002088:	60d3      	str	r3, [r2, #12]
+ 800208a:	e00b      	b.n	80020a4 <uart2_dma1_config+0x128>
 	}
 	else if (ndata == USART_DATA_9)
- 80010b0:	7afb      	ldrb	r3, [r7, #11]
- 80010b2:	2b01      	cmp	r3, #1
- 80010b4:	d106      	bne.n	80010c4 <uart2_dma1_config+0x124>
+ 800208c:	7afb      	ldrb	r3, [r7, #11]
+ 800208e:	2b01      	cmp	r3, #1
+ 8002090:	d106      	bne.n	80020a0 <uart2_dma1_config+0x124>
 	{
 		USART2->CR1 |= USART_CR1_M;			// 1 start, 9 data, n stop
- 80010b6:	4b48      	ldr	r3, [pc, #288]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010b8:	68db      	ldr	r3, [r3, #12]
- 80010ba:	4a47      	ldr	r2, [pc, #284]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010bc:	f443 5380 	orr.w	r3, r3, #4096	@ 0x1000
- 80010c0:	60d3      	str	r3, [r2, #12]
- 80010c2:	e001      	b.n	80010c8 <uart2_dma1_config+0x128>
+ 8002092:	4b48      	ldr	r3, [pc, #288]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002094:	68db      	ldr	r3, [r3, #12]
+ 8002096:	4a47      	ldr	r2, [pc, #284]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002098:	f443 5380 	orr.w	r3, r3, #4096	@ 0x1000
+ 800209c:	60d3      	str	r3, [r2, #12]
+ 800209e:	e001      	b.n	80020a4 <uart2_dma1_config+0x128>
 	}
 	else
 	{
 		return USART_INVALID_NDATA;
- 80010c4:	2302      	movs	r3, #2
- 80010c6:	e07b      	b.n	80011c0 <uart2_dma1_config+0x220>
+ 80020a0:	2302      	movs	r3, #2
+ 80020a2:	e07b      	b.n	800219c <uart2_dma1_config+0x220>
 	}
 
 	if (nstop == USART_STOP_1)
- 80010c8:	7abb      	ldrb	r3, [r7, #10]
- 80010ca:	2b00      	cmp	r3, #0
- 80010cc:	d106      	bne.n	80010dc <uart2_dma1_config+0x13c>
+ 80020a4:	7abb      	ldrb	r3, [r7, #10]
+ 80020a6:	2b00      	cmp	r3, #0
+ 80020a8:	d106      	bne.n	80020b8 <uart2_dma1_config+0x13c>
 	{
 		USART2->CR2 &= ~USART_CR2_STOP;		// 1 stop bit
- 80010ce:	4b42      	ldr	r3, [pc, #264]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010d0:	691b      	ldr	r3, [r3, #16]
- 80010d2:	4a41      	ldr	r2, [pc, #260]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010d4:	f423 5340 	bic.w	r3, r3, #12288	@ 0x3000
- 80010d8:	6113      	str	r3, [r2, #16]
- 80010da:	e021      	b.n	8001120 <uart2_dma1_config+0x180>
+ 80020aa:	4b42      	ldr	r3, [pc, #264]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020ac:	691b      	ldr	r3, [r3, #16]
+ 80020ae:	4a41      	ldr	r2, [pc, #260]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020b0:	f423 5340 	bic.w	r3, r3, #12288	@ 0x3000
+ 80020b4:	6113      	str	r3, [r2, #16]
+ 80020b6:	e021      	b.n	80020fc <uart2_dma1_config+0x180>
 	}
 	else if (nstop == USART_STOP_HALF)
- 80010dc:	7abb      	ldrb	r3, [r7, #10]
- 80010de:	2b01      	cmp	r3, #1
- 80010e0:	d10c      	bne.n	80010fc <uart2_dma1_config+0x15c>
+ 80020b8:	7abb      	ldrb	r3, [r7, #10]
+ 80020ba:	2b01      	cmp	r3, #1
+ 80020bc:	d10c      	bne.n	80020d8 <uart2_dma1_config+0x15c>
 	{
 		USART2->CR2 &= ~USART_CR2_STOP;		// half stop bit
- 80010e2:	4b3d      	ldr	r3, [pc, #244]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010e4:	691b      	ldr	r3, [r3, #16]
- 80010e6:	4a3c      	ldr	r2, [pc, #240]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010e8:	f423 5340 	bic.w	r3, r3, #12288	@ 0x3000
- 80010ec:	6113      	str	r3, [r2, #16]
+ 80020be:	4b3d      	ldr	r3, [pc, #244]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020c0:	691b      	ldr	r3, [r3, #16]
+ 80020c2:	4a3c      	ldr	r2, [pc, #240]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020c4:	f423 5340 	bic.w	r3, r3, #12288	@ 0x3000
+ 80020c8:	6113      	str	r3, [r2, #16]
 		USART2->CR2 |= USART_CR2_STOP_0;
- 80010ee:	4b3a      	ldr	r3, [pc, #232]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010f0:	691b      	ldr	r3, [r3, #16]
- 80010f2:	4a39      	ldr	r2, [pc, #228]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80010f4:	f443 5380 	orr.w	r3, r3, #4096	@ 0x1000
- 80010f8:	6113      	str	r3, [r2, #16]
- 80010fa:	e011      	b.n	8001120 <uart2_dma1_config+0x180>
+ 80020ca:	4b3a      	ldr	r3, [pc, #232]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020cc:	691b      	ldr	r3, [r3, #16]
+ 80020ce:	4a39      	ldr	r2, [pc, #228]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020d0:	f443 5380 	orr.w	r3, r3, #4096	@ 0x1000
+ 80020d4:	6113      	str	r3, [r2, #16]
+ 80020d6:	e011      	b.n	80020fc <uart2_dma1_config+0x180>
 	}
 	else if (nstop == USART_STOP_2)
- 80010fc:	7abb      	ldrb	r3, [r7, #10]
- 80010fe:	2b02      	cmp	r3, #2
- 8001100:	d10c      	bne.n	800111c <uart2_dma1_config+0x17c>
+ 80020d8:	7abb      	ldrb	r3, [r7, #10]
+ 80020da:	2b02      	cmp	r3, #2
+ 80020dc:	d10c      	bne.n	80020f8 <uart2_dma1_config+0x17c>
 	{
 		USART2->CR2 &= ~USART_CR2_STOP;		// 2 stop bits
- 8001102:	4b35      	ldr	r3, [pc, #212]	@ (80011d8 <uart2_dma1_config+0x238>)
- 8001104:	691b      	ldr	r3, [r3, #16]
- 8001106:	4a34      	ldr	r2, [pc, #208]	@ (80011d8 <uart2_dma1_config+0x238>)
- 8001108:	f423 5340 	bic.w	r3, r3, #12288	@ 0x3000
- 800110c:	6113      	str	r3, [r2, #16]
+ 80020de:	4b35      	ldr	r3, [pc, #212]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020e0:	691b      	ldr	r3, [r3, #16]
+ 80020e2:	4a34      	ldr	r2, [pc, #208]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020e4:	f423 5340 	bic.w	r3, r3, #12288	@ 0x3000
+ 80020e8:	6113      	str	r3, [r2, #16]
 		USART2->CR2 |= USART_CR2_STOP_1;
- 800110e:	4b32      	ldr	r3, [pc, #200]	@ (80011d8 <uart2_dma1_config+0x238>)
- 8001110:	691b      	ldr	r3, [r3, #16]
- 8001112:	4a31      	ldr	r2, [pc, #196]	@ (80011d8 <uart2_dma1_config+0x238>)
- 8001114:	f443 5300 	orr.w	r3, r3, #8192	@ 0x2000
- 8001118:	6113      	str	r3, [r2, #16]
- 800111a:	e001      	b.n	8001120 <uart2_dma1_config+0x180>
+ 80020ea:	4b32      	ldr	r3, [pc, #200]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020ec:	691b      	ldr	r3, [r3, #16]
+ 80020ee:	4a31      	ldr	r2, [pc, #196]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 80020f0:	f443 5300 	orr.w	r3, r3, #8192	@ 0x2000
+ 80020f4:	6113      	str	r3, [r2, #16]
+ 80020f6:	e001      	b.n	80020fc <uart2_dma1_config+0x180>
 	}
 	else
 	{
 		return USART_INVALID_NSTOP;
- 800111c:	2301      	movs	r3, #1
- 800111e:	e04f      	b.n	80011c0 <uart2_dma1_config+0x220>
+ 80020f8:	2301      	movs	r3, #1
+ 80020fa:	e04f      	b.n	800219c <uart2_dma1_config+0x220>
 	}
 
 	// pg. 519 STM32F401RE reference
 	float usart_div = f_cpu / (2 * 16.0 * baud);		// APB1 bus is 1/2 clock speed of f_cpu
- 8001120:	4b2e      	ldr	r3, [pc, #184]	@ (80011dc <uart2_dma1_config+0x23c>)
- 8001122:	681b      	ldr	r3, [r3, #0]
- 8001124:	4618      	mov	r0, r3
- 8001126:	f7ff f997 	bl	8000458 <__aeabi_ui2d>
- 800112a:	4604      	mov	r4, r0
- 800112c:	460d      	mov	r5, r1
- 800112e:	68f8      	ldr	r0, [r7, #12]
- 8001130:	f7ff f992 	bl	8000458 <__aeabi_ui2d>
- 8001134:	f04f 0200 	mov.w	r2, #0
- 8001138:	4b29      	ldr	r3, [pc, #164]	@ (80011e0 <uart2_dma1_config+0x240>)
- 800113a:	f7ff fa07 	bl	800054c <__aeabi_dmul>
- 800113e:	4602      	mov	r2, r0
- 8001140:	460b      	mov	r3, r1
- 8001142:	4620      	mov	r0, r4
- 8001144:	4629      	mov	r1, r5
- 8001146:	f7ff fb2b 	bl	80007a0 <__aeabi_ddiv>
- 800114a:	4602      	mov	r2, r0
- 800114c:	460b      	mov	r3, r1
- 800114e:	4610      	mov	r0, r2
- 8001150:	4619      	mov	r1, r3
- 8001152:	f7ff fc0d 	bl	8000970 <__aeabi_d2f>
- 8001156:	4603      	mov	r3, r0
- 8001158:	617b      	str	r3, [r7, #20]
+ 80020fc:	4b2e      	ldr	r3, [pc, #184]	@ (80021b8 <uart2_dma1_config+0x23c>)
+ 80020fe:	681b      	ldr	r3, [r3, #0]
+ 8002100:	4618      	mov	r0, r3
+ 8002102:	f7fe f9a9 	bl	8000458 <__aeabi_ui2d>
+ 8002106:	4604      	mov	r4, r0
+ 8002108:	460d      	mov	r5, r1
+ 800210a:	68f8      	ldr	r0, [r7, #12]
+ 800210c:	f7fe f9a4 	bl	8000458 <__aeabi_ui2d>
+ 8002110:	f04f 0200 	mov.w	r2, #0
+ 8002114:	4b29      	ldr	r3, [pc, #164]	@ (80021bc <uart2_dma1_config+0x240>)
+ 8002116:	f7fe fa19 	bl	800054c <__aeabi_dmul>
+ 800211a:	4602      	mov	r2, r0
+ 800211c:	460b      	mov	r3, r1
+ 800211e:	4620      	mov	r0, r4
+ 8002120:	4629      	mov	r1, r5
+ 8002122:	f7fe fb3d 	bl	80007a0 <__aeabi_ddiv>
+ 8002126:	4602      	mov	r2, r0
+ 8002128:	460b      	mov	r3, r1
+ 800212a:	4610      	mov	r0, r2
+ 800212c:	4619      	mov	r1, r3
+ 800212e:	f7fe fc1f 	bl	8000970 <__aeabi_d2f>
+ 8002132:	4603      	mov	r3, r0
+ 8002134:	617b      	str	r3, [r7, #20]
 	uint16_t mantissa = (uint16_t) usart_div;
- 800115a:	edd7 7a05 	vldr	s15, [r7, #20]
- 800115e:	eefc 7ae7 	vcvt.u32.f32	s15, s15
- 8001162:	ee17 3a90 	vmov	r3, s15
- 8001166:	827b      	strh	r3, [r7, #18]
+ 8002136:	edd7 7a05 	vldr	s15, [r7, #20]
+ 800213a:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 800213e:	ee17 3a90 	vmov	r3, s15
+ 8002142:	827b      	strh	r3, [r7, #18]
 	uint8_t fraction = (uint8_t) ((usart_div - mantissa) * 16);
- 8001168:	8a7b      	ldrh	r3, [r7, #18]
- 800116a:	ee07 3a90 	vmov	s15, r3
- 800116e:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8001172:	ed97 7a05 	vldr	s14, [r7, #20]
- 8001176:	ee77 7a67 	vsub.f32	s15, s14, s15
- 800117a:	eeb3 7a00 	vmov.f32	s14, #48	@ 0x41800000  16.0
- 800117e:	ee67 7a87 	vmul.f32	s15, s15, s14
- 8001182:	eefc 7ae7 	vcvt.u32.f32	s15, s15
- 8001186:	edc7 7a01 	vstr	s15, [r7, #4]
- 800118a:	793b      	ldrb	r3, [r7, #4]
- 800118c:	747b      	strb	r3, [r7, #17]
+ 8002144:	8a7b      	ldrh	r3, [r7, #18]
+ 8002146:	ee07 3a90 	vmov	s15, r3
+ 800214a:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 800214e:	ed97 7a05 	vldr	s14, [r7, #20]
+ 8002152:	ee77 7a67 	vsub.f32	s15, s14, s15
+ 8002156:	eeb3 7a00 	vmov.f32	s14, #48	@ 0x41800000  16.0
+ 800215a:	ee67 7a87 	vmul.f32	s15, s15, s14
+ 800215e:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 8002162:	edc7 7a01 	vstr	s15, [r7, #4]
+ 8002166:	793b      	ldrb	r3, [r7, #4]
+ 8002168:	747b      	strb	r3, [r7, #17]
 	USART2->BRR = mantissa << 4 | fraction;
- 800118e:	8a7b      	ldrh	r3, [r7, #18]
- 8001190:	011a      	lsls	r2, r3, #4
- 8001192:	7c7b      	ldrb	r3, [r7, #17]
- 8001194:	431a      	orrs	r2, r3
- 8001196:	4b10      	ldr	r3, [pc, #64]	@ (80011d8 <uart2_dma1_config+0x238>)
- 8001198:	609a      	str	r2, [r3, #8]
+ 800216a:	8a7b      	ldrh	r3, [r7, #18]
+ 800216c:	011a      	lsls	r2, r3, #4
+ 800216e:	7c7b      	ldrb	r3, [r7, #17]
+ 8002170:	431a      	orrs	r2, r3
+ 8002172:	4b10      	ldr	r3, [pc, #64]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002174:	609a      	str	r2, [r3, #8]
 
 	USART2->CR3 |= USART_CR3_DMAT;		// enable DMA transmitter
- 800119a:	4b0f      	ldr	r3, [pc, #60]	@ (80011d8 <uart2_dma1_config+0x238>)
- 800119c:	695b      	ldr	r3, [r3, #20]
- 800119e:	4a0e      	ldr	r2, [pc, #56]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80011a0:	f043 0380 	orr.w	r3, r3, #128	@ 0x80
- 80011a4:	6153      	str	r3, [r2, #20]
+ 8002176:	4b0f      	ldr	r3, [pc, #60]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002178:	695b      	ldr	r3, [r3, #20]
+ 800217a:	4a0e      	ldr	r2, [pc, #56]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 800217c:	f043 0380 	orr.w	r3, r3, #128	@ 0x80
+ 8002180:	6153      	str	r3, [r2, #20]
 
 	USART2->CR1 |= USART_CR1_TE;		// transmitter enable
- 80011a6:	4b0c      	ldr	r3, [pc, #48]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80011a8:	68db      	ldr	r3, [r3, #12]
- 80011aa:	4a0b      	ldr	r2, [pc, #44]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80011ac:	f043 0308 	orr.w	r3, r3, #8
- 80011b0:	60d3      	str	r3, [r2, #12]
+ 8002182:	4b0c      	ldr	r3, [pc, #48]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002184:	68db      	ldr	r3, [r3, #12]
+ 8002186:	4a0b      	ldr	r2, [pc, #44]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002188:	f043 0308 	orr.w	r3, r3, #8
+ 800218c:	60d3      	str	r3, [r2, #12]
 	USART2->CR1 |= USART_CR1_RE;		// receiver enable
- 80011b2:	4b09      	ldr	r3, [pc, #36]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80011b4:	68db      	ldr	r3, [r3, #12]
- 80011b6:	4a08      	ldr	r2, [pc, #32]	@ (80011d8 <uart2_dma1_config+0x238>)
- 80011b8:	f043 0304 	orr.w	r3, r3, #4
- 80011bc:	60d3      	str	r3, [r2, #12]
+ 800218e:	4b09      	ldr	r3, [pc, #36]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002190:	68db      	ldr	r3, [r3, #12]
+ 8002192:	4a08      	ldr	r2, [pc, #32]	@ (80021b4 <uart2_dma1_config+0x238>)
+ 8002194:	f043 0304 	orr.w	r3, r3, #4
+ 8002198:	60d3      	str	r3, [r2, #12]
 
 	return USART_OK;
- 80011be:	2300      	movs	r3, #0
+ 800219a:	2300      	movs	r3, #0
 }
- 80011c0:	4618      	mov	r0, r3
- 80011c2:	3718      	adds	r7, #24
- 80011c4:	46bd      	mov	sp, r7
- 80011c6:	bdb0      	pop	{r4, r5, r7, pc}
- 80011c8:	40023800 	.word	0x40023800
- 80011cc:	400260a0 	.word	0x400260a0
- 80011d0:	40004404 	.word	0x40004404
- 80011d4:	40020000 	.word	0x40020000
- 80011d8:	40004400 	.word	0x40004400
- 80011dc:	200016a8 	.word	0x200016a8
- 80011e0:	40400000 	.word	0x40400000
+ 800219c:	4618      	mov	r0, r3
+ 800219e:	3718      	adds	r7, #24
+ 80021a0:	46bd      	mov	sp, r7
+ 80021a2:	bdb0      	pop	{r4, r5, r7, pc}
+ 80021a4:	40023800 	.word	0x40023800
+ 80021a8:	400260a0 	.word	0x400260a0
+ 80021ac:	40004404 	.word	0x40004404
+ 80021b0:	40020000 	.word	0x40020000
+ 80021b4:	40004400 	.word	0x40004400
+ 80021b8:	200016a8 	.word	0x200016a8
+ 80021bc:	40400000 	.word	0x40400000
 
-080011e4 <memset>:
- 80011e4:	4402      	add	r2, r0
- 80011e6:	4603      	mov	r3, r0
- 80011e8:	4293      	cmp	r3, r2
- 80011ea:	d100      	bne.n	80011ee <memset+0xa>
- 80011ec:	4770      	bx	lr
- 80011ee:	f803 1b01 	strb.w	r1, [r3], #1
- 80011f2:	e7f9      	b.n	80011e8 <memset+0x4>
+080021c0 <memset>:
+ 80021c0:	4402      	add	r2, r0
+ 80021c2:	4603      	mov	r3, r0
+ 80021c4:	4293      	cmp	r3, r2
+ 80021c6:	d100      	bne.n	80021ca <memset+0xa>
+ 80021c8:	4770      	bx	lr
+ 80021ca:	f803 1b01 	strb.w	r1, [r3], #1
+ 80021ce:	e7f9      	b.n	80021c4 <memset+0x4>
 
-080011f4 <__libc_init_array>:
- 80011f4:	b570      	push	{r4, r5, r6, lr}
- 80011f6:	4d0d      	ldr	r5, [pc, #52]	@ (800122c <__libc_init_array+0x38>)
- 80011f8:	4c0d      	ldr	r4, [pc, #52]	@ (8001230 <__libc_init_array+0x3c>)
- 80011fa:	1b64      	subs	r4, r4, r5
- 80011fc:	10a4      	asrs	r4, r4, #2
- 80011fe:	2600      	movs	r6, #0
- 8001200:	42a6      	cmp	r6, r4
- 8001202:	d109      	bne.n	8001218 <__libc_init_array+0x24>
- 8001204:	4d0b      	ldr	r5, [pc, #44]	@ (8001234 <__libc_init_array+0x40>)
- 8001206:	4c0c      	ldr	r4, [pc, #48]	@ (8001238 <__libc_init_array+0x44>)
- 8001208:	f000 f818 	bl	800123c <_init>
- 800120c:	1b64      	subs	r4, r4, r5
- 800120e:	10a4      	asrs	r4, r4, #2
- 8001210:	2600      	movs	r6, #0
- 8001212:	42a6      	cmp	r6, r4
- 8001214:	d105      	bne.n	8001222 <__libc_init_array+0x2e>
- 8001216:	bd70      	pop	{r4, r5, r6, pc}
- 8001218:	f855 3b04 	ldr.w	r3, [r5], #4
- 800121c:	4798      	blx	r3
- 800121e:	3601      	adds	r6, #1
- 8001220:	e7ee      	b.n	8001200 <__libc_init_array+0xc>
- 8001222:	f855 3b04 	ldr.w	r3, [r5], #4
- 8001226:	4798      	blx	r3
- 8001228:	3601      	adds	r6, #1
- 800122a:	e7f2      	b.n	8001212 <__libc_init_array+0x1e>
- 800122c:	08001314 	.word	0x08001314
- 8001230:	08001314 	.word	0x08001314
- 8001234:	08001314 	.word	0x08001314
- 8001238:	08001318 	.word	0x08001318
+080021d0 <__libc_init_array>:
+ 80021d0:	b570      	push	{r4, r5, r6, lr}
+ 80021d2:	4d0d      	ldr	r5, [pc, #52]	@ (8002208 <__libc_init_array+0x38>)
+ 80021d4:	4c0d      	ldr	r4, [pc, #52]	@ (800220c <__libc_init_array+0x3c>)
+ 80021d6:	1b64      	subs	r4, r4, r5
+ 80021d8:	10a4      	asrs	r4, r4, #2
+ 80021da:	2600      	movs	r6, #0
+ 80021dc:	42a6      	cmp	r6, r4
+ 80021de:	d109      	bne.n	80021f4 <__libc_init_array+0x24>
+ 80021e0:	4d0b      	ldr	r5, [pc, #44]	@ (8002210 <__libc_init_array+0x40>)
+ 80021e2:	4c0c      	ldr	r4, [pc, #48]	@ (8002214 <__libc_init_array+0x44>)
+ 80021e4:	f000 f818 	bl	8002218 <_init>
+ 80021e8:	1b64      	subs	r4, r4, r5
+ 80021ea:	10a4      	asrs	r4, r4, #2
+ 80021ec:	2600      	movs	r6, #0
+ 80021ee:	42a6      	cmp	r6, r4
+ 80021f0:	d105      	bne.n	80021fe <__libc_init_array+0x2e>
+ 80021f2:	bd70      	pop	{r4, r5, r6, pc}
+ 80021f4:	f855 3b04 	ldr.w	r3, [r5], #4
+ 80021f8:	4798      	blx	r3
+ 80021fa:	3601      	adds	r6, #1
+ 80021fc:	e7ee      	b.n	80021dc <__libc_init_array+0xc>
+ 80021fe:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8002202:	4798      	blx	r3
+ 8002204:	3601      	adds	r6, #1
+ 8002206:	e7f2      	b.n	80021ee <__libc_init_array+0x1e>
+ 8002208:	08002ca4 	.word	0x08002ca4
+ 800220c:	08002ca4 	.word	0x08002ca4
+ 8002210:	08002ca4 	.word	0x08002ca4
+ 8002214:	08002ca8 	.word	0x08002ca8
 
-0800123c <_init>:
- 800123c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 800123e:	bf00      	nop
- 8001240:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 8001242:	bc08      	pop	{r3}
- 8001244:	469e      	mov	lr, r3
- 8001246:	4770      	bx	lr
+08002218 <_init>:
+ 8002218:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800221a:	bf00      	nop
+ 800221c:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800221e:	bc08      	pop	{r3}
+ 8002220:	469e      	mov	lr, r3
+ 8002222:	4770      	bx	lr
 
-08001248 <_fini>:
- 8001248:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 800124a:	bf00      	nop
- 800124c:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 800124e:	bc08      	pop	{r3}
- 8001250:	469e      	mov	lr, r3
- 8001252:	4770      	bx	lr
+08002224 <_fini>:
+ 8002224:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8002226:	bf00      	nop
+ 8002228:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800222a:	bc08      	pop	{r3}
+ 800222c:	469e      	mov	lr, r3
+ 800222e:	4770      	bx	lr

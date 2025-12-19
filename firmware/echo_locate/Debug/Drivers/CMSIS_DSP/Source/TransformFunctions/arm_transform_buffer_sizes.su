@@ -1,0 +1,7 @@
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_transform_buffer_sizes.c:47:9:arm_cfft_tmp_buffer_size	0	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_transform_buffer_sizes.c:91:9:arm_cfft_output_buffer_size	0	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_transform_buffer_sizes.c:112:9:arm_cifft_output_buffer_size	0	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_transform_buffer_sizes.c:152:9:arm_rfft_tmp_buffer_size	0	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_transform_buffer_sizes.c:204:9:arm_rfft_output_buffer_size	0	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_transform_buffer_sizes.c:245:9:arm_rifft_input_buffer_size	0	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_transform_buffer_sizes.c:296:9:arm_mfcc_tmp_buffer_size	0	static

@@ -1,0 +1,30 @@
+timestamp: "18171412222"
+arch: ICE40
+fpga_info {
+  fpga_id: "ice40hx8k-cb132"
+  part_num: "ICE40HX8K-CB132"
+  size: "8k"
+  ice40 {
+    type: "hx8k"
+    pack: "cb132"
+  }
+}
+verbosity {
+  all: false
+  synth: false
+  pnr: false
+}
+environment {
+  platform_id: "windows-amd64"
+  is_windows: true
+  terminal_mode: FORCE_TERMINAL
+  theme_name: "light"
+  debug_level: 0
+  yosys_path: "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys"
+  trellis_path: "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\trellis"
+}
+apio_env_params {
+  env_name: "default"
+  board_id: "alchitry-cu"
+  top_module: "adc_sync_top"
+}

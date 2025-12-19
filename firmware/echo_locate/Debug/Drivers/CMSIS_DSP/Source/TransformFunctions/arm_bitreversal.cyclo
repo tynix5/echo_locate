@@ -1,0 +1,3 @@
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_bitreversal.c:46:24:arm_bitreversal_f32	6
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_bitreversal.c:121:24:arm_bitreversal_q31	6
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_bitreversal.c:196:24:arm_bitreversal_q15	6

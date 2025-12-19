@@ -1,0 +1,2 @@
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_cfft_f64.c:56:24:arm_radix4_butterfly_f64	240	static
+../Drivers/CMSIS_DSP/Source/TransformFunctions/arm_cfft_f64.c:256:24:arm_cfft_f64	128	static
