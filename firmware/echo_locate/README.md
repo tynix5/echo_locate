@@ -12,10 +12,10 @@ The last point is probably the most important; in previous versions, there was a
 GCC-PHAT was selected instead of cross-correlation for its robustness and increased SNR characteristics, and envelope detection was added to reduce spurious events.
 
 ### Overview
-FPGA
+#### FPGA
 1. Simultaneously sample N samples using iCE40HX8K FPGA at fs=40kHz
 2. Transfer streams to STM32F401RE over SPI
-STM32
+#### STM32
 1. Wait for DMA buffer to fill
 2. Bandpass filter [1kHz, 5kHz] microphone stream(FPGA)
 3. Envelope detection
