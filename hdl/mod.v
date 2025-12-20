@@ -1,6 +1,7 @@
 module mod #(
 
-    parameter MOD = 256         // counter counts from 0 to MOD-1
+    parameter MOD = 256,        // counter counts from 0 to MOD-1
+    parameter WIDTH = $clog2(MOD)
 )(
 
     input clk,                  // clock
@@ -9,8 +10,6 @@ module mod #(
     output [WIDTH-1:0] q,       // counter output
     output sync_ovf             // synchronous overflow enable (for chaining)
 );
-
-    localparam WIDTH = $clog2(MOD);
     
     reg [WIDTH:0] q_reg;
 

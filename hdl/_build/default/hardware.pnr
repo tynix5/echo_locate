@@ -1,1 +1,0 @@
-{"critical_paths": [], "fmax": {}, "utilization": {"ICESTORM_LC": {"available": 7680, "used": 1}, "ICESTORM_PLL": {"available": 2, "used": 0}, "ICESTORM_RAM": {"available": 32, "used": 0}, "SB_GB": {"available": 8, "used": 0}, "SB_IO": {"available": 256, "used": 2}, "SB_WARMBOOT": {"available": 1, "used": 0}}}

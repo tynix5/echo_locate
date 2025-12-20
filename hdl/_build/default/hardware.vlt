@@ -1,0 +1,8 @@
+`verilator_config
+lint_off -rule COMBDLY  -file "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys\\ice40\\*"
+lint_off -rule WIDTHEXPAND  -file "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys\\ice40\\*"
+lint_off -rule SPECIFYIGN  -file "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys\\ice40\\*"
+lint_off -rule PINMISSING  -file "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys\\ice40\\*"
+lint_off -rule ASSIGNIN  -file "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys\\ice40\\*"
+lint_off -rule WIDTHTRUNC  -file "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys\\ice40\\*"
+lint_off -rule INITIALDLY  -file "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys\\ice40\\*"

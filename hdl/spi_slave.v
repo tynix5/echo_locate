@@ -1,4 +1,5 @@
-// Returns XOR'd input byte on next byte exchange 
+// DEMO SPI slave for sync_adc
+// returns a 16-bit running count
 module spi_slave #(
 
     parameter CPOL = 1'b0,      // clock polarity
@@ -21,16 +22,19 @@ module spi_slave #(
     localparam SPI_MODE2 = 2'b10;
     localparam SPI_MODE3 = 2'b11;
 
+    localparam N = 16;
+    localparam BITS = $clog2(N);
+
     reg state;                  // FSM state register
     wire [1:0] spi_mode;        // CPOL and CPHA state
 
-    reg [7:0] di_reg, xor_out;  // data in register and xor register
+    reg [N-1:0] di_reg, cnt;    // data in register and xor register
 
     reg miso_reg;               // slave output line
     reg last_sclk;              // last sclk state
 
     reg first_edge;             // first rising/falling edge detected register
-    reg [2:0] bit_cnt;          // current bit counter
+    reg [BITS-1:0] bit_cnt;     // current bit counter
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -39,10 +43,10 @@ module spi_slave #(
             miso_reg <= 1'bz;       // tri state
 
             // reset registers
-            di_reg <= 8'b0;
-            xor_out <= 8'b0;
+            di_reg <= {N{1'b0}};
+            cnt <= {N{1'b0}};
 
-            bit_cnt <= 3'b0;        // reset bit counter
+            bit_cnt <= {BITS{1'b0}};    // reset bit counter
             first_edge <= 1'b1;     // first edge not yet detected
 
             state <= STATE_IDLE;
@@ -59,19 +63,13 @@ module spi_slave #(
                     first_edge <= 1'b1;
 
                     if (~cs) begin               
-                        bit_cnt <= 3'b000;      // reset counter
+                        bit_cnt <= {BITS{1'b0}};      // reset counter
                         state <= STATE_BUSY;    // if device is selected, transmission in progress
                     end
                 end
                 STATE_BUSY: begin
 
-                    // default states
-                    bit_cnt <= bit_cnt;
-                    first_edge <= first_edge;
-                    di_reg <= di_reg;
-
-                    miso_reg <= xor_out[3'b111 - bit_cnt];      // Update MISO line when bit shifts on falling edge (MSb first)
-
+                    miso_reg <= cnt[{BITS{1'b1}} - bit_cnt];    // Update MISO line when bit shifts on falling edge (MSb first)
 
                     case (spi_mode)
                         SPI_MODE0, SPI_MODE3: begin        // data sample on rising edge and shifted on falling edge
@@ -79,23 +77,23 @@ module spi_slave #(
                                 bit_cnt <= bit_cnt + 1'b1;                  // shift to next bit
                             end
                             else if (~last_sclk && sclk) begin      // if rising edge...
-                                di_reg <= {di_reg[6:0], mosi};      // sample bit
+                                di_reg <= {di_reg[N-2:0], mosi};    // sample bit
                                 first_edge <= 1'b0;                 // indicate rising edge detected
                             end
                             
                         end
                         SPI_MODE1, SPI_MODE2: begin        // data sampled on falling edge and shifted on rising edge
-                            if (last_sclk && ~sclk) begin       // if falling edge...
-                                di_reg <= {di_reg[6:0], mosi};  // sample bit
-                                first_edge <= 1'b0;             // indicate falling edge detected
+                            if (last_sclk && ~sclk) begin           // if falling edge...
+                                di_reg <= {di_reg[N-2:0], mosi};    // sample bit
+                                first_edge <= 1'b0;                 // indicate falling edge detected
                             end
                             else if (~last_sclk && sclk && ~first_edge)     // if rising edge detected and first falling edge has already been detected (SPI_MODE1)..
                                 bit_cnt <= bit_cnt + 1'b1;                  // shift to next bit
                         end
                     endcase
 
-                    if (cs) begin       // when device is selected...
-                        xor_out <= di_reg ^ {8{1'b1}};  // xor received data for next transmission
+                    if (cs) begin       // when device is released...
+                        cnt <= cnt + 'b1;               // increment for next transaction
                         state <= STATE_IDLE;            // idle
                     end
 

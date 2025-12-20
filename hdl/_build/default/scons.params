@@ -1,4 +1,4 @@
-timestamp: "18171412222"
+timestamp: "20144144199"
 arch: ICE40
 fpga_info {
   fpga_id: "ice40hx8k-cb132"
@@ -9,11 +9,6 @@ fpga_info {
     pack: "cb132"
   }
 }
-verbosity {
-  all: false
-  synth: false
-  pnr: false
-}
 environment {
   platform_id: "windows-amd64"
   is_windows: true
@@ -22,9 +17,17 @@ environment {
   debug_level: 0
   yosys_path: "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\yosys"
   trellis_path: "C:\\Users\\tynix\\.apio\\packages\\oss-cad-suite\\share\\trellis"
+  scons_shell_id: "cmd"
 }
 apio_env_params {
   env_name: "default"
   board_id: "alchitry-cu"
-  top_module: "adc_sync_top"
+  top_module: "sync_adc"
+}
+target {
+  sim {
+    force_sim: false
+    no_gtkwave: false
+    detach_gtkwave: false
+  }
 }

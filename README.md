@@ -13,5 +13,4 @@ This version using 3 distributed microphones at the points (0, 0), (0, 1), and (
 ## /hardware
 - Contains active bandpass-filter schematics and notes on hardware selection
 ## /misc
-- Contains block diagram of core signal processing algorithm (draw.io)
-
+- Contains block diagram of original core signal processing algorithm (draw.io)
