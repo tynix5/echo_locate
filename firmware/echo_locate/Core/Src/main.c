@@ -24,7 +24,7 @@
 #define N_LP_TAPS			1
 
 #define N_BLOCK				1440							// total samples from ADC before switching DMA targets
-#define N_SAMPLE			(N_BLOCK / 3)					// samples per microphone before switching DMA targets
+#define N_SAMPLE			N_BLOCK / 3						// samples per microphone before switching DMA targets
 
 #define N_WINDOW			2
 #define N_BUFFER			N_WINDOW * N_SAMPLE				// buffer for previous microphone samples
@@ -37,8 +37,8 @@
 
 #define N_UPDATE_DELAY		500								// about 12.5ms between updates
 
-#define SAMPLE_FREQ			40000.0f						// ADC group sample rate
-#define SAMPLE_PERIOD		(1.0f / SAMPLE_FREQ)
+#define F_SAMPLE			40000.0f						// ADC group sample rate
+#define T_SAMPLE			1.0f / F_SAMPLE
 
 #define SPEED_OF_SOUND		343.0f							// m/s
 
@@ -115,7 +115,7 @@ struct MicProc {
 	float32_t buffer[N_BUFFER];							// running window
 
 	float32_t fft_window[N_FFT];						// samples taken from buffer (after envelope)
-	float32_t fft[N_FFT];								// FFT of fft_window
+	float32_t fft[N_FFT];								// FFT of fft_window (size: CMSIS-DSP reference)
 	// add variables for noise mean?
 };
 
@@ -273,19 +273,103 @@ int main(void)
 			for (uint32_t i = 0; i < N_MICS; i++)
 				arm_rfft_fast_f32(&mics[i].hfft, mics[i].fft_window, mics[i].fft, 0);
 
+			// FFT output in memory
+			// Bin 0: Re{X[0]} (DC offset)
+			// Bin 1: Re{X[128]} (Nyquist)
+			// Bin 2: Re{X[1]}
+			// Bin 3: Imag{X[1]
+			// Bin 4: Re{X[2]}
+			// Bin 5: Imag{X[2]}
+			// .....
+			// Bin 254: Re{X[127]}
+			// Bin 255: Imag{X[127]}
+
+			// to compute correlation in frequency domain, conjugate X[1] and X[2], then multiply with X[0]
 			// Use mic 0 as reference
-			// no need to compute conjugates for mic 1 and mic 2 FFTs because both are real-valued
 			// compute cross correlation between mic 0 - mic 1 and mic 0 - mic 2 (in frequency domain)
 			float32_t xcorr_01[N_FFT], xcorr_02[N_FFT];
 
-			for (uint32_t i = 0; i < N_FFT; i++)
+			// since bins 0 and 1 are only real, multiply element-wise
+//			xcorr_01[0] = mics[0].fft[0] * mics[1].fft[0];
+//			xcorr_01[1] = mics[0].fft[1] * mics[1].fft[1];
+//			xcorr_02[0] = mics[0].fft[0] * mics[2].fft[0];
+//			xcorr_02[1] = mics[0].fft[1] * mics[2].fft[1];
+
+			// X = a + jb ---> X[0] = a, X[1] = b
+			// Y = c + jd ---> Y[0] = c, Y[1] = d
+			// Y* = c - jd --> Y*[0] = c, Y*[1] = -d
+			// Z = X * Y* = ac - jad + jbc + bd
+			// Z[0] = ac + bd
+			// Z[1] = bc - ad
+			for (uint32_t i = 2; i < N_FFT; i += 2)
 			{
-				xcorr_01[i] = mics[0].fft[i] * mics[1].fft[i];
-				xcorr_02[i] = mics[0].fft[i] * mics[2].fft[i];
+				xcorr_01[i] = mics[0].fft[i] * mics[1].fft[i] + mics[0].fft[i+1] * mics[1].fft[i+1];		// real
+				xcorr_01[i+1] = mics[0].fft[i+1] * mics[1].fft[i] - mics[0].fft[i] * mics[1].fft[i+1];		// imag
+
+				xcorr_02[i] = mics[0].fft[i] * mics[2].fft[i] + mics[0].fft[i+1] * mics[2].fft[i+1];		// real
+				xcorr_02[i+1] = mics[0].fft[i+1] * mics[2].fft[i] - mics[0].fft[i] * mics[2].fft[i+1];		// imag
 			}
 
+			// zero-out DC and Nyquist for cleaner iFFT
+			// signals have already been bandpassed and lowpassed so they should be ~= 0
+			xcorr_01[0] = xcorr_01[1] = xcorr_02[0] = xcorr_01[1] = 0;
 
-			// estimate location
+			// apply PHAT weighting (normalize magnitude)
+			for (uint32_t i = 2; i < N_FFT; i += 2)
+			{
+				float re_01 = xcorr_01[i];
+				float im_01 = xcorr_01[i+1];
+				float re_02 = xcorr_02[i];
+				float im_02 = xcorr_02[i+1];
+
+				float mag_01 = sqrtf(re_01 * re_01 + im_01 * im_01);
+				float mag_02 = sqrtf(re_02 * re_02 + im_02 * im_02);
+
+				xcorr_01[i] *= 1 / mag_01;
+				xcorr_02[i] *= 1 / mag_02;
+			}
+
+			// iFFT
+			float32_t xcorr_01_time[N_FFT];
+			float32_t xcorr_02_time[N_FFT];
+			arm_rfft_fast_instance_f32 xcorr_01_hfft, xcorr_02_hfft;
+			arm_rfft_fast_init_256_f32(&xcorr_01_hfft);
+			arm_rfft_fast_init_256_f32(&xcorr_02_hfft);
+			arm_rfft_fast_f32(&xcorr_01_hfft, xcorr_01, xcorr_01_time, 1);
+			arm_rfft_fast_f32(&xcorr_02_hfft, xcorr_02, xcorr_02_time, 1);
+
+			// estimate location by finding peaks in cross correlation and converting to time
+			float32_t dummy;
+			uint32_t max_ind_01, max_ind_02;
+			arm_max_f32(xcorr_01_time, N_FFT, &dummy, &max_ind_01);
+			arm_max_f32(xcorr_02_time, N_FFT, &dummy, &max_ind_02);
+
+			float32_t mic01_delay = (float32_t) (max_ind_01 - (N_FFT / 2)) * T_SAMPLE;
+			float32_t mic02_delay = (float32_t) (max_ind_02 - (N_FFT / 2)) * T_SAMPLE;
+
+			// x, y coordinates of event
+			union {
+				float32_t xy[2];
+				uint8_t ser[8];
+			} coords;
+
+			// place initial guess at centroid
+			coords.xy[0] = (MIC0_XPOS + MIC1_XPOS + MIC2_XPOS) / 3.0f;
+			coords.xy[1] = (MIC0_YPOS + MIC1_YPOS + MIC2_YPOS) / 3.0f;
+
+			uint8_t valid = compute_event_pos(&coords.xy[0], &coords.xy[1], &mics_xy, mic01_delay, mic02_delay);
+
+			if (!valid || coords.xy[0] > 1.2f || coords.xy[0] < -0.2f || coords.xy[1] > 1.2f || coords.xy[1] < -0.2f)
+			{
+				// if NLLS doesn't converge or values are garbage, error, but indicate sound detected
+				coords.xy[0] = -1.0f;
+				coords.xy[1] = -1.0f;
+				uart2_dma1_write(8, coords.ser);
+			}
+			else
+			{
+				uart2_dma1_write(8, coords.ser);
+			}
 
 			// reset event detection
 			triggered = 0;
