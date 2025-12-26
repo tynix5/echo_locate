@@ -20,8 +20,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define N_BP_TAPS			48
-#define N_LP_TAPS			1
+#define N_BP_TAPS			42
+#define N_LP_TAPS			42
 
 #define N_BLOCK				1440							// total samples from ADC before switching DMA targets
 #define N_SAMPLE			N_BLOCK / 3						// samples per microphone before switching DMA targets
@@ -85,18 +85,46 @@ fixed point precision: 16 bits
 */
 
 float32_t const bandpass_taps[N_BP_TAPS] = {
-		427, 682, 874, 755, 246, -527,
-		-1261, -1613, -1405, -775, -149, -25,
-		-669, -1885, -3025, -3280, -2107, 416,
-		3530, 6090, 7078, 6090, 3530, 416,
-		-2107 -3280, -3025, -1885, -669, -25,
-		-149, -775, -1405, -1613, -1261, -527,
-		246, 755, 874, 682, 427, 0
+		0.013024996511747034, 0.02081231010417477, 0.026685590226205227, 0.023031794500352313, 0.007520216449306763,
+		-0.016090052552988288, -0.03849239728393633, -0.04921624551771023, -0.042885108349138626, -0.023664480038404784,
+		-0.004541353788974114, -0.0007683969964721174, -0.020425478999019347, -0.05751122103456796, -0.09231842258036177,
+		-0.10010412745245136, -0.06431405980269875, 0.012684474364821457, 0.10774048235542323, 0.18586684053806685,
+		0.21601107052289345, 0.18586684053806685, 0.10774048235542323, 0.012684474364821457, -0.06431405980269875,
+		-0.10010412745245136, -0.09231842258036177, -0.05751122103456796, -0.020425478999019347, -0.0007683969964721174,
+		-0.004541353788974114, -0.023664480038404784, -0.042885108349138626, -0.04921624551771023, -0.03849239728393633,
+		-0.016090052552988288, 0.007520216449306763, 0.023031794500352313, 0.026685590226205227, 0.02081231010417477,
+		0.013024996511747034, 0
 };
 
+/*
+
+FIR filter designed with
+http://t-filter.appspot.com
+
+sampling frequency: 40000 Hz
+
+* 0 Hz - 5000 Hz
+  gain = 1
+  desired ripple = 5 dB
+  actual ripple = 4.152902868688468 dB
+
+* 6000 Hz - 20000 Hz
+  gain = 0
+  desired attenuation = -40 dB
+  actual attenuation = -40.04629176398793 dB
+
+*/
 
 float32_t const lowpass_taps[N_LP_TAPS] = {
-		0
+		0.013140750890121828, 0.021198220810042096, 0.027604914499249664, 0.024872679012043458, 0.010750686921766485,
+		-0.010955572802103634, -0.030934992390477648, -0.03878611297580051, -0.029234804504588666, -0.006549859009201667,
+		0.01613627187769598, 0.02347280044823164, 0.007271895688615912, -0.026542498783174703, -0.05834333807827964,
+		-0.06345738932869462, -0.025392549461722966, 0.05343715017069038, 0.1498369983207342, 0.22877080850128836,
+		0.25919563096538806, 0.22877080850128836, 0.1498369983207342, 0.05343715017069038, -0.025392549461722966,
+		-0.06345738932869462, -0.05834333807827964, -0.026542498783174703, 0.007271895688615912, 0.02347280044823164,
+		0.01613627187769598, -0.006549859009201667, -0.029234804504588666, -0.03878611297580051, -0.030934992390477648,
+		-0.010955572802103634, 0.010750686921766485, 0.024872679012043458, 0.027604914499249664, 0.021198220810042096,
+		0.013140750890121828, 0
 };
 
 uint16_t stream0[N_BLOCK], stream1[N_BLOCK];										// raw data streams from DMA buffers
@@ -121,8 +149,8 @@ struct MicProc {
 
 struct MicCoord {
 
-	float x;
-	float y;
+	float32_t x;
+	float32_t y;
 };
 
 
@@ -132,13 +160,13 @@ uint8_t dma_tgt = 0;				// M0AR written to first
 /* Configure system clock for 84 MHz */
 void sysclock_init(void);
 /* Configure SPI1 to receive ADC stream from FPGA using DMA2 in double-buffer mode */
-void spi1_dma_init(void);
+void spi1_dma2_init(void);
 /* Split DMA stream into separate microphone streams, converting from biased uint16_t to q15_t */
 void stream_splice(struct MicProc * mics);
 /* Compute x and y coordinates of event using trilateration */
-uint8_t compute_event_pos(float * x, float * y, struct MicCoord * mics_xy, float mic1_delay, float mic2_delay);
+uint8_t compute_event_pos(float32_t * x, float32_t * y, struct MicCoord * mics_xy, float32_t mic1_delay, float32_t mic2_delay);
 /* compute_event_pos helper function */
-float clamp(float in, float abs_max);
+float32_t clamp(float32_t in, float32_t abs_max);
 /* Envelope detector function */
 void compute_envelope(struct MicProc * mics);
 /* Threshold-search function, returns index of first value where src > thresh */
@@ -162,10 +190,15 @@ int main(void)
 		arm_fir_init_f32(&mics[i].lp_hfir, N_LP_TAPS, lowpass_taps, mics[i].lp_state, N_SAMPLE);
 	}
 
+	float32_t xcorr_01_time[N_FFT], xcorr_02_time[N_FFT];
+	arm_rfft_fast_instance_f32 xcorr_01_freq_hfft, xcorr_02_freq_hfft;
+	arm_rfft_fast_init_256_f32(&xcorr_01_freq_hfft);
+	arm_rfft_fast_init_256_f32(&xcorr_02_freq_hfft);
+
 	uart2_set_fcpu(84000000);
 	uart2_dma1_config(115200, USART_DATA_8, USART_STOP_1);
 
-//	adc1_dma_init();
+	spi1_dma2_init();
 
 	/*
 	GPIOA->MODER &= ~GPIO_MODER_MODER10;
@@ -287,13 +320,7 @@ int main(void)
 			// to compute correlation in frequency domain, conjugate X[1] and X[2], then multiply with X[0]
 			// Use mic 0 as reference
 			// compute cross correlation between mic 0 - mic 1 and mic 0 - mic 2 (in frequency domain)
-			float32_t xcorr_01[N_FFT], xcorr_02[N_FFT];
-
-			// since bins 0 and 1 are only real, multiply element-wise
-//			xcorr_01[0] = mics[0].fft[0] * mics[1].fft[0];
-//			xcorr_01[1] = mics[0].fft[1] * mics[1].fft[1];
-//			xcorr_02[0] = mics[0].fft[0] * mics[2].fft[0];
-//			xcorr_02[1] = mics[0].fft[1] * mics[2].fft[1];
+			float32_t xcorr_01_freq[N_FFT], xcorr_02_freq[N_FFT];
 
 			// X = a + jb ---> X[0] = a, X[1] = b
 			// Y = c + jd ---> Y[0] = c, Y[1] = d
@@ -303,40 +330,31 @@ int main(void)
 			// Z[1] = bc - ad
 			for (uint32_t i = 2; i < N_FFT; i += 2)
 			{
-				xcorr_01[i] = mics[0].fft[i] * mics[1].fft[i] + mics[0].fft[i+1] * mics[1].fft[i+1];		// real
-				xcorr_01[i+1] = mics[0].fft[i+1] * mics[1].fft[i] - mics[0].fft[i] * mics[1].fft[i+1];		// imag
+				// compute real and imaginary cross correlation values per index
+				float32_t re_01 = mics[0].fft[i] * mics[1].fft[i] + mics[0].fft[i+1] * mics[1].fft[i+1];		// real
+				float32_t im_01 = mics[0].fft[i+1] * mics[1].fft[i] - mics[0].fft[i] * mics[1].fft[i+1];		// imag
 
-				xcorr_02[i] = mics[0].fft[i] * mics[2].fft[i] + mics[0].fft[i+1] * mics[2].fft[i+1];		// real
-				xcorr_02[i+1] = mics[0].fft[i+1] * mics[2].fft[i] - mics[0].fft[i] * mics[2].fft[i+1];		// imag
+				float32_t re_02 = mics[0].fft[i] * mics[2].fft[i] + mics[0].fft[i+1] * mics[2].fft[i+1];		// real
+				float32_t im_02 = mics[0].fft[i+1] * mics[2].fft[i] - mics[0].fft[i] * mics[2].fft[i+1];		// imag
+
+				// apply PHAT weighting, normalizing magnitude
+				float32_t mag_01 = sqrtf(re_01 * re_01 + im_01 * im_01);
+				float32_t mag_02 = sqrtf(re_02 * re_02 + im_02 * im_02);
+
+				xcorr_01_freq[i] = re_01 * (1 / mag_01);
+				xcorr_01_freq[i+1] = im_01 * (1 / mag_01);
+
+				xcorr_02_freq[i] = re_02 * (1 / mag_02);
+				xcorr_02_freq[i+1] = im_02 * (1 / mag_02);
 			}
 
 			// zero-out DC and Nyquist for cleaner iFFT
 			// signals have already been bandpassed and lowpassed so they should be ~= 0
-			xcorr_01[0] = xcorr_01[1] = xcorr_02[0] = xcorr_01[1] = 0;
-
-			// apply PHAT weighting (normalize magnitude)
-			for (uint32_t i = 2; i < N_FFT; i += 2)
-			{
-				float re_01 = xcorr_01[i];
-				float im_01 = xcorr_01[i+1];
-				float re_02 = xcorr_02[i];
-				float im_02 = xcorr_02[i+1];
-
-				float mag_01 = sqrtf(re_01 * re_01 + im_01 * im_01);
-				float mag_02 = sqrtf(re_02 * re_02 + im_02 * im_02);
-
-				xcorr_01[i] *= 1 / mag_01;
-				xcorr_02[i] *= 1 / mag_02;
-			}
+			xcorr_01_freq[0] = xcorr_01_freq[1] = xcorr_02_freq[0] = xcorr_02_freq[1] = 0;
 
 			// iFFT
-			float32_t xcorr_01_time[N_FFT];
-			float32_t xcorr_02_time[N_FFT];
-			arm_rfft_fast_instance_f32 xcorr_01_hfft, xcorr_02_hfft;
-			arm_rfft_fast_init_256_f32(&xcorr_01_hfft);
-			arm_rfft_fast_init_256_f32(&xcorr_02_hfft);
-			arm_rfft_fast_f32(&xcorr_01_hfft, xcorr_01, xcorr_01_time, 1);
-			arm_rfft_fast_f32(&xcorr_02_hfft, xcorr_02, xcorr_02_time, 1);
+			arm_rfft_fast_f32(&xcorr_01_freq_hfft, xcorr_01_freq, xcorr_01_time, 1);
+			arm_rfft_fast_f32(&xcorr_02_freq_hfft, xcorr_02_freq, xcorr_02_time, 1);
 
 			// estimate location by finding peaks in cross correlation and converting to time
 			float32_t dummy;
@@ -357,7 +375,7 @@ int main(void)
 			coords.xy[0] = (MIC0_XPOS + MIC1_XPOS + MIC2_XPOS) / 3.0f;
 			coords.xy[1] = (MIC0_YPOS + MIC1_YPOS + MIC2_YPOS) / 3.0f;
 
-			uint8_t valid = compute_event_pos(&coords.xy[0], &coords.xy[1], &mics_xy, mic01_delay, mic02_delay);
+			uint8_t valid = compute_event_pos(&coords.xy[0], &coords.xy[1], mics_xy, mic01_delay, mic02_delay);
 
 			if (!valid || coords.xy[0] > 1.2f || coords.xy[0] < -0.2f || coords.xy[1] > 1.2f || coords.xy[1] < -0.2f)
 			{
@@ -440,70 +458,65 @@ void sysclock_init(void)
 	while (!((RCC->CFGR) & RCC_CFGR_SWS_1));
 }
 
-void spi1_dma_init(void)
+void spi1_dma2_init(void)
 {
-	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;				// enable ADC1 clock
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;				// enable SPI1 clock
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;			// enable GPIOA clock
 
-	// PA0 as analog input
-	GPIOA->MODER |= GPIO_MODER_MODER0_0 | GPIO_MODER_MODER0_1;
-	// PA1 as analog input
-	GPIOA->MODER |= GPIO_MODER_MODER1_0 | GPIO_MODER_MODER1_1;
-	// PA4 as analog input
-	GPIOA->MODER |= GPIO_MODER_MODER4_0 | GPIO_MODER_MODER4_1;
+	// PA4 is SPI1_NSS (select alternate function)
+	GPIOA->MODER |= GPIO_MODER_MODER4_1;
+	GPIOA->MODER &= ~GPIO_MODER_MODER4_0;
 
-	ADC1->CR2 &= ~ADC_CR2_ADON;						// turn off ADC to configure
+	// PA5 is SPI1_SCK (AF)
+	GPIOA->MODER |= GPIO_MODER_MODER5_1;
+	GPIOA->MODER &= ~GPIO_MODER_MODER5_0;
 
-	// APB2 clock (84 MHz) / 4 = 21 MHz
-	// MAX ADC clock freq is 36 MHz (pg 106 datasheet)
-	ADC->CCR &= ~ADC_CCR_ADCPRE;
-	ADC->CCR |= ADC_CCR_ADCPRE_0;
+	// PA6 is SPI1_MISO (AF)
+//	GPIOA->MODER |= GPIO_MODER_MODER6_1;
+//	GPIOA->MODER &= ~GPIO_MODER_MODER6_0;
 
-	// trigger detection on rising edge
-	ADC1->CR2 |= ADC_CR2_EXTEN_0;
-	ADC1->CR2 &= ~ADC_CR2_EXTEN_1;
+	// PA7 is SPI1_MOSI (AF)
+	GPIOA->MODER |= GPIO_MODER_MODER7_1;
+	GPIOA->MODER &= ~GPIO_MODER_MODER7_0;
 
-	// TIM2 TRGO event
-	ADC1->CR2 |= ADC_CR2_EXTSEL_1 | ADC_CR2_EXTSEL_2;
-	ADC1->CR2 &= ~(ADC_CR2_EXTSEL_0 | ADC_CR2_EXTSEL_3);
+	// Select AF mode 05 for all SPI1 pins
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL4_0 | GPIO_AFRL_AFRL4_2;
+	GPIOA->AFR[0] &= ~(GPIO_AFRL_AFRL4_1 | GPIO_AFRL_AFRL4_3);
 
-	// Scan mode to convert all 3 channels
-	ADC1->CR1 |= ADC_CR1_SCAN;
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL5_0 | GPIO_AFRL_AFRL5_2;
+	GPIOA->AFR[0] &= ~(GPIO_AFRL_AFRL5_1 | GPIO_AFRL_AFRL5_3);
 
-	// EOC bit set at end of each sequence of regular conversions
-	ADC1->CR2 &= ~ADC_CR2_EOCS;
+//	GPIOA->AFR[0] |= GPIO_AFRL_AFRL6_0 | GPIO_AFRL_AFRL6_2;
+//	GPIOA->AFR[0] &= ~(GPIO_AFRL_AFRL6_1 | GPIO_AFRL_AFRL6_3);
 
-	// 3 cycles before sample
-	ADC1->SMPR2 &= ~(ADC_SMPR2_SMP0 | ADC_SMPR2_SMP1 | ADC_SMPR2_SMP2);
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL7_0 | GPIO_AFRL_AFRL7_2;
+	GPIOA->AFR[0] &= ~(GPIO_AFRL_AFRL7_1 | GPIO_AFRL_AFRL7_3);
 
-	// 3 conversions per sequence
-	ADC1->SQR1 &= ~ADC_SQR1_L;
-	ADC1->SQR1 |= ADC_SQR1_L_1;
+	// initialize SPI slave
+	SPI1->CR1 |= SPI_CR1_DFF | SPI_CR1_RXONLY;			// 16-bit data frame, not using MISO
+	SPI1->CR1 &= ~(SPI_CR1_LSBFIRST | SPI_CR1_SSM | 	// MSb first, disable software slave management
+					SPI_CR1_SPE | SPI_CR1_MSTR | 		// disable SPI, slave mode
+					SPI_CR1_BIDIMODE |					// not using bidirectional mode
+					SPI_CR1_CPOL | SPI_CR1_CPHA);		// SPI mode = [0, 0]
 
-	// channel 0 (PA0 --> ADC1_IN0) is first conversion (microphone 0)
-	ADC1->SQR3 &= ~ADC_SQR3_SQ1;
-
-	// channel 1 (PA1 --> ADC1_IN1) is second conversion (microphone 1)
-	ADC1->SQR3 &= ~ADC_SQR3_SQ2;
-	ADC1->SQR3 |= ADC_SQR3_SQ2_0;
-
-	// channel 4 (PA4 --> ADC1_IN4) is third conversion (microphone 2)
-	ADC1->SQR3 &= ~ADC_SQR3_SQ3;
-	ADC1->SQR3 |= ADC_SQR3_SQ3_2;
+	SPI1->CR2 &= ~(SPI_CR2_SSOE | SPI_CR2_FRF);			// disable slave select output and select Motorola mode
+	SPI1->CR2 |= SPI_CR2_RXDMAEN;						// enable DMA requests when data is received
 
 
-	/* DMA2 Channel 0, Stream 0 --> ADC1 */
+	/* DMA2 Channel 3, Stream 0 --> SPI1 RX */
 	RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN;		// enable DMA2 clock
 
 	DMA2_Stream0->CR &= ~DMA_SxCR_EN;		// disable stream
 	while (DMA2_Stream0->CR & DMA_SxCR_EN);	// wait for stream to disable
 
-	DMA2_Stream0->PAR = (uint32_t)&(ADC1->DR);// peripheral address
+	DMA2_Stream0->PAR = (uint32_t)&(SPI1->DR);// peripheral address
 	DMA2_Stream0->M0AR = (uint32_t)stream0;	// destination memory address (CT = 0)
 	DMA2_Stream0->M1AR = (uint32_t)stream1;	// destination memory address (CT = 1)
 	DMA2_Stream0->NDTR = N_BLOCK;			// number of units to be transmitted
 
-	DMA2_Stream0->CR &= ~DMA_SxCR_CHSEL;	// channel 0 selected
+	// select channel 3 for SPI1 RX
+	DMA2_Stream0->CR &= ~DMA_SxCR_CHSEL;
+	DMA2_Stream0->CR |= DMA_SxCR_CHSEL_0 | DMA_SxCR_CHSEL_1;
 
 	DMA2_Stream0->CR &= ~DMA_SxCR_PFCTRL;	// DMA is the flow controller
 
@@ -544,9 +557,7 @@ void spi1_dma_init(void)
 
 	DMA2_Stream0->CR |= DMA_SxCR_EN;		// enable DMA stream
 
-	ADC1->CR2 |= ADC_CR2_DMA;				// enable DMA
-	ADC1->CR2 |= ADC_CR2_DDS;				// DMA requests issued as long as DMA=1
-	ADC1->CR2 |= ADC_CR2_ADON;				// turn on ADC
+	SPI1->CR1 |= SPI_CR1_SPE;				// enable SPI1
 }
 
 void stream_splice(struct MicProc * mics)
@@ -576,40 +587,37 @@ void stream_splice(struct MicProc * mics)
 	}
 }
 
-uint8_t compute_event_pos(float * x, float * y, struct MicCoord * mics_xy, float mic1_delay, float mic2_delay)
+uint8_t compute_event_pos(float32_t * x, float32_t * y, struct MicCoord * mics_xy, float32_t mic1_delay, float32_t mic2_delay)
 {
 
-	const float max_step = 0.2f;			// maximum dx/dy change per iteration in meters
+	const float32_t max_step = 0.2f;			// maximum dx/dy change per iteration in meters
 
 	// distances from mic1 and mic2 to mic0
-	const float d10 = SPEED_OF_SOUND * mic1_delay;
-	const float d20 = SPEED_OF_SOUND * mic2_delay;
+	const float32_t d10 = SPEED_OF_SOUND * mic1_delay;
+	const float32_t d20 = SPEED_OF_SOUND * mic2_delay;
 
-	float lambda = 1e-3f;
+	float32_t lambda = 1e-3f;
 
-	float old_res1 = 0, old_res2 = 0;
+	float32_t old_res1 = 0, old_res2 = 0;
 
 	for (uint8_t i = 0; i < 50; i++)
 	{
 
 		// compute radii of guesses
-		float r0 = sqrtf(powf(*x - mics_xy[0].x, 2) + powf(*y - mics_xy[0].y, 2));
-		float r1 = sqrtf(powf(*x - mics_xy[1].x, 2) + powf(*y - mics_xy[1].y, 2));
-		float r2 = sqrtf(powf(*x - mics_xy[2].x, 2) + powf(*y - mics_xy[2].y, 2));
-//		float r0 = sqrtf(powf(*x - mic0_x, 2) + powf(*y - mic0_y, 2));
-//		float r1 = sqrtf(powf(*x - mic1_x, 2) + powf(*y - mic1_y, 2));
-//		float r2 = sqrtf(powf(*x - mic2_x, 2) + powf(*y - mic2_y, 2));
+		float32_t r0 = sqrtf(powf(*x - mics_xy[0].x, 2) + powf(*y - mics_xy[0].y, 2));
+		float32_t r1 = sqrtf(powf(*x - mics_xy[1].x, 2) + powf(*y - mics_xy[1].y, 2));
+		float32_t r2 = sqrtf(powf(*x - mics_xy[2].x, 2) + powf(*y - mics_xy[2].y, 2));
 
 		if (r0 == 0 || r1 == 0 || r2 == 0) return 1;
 
 		// compute residuals (error)
 		// [f]
-		float res1 = r1 - r0 - d10;
-		float res2 = r2 - r0 - d20;
+		float32_t res1 = r1 - r0 - d10;
+		float32_t res2 = r2 - r0 - d20;
 
 		// compute cost, exit if small
-		float cost = res1 * res1 + res2 * res2;
-		float old_cost = old_res1 * old_res1 + old_res2 * old_res2;
+		float32_t cost = res1 * res1 + res2 * res2;
+		float32_t old_cost = old_res1 * old_res1 + old_res2 * old_res2;
 		if (cost < 1e-8f)	return 1;
 
 		// else, compare new residuals to ones calculated previous iteration
@@ -617,29 +625,25 @@ uint8_t compute_event_pos(float * x, float * y, struct MicCoord * mics_xy, float
 		else						lambda *= 5.0f;			// punish bad step
 
 		// create Jacobian
-		float j11 = (*x - mics_xy[1].x) / r1 - (*x - mics_xy[0].x) / r0;
-		float j12 = (*y - mics_xy[1].y) / r1 - (*y - mics_xy[0].y) / r0;
-		float j21 = (*x - mics_xy[2].x) / r2 - (*x - mics_xy[0].x) / r0;
-		float j22 = (*y - mics_xy[2].y) / r2 - (*y - mics_xy[0].y) / r0;
-//		float j11 = (*x - mic1_x) / r1 - (*x - mic0_x) / r0;
-//		float j12 = (*y - mic1_y) / r1 - (*y - mic0_y) / r0;
-//		float j21 = (*x - mic2_x) / r2 - (*x - mic0_x) / r0;
-//		float j22 = (*y - mic2_y) / r2 - (*y - mic0_y) / r0;
+		float32_t j11 = (*x - mics_xy[1].x) / r1 - (*x - mics_xy[0].x) / r0;
+		float32_t j12 = (*y - mics_xy[1].y) / r1 - (*y - mics_xy[0].y) / r0;
+		float32_t j21 = (*x - mics_xy[2].x) / r2 - (*x - mics_xy[0].x) / r0;
+		float32_t j22 = (*y - mics_xy[2].y) / r2 - (*y - mics_xy[0].y) / r0;
 
 		// ([J]^T)[J] with damping on diagonal
-		float prod11 = j11 * j11 + j21 * j21 + lambda;
-		float prod12 = j11 * j12 + j21 * j22;
-		float prod21 = prod12;
-		float prod22 = j12 * j12 + j22 * j22 + lambda;
+		float32_t prod11 = j11 * j11 + j21 * j21 + lambda;
+		float32_t prod12 = j11 * j12 + j21 * j22;
+		float32_t prod21 = prod12;
+		float32_t prod22 = j12 * j12 + j22 * j22 + lambda;
 
 		// ([J]^T)[f]
-		float g1 = j11 * res1 + j21 * res2;
-		float g2 = j12 * res1 + j22 * res2;
+		float32_t g1 = j11 * res1 + j21 * res2;
+		float32_t g2 = j12 * res1 + j22 * res2;
 
 		// solve system
 		// ([J]^T)[J]delta = -([J]^T)[f]
 		// delta = inv(([J]^T)[J]) * (-([J]^T)[f])
-		float det = prod11 * prod22 - prod12 * prod21;
+		float32_t det = prod11 * prod22 - prod12 * prod21;
 
 		// ill-conditioned, increase lambda and try again
 		if (fabsf(det) < 1e-12f)
@@ -648,8 +652,8 @@ uint8_t compute_event_pos(float * x, float * y, struct MicCoord * mics_xy, float
 			continue;
 		}
 
-		float dx = (-prod22 * g1 + prod12 * g2) / det;
-		float dy = (prod21 * g1 - prod11 * g2) / det;
+		float32_t dx = (-prod22 * g1 + prod12 * g2) / det;
+		float32_t dy = (prod21 * g1 - prod11 * g2) / det;
 
 		dx = clamp(dx, max_step);
 		dy = clamp(dy, max_step);
@@ -666,7 +670,7 @@ uint8_t compute_event_pos(float * x, float * y, struct MicCoord * mics_xy, float
 	return 0;			// error if didn't converge
 }
 
-float clamp(float in, float abs_max)
+float32_t clamp(float32_t in, float32_t abs_max)
 {
 	// clamp in between [-abs_max, abs_max]
 	if (in > abs_max)

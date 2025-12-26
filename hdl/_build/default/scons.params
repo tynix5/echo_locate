@@ -1,4 +1,4 @@
-timestamp: "20144144199"
+timestamp: "26133008082"
 arch: ICE40
 fpga_info {
   fpga_id: "ice40hx8k-cb132"
@@ -8,6 +8,11 @@ fpga_info {
     type: "hx8k"
     pack: "cb132"
   }
+}
+verbosity {
+  all: false
+  synth: false
+  pnr: false
 }
 environment {
   platform_id: "windows-amd64"
@@ -23,11 +28,4 @@ apio_env_params {
   env_name: "default"
   board_id: "alchitry-cu"
   top_module: "sync_adc"
-}
-target {
-  sim {
-    force_sim: false
-    no_gtkwave: false
-    detach_gtkwave: false
-  }
 }

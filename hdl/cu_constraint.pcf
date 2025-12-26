@@ -1,2 +1,15 @@
-set_io      clk                 P7
-set_io      rst_n               P8
+set_io      clk                 P7          # bank D pin 40
+set_io      rst_n               P8          # bank D pin 39
+
+                                            # Cu pins
+set_io      adc_miso[0]         H1          # bank A pin 42
+set_io      adc_miso[1]         H4          # bank A pin 39
+set_io      adc_miso[2]         F4          # bank A pin 36
+set_io      adc_sclk            N1          # bank A pin 48
+set_io      adc_mosi            K3          # bank A pin 45
+set_io      adc_cs[0]           D4          # bank A pin 33
+set_io      adc_cs[1]           D5          # bank A pin 30
+set_io      adc_cs[2]           A5          # bank A pin 27
+set_io      stm_sclk            P1          # bank A pin 49
+set_io      stm_mosi            K4          # bank A pin 46
+set_io      stm_cs              H3          # bank A pin 43
