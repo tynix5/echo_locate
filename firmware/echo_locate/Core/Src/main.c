@@ -33,7 +33,7 @@
 #define N_SAMPLES_BEFORE	26								// gather samples before maximum peak to get full shape
 #define N_SAMPLES_AFTER		229								// N > MAX_DIST / (SAMPLE_PERIOD * SPEED_OF_SOUND) = 165
 
-#define ENERGY_THRESH		8000.0f							// detected event energy threshold
+#define ENERGY_THRESH		0.6f							// detected event energy threshold
 
 #define N_UPDATE_DELAY		500								// about 12.5ms between updates
 
@@ -50,9 +50,12 @@
 #define MIC0_XPOS			0
 #define MIC0_YPOS			0
 #define MIC1_XPOS			0
-#define MIC1_YPOS			1
-#define MIC2_XPOS			1
-#define MIC2_YPOS			1
+#define MIC1_YPOS			0.9144
+#define MIC2_XPOS			0.9144
+#define MIC2_YPOS			0.9144
+//#define MIC1_YPOS			1
+//#define MIC2_XPOS			1
+//#define MIC2_YPOS			1
 
 #if N_FFT > N_BUFFER / 2
 #error	"FFT input length cannot exceed half of buffer length"
@@ -144,7 +147,10 @@ struct MicProc {
 
 	float32_t fft_window[N_FFT];						// samples taken from buffer (after envelope)
 	float32_t fft[N_FFT];								// FFT of fft_window (size: CMSIS-DSP reference)
-	// add variables for noise mean?
+	// add variables for adaptive noise threshold
+//	double noise_accum;
+//	float32_t noise_mean;
+//	float32_t event_thresh;
 };
 
 struct MicCoord {
@@ -272,8 +278,8 @@ int main(void)
 		if (triggered && samples > last_trigger_sample + N_SAMPLES_AFTER)		// wait until enough samples have been taken after peak is detected
 		{
 			// extract windows
-			int32_t start_sample = ref_sample - N_SAMPLES_BEFORE;
-			int32_t stop_sample = ref_sample + N_SAMPLES_AFTER;
+			int32_t start_sample = (int32_t) ref_sample - N_SAMPLES_BEFORE;
+			int32_t stop_sample = (int32_t) ref_sample + N_SAMPLES_AFTER;
 
 			if (start_sample > 0 && stop_sample < N_BUFFER)					// if N_FFT is not wrapped in buffer...
 			{
@@ -348,9 +354,12 @@ int main(void)
 				xcorr_02_freq[i+1] = im_02 * (1 / mag_02);
 			}
 
-			// zero-out DC and Nyquist for cleaner iFFT
+			// DC and Nyquist bins only have real components, so simple multiply
 			// signals have already been bandpassed and lowpassed so they should be ~= 0
-			xcorr_01_freq[0] = xcorr_01_freq[1] = xcorr_02_freq[0] = xcorr_02_freq[1] = 0;
+			xcorr_01_freq[0] = mics[0].fft[0] * mics[1].fft[0];
+			xcorr_01_freq[1] = mics[0].fft[1] * mics[1].fft[1];
+			xcorr_02_freq[0] = mics[0].fft[0] * mics[2].fft[0];
+			xcorr_02_freq[1] = mics[0].fft[1] * mics[2].fft[1];
 
 			// iFFT
 			arm_rfft_fast_f32(&xcorr_01_freq_hfft, xcorr_01_freq, xcorr_01_time, 1);
@@ -362,8 +371,22 @@ int main(void)
 			arm_max_f32(xcorr_01_time, N_FFT, &dummy, &max_ind_01);
 			arm_max_f32(xcorr_02_time, N_FFT, &dummy, &max_ind_02);
 
-			float32_t mic01_delay = (float32_t) (max_ind_01 - (N_FFT / 2)) * T_SAMPLE;
-			float32_t mic02_delay = (float32_t) (max_ind_02 - (N_FFT / 2)) * T_SAMPLE;
+			// iFFT returns circular correlation output
+			// 0 lag at index 0, max lag at index N/2, minimum lag at index N/2+1, -1 lag at index N-1
+			int32_t lag01, lag02;
+
+			if (max_ind_01 > N_FFT / 2)
+				lag01 = (int32_t) max_ind_01 - N_FFT;
+			else
+				lag01 = max_ind_01;
+
+			if (max_ind_02 > N_FFT / 2)
+				lag02 = (int32_t) max_ind_02 - N_FFT;
+			else
+				lag02 = max_ind_02;
+
+			float32_t mic01_delay = -((float32_t) lag01 * T_SAMPLE);
+			float32_t mic02_delay = -((float32_t) lag02 * T_SAMPLE);
 
 			// x, y coordinates of event
 			union {
@@ -577,12 +600,12 @@ void stream_splice(struct MicProc * mics)
 		if (dma_tgt)
 		{
 			for (uint32_t j = 0; j < N_MICS; j++)
-				mics[j].raw[ind] = (float32_t) stream0[i + j] - 2048.0 * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
+				mics[j].raw[ind] = ((float32_t) stream0[i + j] - 2048.0) * (1.0f / 2048.0f);		// convert raw ADC sample to range [-1, 1]
 		}
 		else
 		{
 			for (uint32_t j = 0; j < N_MICS; j++)
-				mics[j].raw[ind] = (float32_t) stream1[i + j] - 2048.0 * (1.0f / 2048.0f);
+				mics[j].raw[ind] = ((float32_t) stream1[i + j] - 2048.0) * (1.0f / 2048.0f);
 		}
 	}
 }
