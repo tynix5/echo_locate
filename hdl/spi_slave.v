@@ -22,13 +22,15 @@ module spi_slave #(
     localparam SPI_MODE2 = 2'b10;
     localparam SPI_MODE3 = 2'b11;
 
-    localparam N = 16;
+    localparam ADC_SAMPLE = 17'b00000101010101010;
+
+    localparam N = 17;
     localparam BITS = $clog2(N);
 
     reg state;                  // FSM state register
     wire [1:0] spi_mode;        // CPOL and CPHA state
 
-    reg [N-1:0] di_reg, cnt;    // data in register and xor register
+    reg [N-1:0] di_reg;         // data in register
 
     reg miso_reg;               // slave output line
     reg last_sclk;              // last sclk state
@@ -44,7 +46,6 @@ module spi_slave #(
 
             // reset registers
             di_reg <= {N{1'b0}};
-            cnt <= {N{1'b0}};
 
             bit_cnt <= {BITS{1'b0}};    // reset bit counter
             first_edge <= 1'b1;     // first edge not yet detected
@@ -69,7 +70,7 @@ module spi_slave #(
                 end
                 STATE_BUSY: begin
 
-                    miso_reg <= cnt[{BITS{1'b1}} - bit_cnt];    // Update MISO line when bit shifts on falling edge (MSb first)
+                    miso_reg <= ADC_SAMPLE[N - bit_cnt - 1];    // Update MISO line when bit shifts on falling edge (MSb first)
 
                     case (spi_mode)
                         SPI_MODE0, SPI_MODE3: begin        // data sample on rising edge and shifted on falling edge
@@ -93,7 +94,6 @@ module spi_slave #(
                     endcase
 
                     if (cs) begin       // when device is released...
-                        cnt <= cnt + 'b1;               // increment for next transaction
                         state <= STATE_IDLE;            // idle
                     end
 

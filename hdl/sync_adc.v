@@ -29,9 +29,10 @@ module sync_adc (
     localparam N_ADC = 3;                               // # of ADCs
     localparam W_ADC = 12;                              // 12-bit ADC
 
-    localparam W_ADC_WORD = 2 ** $clog2(W_ADC);         // 16 bit space for each sample
+    localparam W_ADC_WORD = 17;                         // 17 bit space for each sample (4 control + 1 NULL + 12 ADC)
+    localparam W_STM_WORD = 16;                         // 16 bit word for each sample
 
-    localparam MCP_CMD = {4'b1101, {12{1'b0}}};         // single-ended mode, channel 0, MSB first
+    localparam MCP_CMD = {4'b1101, {13{1'b0}}};         // single-ended mode, channel 0, MSB first
 
     /************** FSM States ************/
     localparam S_ADC_IDLE = 1'b0;                       // waiting for 40kHz timer
@@ -56,7 +57,7 @@ module sync_adc (
     mod #(.MOD(CH_TRANS_DELAY)) delay_tim(.clk(clk), .rst(rst), .cen(delay_en), .q(), .sync_ovf(delay_done));
 
     wire adc_sample_done;
-    wire [W_ADC_WORD-1:0] samples_reg [N_ADC-1:0];         // current samples from all 3 microphones
+    wire [W_ADC_WORD-1:0] samples_reg [N_ADC-1:0];         // current samples from all 3 microphones (bottom 12 bits contains ADC)
 
     // MCP3202 ADC SPI units (may need to change order of samples_reg for STM32 DMA)
     spi_master #(.F_SPI(F_ADC_SPI), .CPHA(1'b0), .CPOL(1'b0), .N(W_ADC_WORD)) adc0(.clk(clk), .rst(rst), .start(adc_trigger), .data_in(MCP_CMD), 
@@ -77,7 +78,7 @@ module sync_adc (
     reg [1:0] stm_curr_sample;
 
     // STM32 SPI unit
-    spi_master #(.F_SPI(F_STM_SPI), .CPHA(1'b0), .CPOL(1'b0), .N(W_ADC_WORD)) stm(.clk(clk), .rst(rst), .start(stm_trigger), .data_in(samples_reg[stm_curr_sample]), 
+    spi_master #(.F_SPI(F_STM_SPI), .CPHA(1'b0), .CPOL(1'b0), .N(W_STM_WORD)) stm(.clk(clk), .rst(rst), .start(stm_trigger), .data_in({4'b0, samples_reg[stm_curr_sample][11:0]}), 
                                                                                        .miso(), .sclk(stm_sclk), .mosi(stm_mosi), .cs(stm_cs), .done(stm_sample_done), 
                                                                                        .data_out());
 
