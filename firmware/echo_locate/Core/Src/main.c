@@ -33,9 +33,7 @@
 #define N_SAMPLES_BEFORE	26								// gather samples before maximum peak to get full shape
 #define N_SAMPLES_AFTER		229								// N > MAX_DIST / (SAMPLE_PERIOD * SPEED_OF_SOUND) = 165
 
-#define ENERGY_THRESH		0.6f							// detected event energy threshold
-
-#define N_UPDATE_DELAY		500								// about 12.5ms between updates
+#define N_UPDATE_DELAY		1000							// about 25ms between updates
 
 #define F_SAMPLE			40000.0f						// ADC group sample rate
 #define T_SAMPLE			1.0f / F_SAMPLE
@@ -141,17 +139,20 @@ struct MicProc {
 	float32_t lp_state[N_LP_TAPS + N_SAMPLE - 1];		// lowpass FIR filter state
 
 	float32_t raw[N_SAMPLE];							// raw samples coming from ADCs
-	float32_t samples[N_SAMPLE];						// bandpassed samples received from FPGA
+	float32_t filtered[N_SAMPLE];						// bandpassed samples received from FPGA
 	float32_t envelope[N_SAMPLE];						// scaled, lowpassed, and square rooted samples
 	float32_t buffer[N_BUFFER];							// running window
 
 	float32_t fft_window[N_FFT];						// samples taken from buffer (after envelope)
 	float32_t fft[N_FFT];								// FFT of fft_window (size: CMSIS-DSP reference)
-	// add variables for adaptive noise threshold
-//	double noise_accum;
-//	float32_t noise_mean;
-//	float32_t event_thresh;
+
+	float32_t noise_mean;								// average of envelope
+	float32_t noise_std;								// standard deviation of envelope
+	float32_t thresh;									// energy threshold in order to determine event
 };
+
+const float32_t alpha = 0.03;						// exponential moving average alpha
+const float32_t k = 75.0;							// # of standard deviations thresh must be from mean
 
 struct MicCoord {
 
@@ -175,6 +176,8 @@ uint8_t compute_event_pos(float32_t * x, float32_t * y, struct MicCoord * mics_x
 float32_t clamp(float32_t in, float32_t abs_max);
 /* Envelope detector function */
 void compute_envelope(struct MicProc * mics);
+/* Updates average noise and event threshold */
+void update_thresh(struct MicProc * mics);
 /* Threshold-search function, returns index of first value where src > thresh */
 int32_t thresh_search(float32_t * src, uint32_t len, float32_t thresh);
 /* simple sorting function */
@@ -239,13 +242,27 @@ int main(void)
 
 		// bandpass filter raw samples
 		for (uint32_t i = 0; i < N_MICS; i++)
-			arm_fir_f32(&mics[i].bp_hfir, mics[i].raw, mics[i].samples, N_SAMPLE);
+			arm_fir_f32(&mics[i].bp_hfir, mics[i].raw, mics[i].filtered, N_SAMPLE);
 
 		// square, lowpass, sqrt
 		compute_envelope(mics);
 
 		for (uint32_t i = 0; i < N_MICS; i++)
 			arm_copy_f32(mics[i].envelope, mics[i].buffer + window_ind * N_SAMPLE, N_SAMPLE); 		// copy envelope to buffer for processing later
+
+		// do not allow triggers in first N_SAMPLE samples collected to get baseline for noise
+		if (samples == N_SAMPLE)
+		{
+			for (uint32_t i = 0; i < N_MICS; i++)
+			{
+				arm_mean_f32(mics[i].envelope, N_SAMPLE, &mics[i].noise_mean);
+				arm_std_f32(mics[i].envelope, N_SAMPLE, &mics[i].noise_std);
+
+				mics[i].thresh = mics[i].noise_mean + k * mics[i].noise_std;
+			}
+			window_ind = 1;
+			continue;
+		}
 
 
 		if (!triggered && samples - last_trigger_sample > N_UPDATE_DELAY)			// wait for event detection after N_UPDATE_DELAY samples since last event
@@ -257,7 +274,7 @@ int main(void)
 			int32_t thresh_ind[N_MICS], thresh_ind_sorted[N_MICS];
 
 			for (uint32_t i = 0; i < N_MICS; i++)
-				thresh_ind[i] = thresh_search(mics[i].envelope, N_SAMPLE, ENERGY_THRESH);
+				thresh_ind[i] = thresh_search(mics[i].envelope, N_SAMPLE, mics[i].thresh);
 
 			simple_sort3(thresh_ind, thresh_ind_sorted);		// sort the indices of the first peaks
 
@@ -273,6 +290,10 @@ int main(void)
 					break;
 				}
 			}
+
+			// only update noise threshold when not triggered
+			if (!triggered)
+				update_thresh(mics);
 		}
 
 		if (triggered && samples > last_trigger_sample + N_SAMPLES_AFTER)		// wait until enough samples have been taken after peak is detected
@@ -709,7 +730,7 @@ void compute_envelope(struct MicProc * mics)
 	// square signals and multiply with gain of 2
 	for (uint32_t i = 0; i < N_MICS; i++)
 		for (uint32_t j = 0; j < N_SAMPLE; j++)
-			mics[i].envelope[j] = mics[i].samples[j] * mics[i].samples[j] * 2;
+			mics[i].envelope[j] = mics[i].filtered[j] * mics[i].filtered[j] * 2;
 
 	// Lowpass filter to remove high frequencies accumulated during scaling
 	for (uint32_t i = 0; i < N_MICS; i++)
@@ -719,6 +740,26 @@ void compute_envelope(struct MicProc * mics)
 	for (uint32_t i = 0; i < N_MICS; i++)
 		for (uint32_t j = 0; j < N_SAMPLE; j++)
 			arm_sqrt_f32(mics[i].envelope[j], &mics[i].envelope[j]);
+}
+
+void update_thresh(struct MicProc * mics)
+{
+	for (uint32_t i = 0; i < N_MICS; i++)
+	{
+		// compute average noise and standard deviation in current envelope
+		float32_t mean, std;
+
+		arm_mean_f32(mics[i].envelope, N_SAMPLE, &mean);
+		arm_std_f32(mics[i].envelope, N_SAMPLE, &std);
+
+		// apply exponential moving average to new mean and std
+		mics[i].noise_mean = (1 - alpha) * mics[i].noise_mean + alpha * mean;
+		mics[i].noise_std = (1 - alpha) * mics[i].noise_std + alpha * std;
+
+		// determine energy threshold for event
+		mics[i].thresh = mics[i].noise_mean + k * mics[i].noise_std;
+	}
+
 }
 
 int32_t thresh_search(float32_t * src, uint32_t len, float32_t thresh)
