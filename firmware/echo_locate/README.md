@@ -24,4 +24,4 @@ GCC-PHAT was selected instead of cross-correlation for its robustness and increa
 6. GCC-PHAT
 7. Solve using NLLS/linear variant to estimate sound origin
 
-![alt text](image.png)
+![alt text](echo_locate_v2.0.png)
