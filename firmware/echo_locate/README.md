@@ -20,5 +20,8 @@ GCC-PHAT was selected instead of cross-correlation for its robustness and increa
 2. Bandpass filter [1kHz, 5kHz] microphone stream(FPGA)
 3. Envelope detection
 4. Detect peaks and extract sample windows
-5. GCC-PHAT
-6. Solve using NLLS/linear variant to estimate sound origin
+5. Update noise thresholds
+6. GCC-PHAT
+7. Solve using NLLS/linear variant to estimate sound origin
+
+![alt text](image.png)
