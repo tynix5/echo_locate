@@ -6,7 +6,8 @@ import time
 
 #################### Configure live plot #######################
 # coordinates of reference mics
-ref_coords = np.array([[0, 0], [0, 1], [1, 1]])
+# ref_coords = np.array([[0, 0], [0, 1], [1, 1]])
+ref_coords = np.array([[0, 0], [0, 0.9144], [0.9144, 0.9144]])
 ref_x, ref_y = ref_coords[:,0], ref_coords[:,1]
 
 # initialize event point
